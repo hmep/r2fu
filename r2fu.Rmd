@@ -129,7 +129,7 @@ Our aim is to investigate if *assertiveness* could be a relevant target in the t
 
 Export settings recorded in "Screenshot 2021-12-12 at 11-29-37 Exportera.png"
 
-```{r data, echo = F}
+```{r prepare.data, echo = F, eval = F}
 
 library("readxl")
 raw_excel = "Respekt_surveys_211213_101425.xlsx"
@@ -249,6 +249,13 @@ lg3t3 <- r2fu.long.data$group == xg3 & r2fu.long.data$time == xt3
 ll1 = length(r2fu.long.data[lg1t1,1])
 ll2 = length(r2fu.long.data[lg2t1,1])
 ll3 = length(r2fu.long.data[lg3t1,1])
+
+```
+
+```{r import.data}
+
+r2fu.long.data <- readRDS("r2fu.long.data.RDS")
+r2fu.wide.data <- readRDS("r2fu.wide.data.RDS")
 
 ```
 
