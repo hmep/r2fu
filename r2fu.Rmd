@@ -313,25 +313,6 @@ performance::check_model(aaas_ad.lmer)
 
 ```
 
-## (aaas_ad ~ group * time + (1 | subject),data=r2fu.long.data[nlg3,])
-
-```{r aaas_ad.lmer, results="asis", fig.width = 13, fig.asp = 0.75}
-
-aaas_ad.lmerB <-
-  lme4::lmer(
-    aaas_ad ~ group * time + (1 | subject),
-    data = r2fu.long.data[nlg3,],
-    na.action = na.omit,
-    REML = T
-  )
-#aaas_ad.estimate <- jtools::plot_summs(aaas_ad.lmer)
-#aaas_ad.estimate
-
-performance::check_model(aaas_ad.lmerB)
-
-```
-
-
 ## (aaas_ad ~ group * time + (1 | subject))
 
 ```{r aaas_ad.outliers, results="asis", fig.width = 8, fig.asp = .6}
