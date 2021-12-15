@@ -129,7 +129,7 @@ Our aim is to investigate if *assertiveness* could be a relevant target in the t
 
 Export settings recorded in "Screenshot 2021-12-12 at 11-29-37 Exportera.png"
 
-```{r prepare.data, echo = F, eval = T}
+```{r prepare.data, echo = F, eval = F}
 
 library("readxl")
 raw_excel = "Respekt_surveys_211213_101425.xlsx"
@@ -211,7 +211,7 @@ r2fu.long.data <- r2fu.raw.data %>%
                names_to = c(".value", "time"),
                names_pattern = "(.*).(\\d+)") %>% as.data.frame()
 r2fu.long.data$time <- as.factor(r2fu.long.data$time)
-saveRDS(r2fu.raw.data,file="r2fu.long.data.RDS")
+saveRDS(r2fu.long.data,file="r2fu.long.data.RDS")
 write_xlsx(r2fu.long.data, "r2fu.long.data.xlsx")
 
 # Pivot back to wide format (should be equivalent to raw data)
@@ -219,7 +219,7 @@ r2fu.wide.data <- r2fu.long.data %>%
   pivot_wider(names_from = time,
               names_sep = ".",
               values_from = scale.names) %>% as.data.frame()
-saveRDS(r2fu.raw.data,file="r2fu.wide.data.RDS")
+saveRDS(r2fu.wide.data,file="r2fu.wide.data.RDS")
 write_xlsx(r2fu.wide.data, "r2fu.wide.data.xlsx")
 
 # Subsetting keys
