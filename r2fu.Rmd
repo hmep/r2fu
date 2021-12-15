@@ -131,7 +131,6 @@ Export settings recorded in "Screenshot 2021-12-12 at 11-29-37 Exportera.png"
 
 ```{r prepare.data, echo = F, eval = F}
 
-library("readxl")
 raw_excel = "Respekt_surveys_211213_101425.xlsx"
 r2fu.raw.data <- read_excel(raw_excel)
 
@@ -324,8 +323,6 @@ performance::check_model(aaas_ad.lmer)
 
 ```{r aaas_ad.outliers, results="asis", fig.width = 8, fig.asp = .6}
 
-# install.packages("outliers")
-library(outliers)
 test <- grubbs.test(r2fu.long.data$aaas_ad)
 test
 
@@ -357,8 +354,6 @@ performance::check_model(aaas_ad.lmer)
 
 ```{r aaas_ag.outliers, results="asis", fig.width = 8, fig.asp = .6}
 
-# install.packages("outliers")
-library(outliers)
 test <- grubbs.test(r2fu.long.data$aaas_ag)
 test
 
@@ -390,8 +385,6 @@ performance::check_model(rathus.lmer)
 
 ```{r rathus.outliers, results="asis", fig.width = 8, fig.asp = .6}
 
-# install.packages("outliers")
-library(outliers)
 test <- grubbs.test(r2fu.long.data$rathus)
 test
 
