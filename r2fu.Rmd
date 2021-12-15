@@ -129,7 +129,7 @@ Our aim is to investigate if *assertiveness* could be a relevant target in the t
 
 Export settings recorded in "Screenshot 2021-12-12 at 11-29-37 Exportera.png"
 
-```{r prepare.data, echo = F, eval = F}
+```{r prepare.data, echo = F, eval = T}
 
 library("readxl")
 raw_excel = "Respekt_surveys_211213_101425.xlsx"
