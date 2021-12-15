@@ -501,8 +501,8 @@ lattice::xyplot(rathus ~ time, group = subject, r2fu.new.data, type = "b")
 
 - Should have sampled at more time points?
   - Would have allowed for individual slopes
-- Wait list is not ideal as control (although apparently regressing to the mean in for all primary outcomes)
-- De som väntelista med som uppföljning saknas inte slumpmässigt, kolla ev om de som inte svarat skiljt sig på något sätt (anova: vad är relevant att testa, testa endast de som är relevanta)
+- Wait list is not ideal as control (although apparently regressing to the mean for all primary outcomes)
+- MNAR, MAR, MCAR -- kolla ev om de som inte svarat på uppföljningen skiljer sig på något sätt från övriga (anova: vad är relevant att testa, testa endast de som är relevanta från teoretisk synpunkt för att inte fiska p-värden)
 
 ## 2do: discussion -- new questions/more research
 
