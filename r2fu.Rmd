@@ -1,0 +1,556 @@
+---
+title: "R2 fu"
+author: "Tobias Hagberg"
+date: "211212"
+lang: sv-SE
+bibliography: [packages.bib]
+link-citations: yes
+output:
+  beamer_presentation: 
+    colortheme: seahorse
+    keep_tex: yes
+header-includes:
+  - \usepackage[default]{sourcesanspro}
+  - \usepackage[T1]{fontenc}
+  - \usepackage{setspace}
+  - \setstretch{1.2}
+---
+
+```{r setup, include=F}
+
+packages <- c("lme4", "jtools", "broom.mixed", "readxl", "writexl", "tidyr", "jtools", "lattice", "modelr", "ggeffects", "emmeans", "patchwork", "outliers")
+if (!require("install.load")) install.packages("install.load")
+library(install.load)
+install_load(packages)
+
+knitr::opts_chunk$set(
+  warning = F,
+  message = F,
+  echo = F,
+  collapse = T,
+  fig.retina = 4,
+  dpi = 300,
+  out.width = "100%",
+  fig.width = 7.5,
+  fig.asp = 0.618
+)
+
+xg1 = "selfhelp"
+xg2 = "support"
+xg3 = "waitlist"
+xG1 = "Selfhelp"
+xG2 = "Support"
+xG3 = "Waitlist"
+
+xpre = "pre measurement"
+xdur = "during measurement"
+xpost = "post measurement"
+xfu = "follow-up measurement"
+xPre = "Pre measurement"
+xDur = "During measurement"
+xPost = "Post measurement"
+xFu = "Follow-up measurement"
+
+xt1 = "pre"
+xt2 = "during"
+xt3 = "post"
+xt4 = "follow-up"
+xT1 = "Pre"
+xT2 = "During"
+xT3 = "Post"
+xT4 = "Follow-up"
+
+```
+
+## What is 'assertiveness'
+
+'Assertiveness' can be defined as ... (cite)
+
+## 1st wave (skip?)
+
+- Assertiveness (saying "no" or making requests) was the target for the very first behavioral treatments of neuroses (wolpe) (??), which were based on the principle of inhibitory learning
+- According to (wolpe), being assertive is incompatible with being neurotic, thus the treatment consisted of pairing
+  - stressful thoughts ("I will fail the interview") with relaxation techniques; and
+  - anxiety inducing situations (doing the interview) with assertiveness skills
+
+## 2nd wave (skip?)
+
+- (beck) added cognitive restructuring as an add-on to habituation; inhibition was framed as the product of restructuring following behavioral experiments
+  - An example of a 2nd wave intervention which targets assertiveness is (cite), which forms the basis for the intervention of interest in this RCT
+
+## 3rd wave (skip?)
+
+- Recently, 3rd wave CBT emphasized anxiety tolerance as especially helpful for exposure (hayes)
+  - The authors added 3rd wave values and tolerance tools to (cite) to form Respekt i kvadrat, the purpose of which is to help the client select new rules for behavior
+    - I.e. "Seeking out challenges will help med grow" rather than "I will only do something if I feel like it"
+
+## Mediators of change
+
+<!-- https://pubmed.ncbi.nlm.nih.gov/20381224/ -->
+
+What are the mediators of inhibitory learning? (Craske) suggests that habituation and cognitive restructuring (including increased tolerance) all are part and parcel of the same mechanism; in fact, they may be both mediators and each others' moderators.
+
+<!-- Behavioral experiments may be effective because they use a real-life experience that will share many functional similarities with exposure but explicitly frame this as a test of a key cognition and so blend propositional and experiential learning. (Mcmillan2010) -->
+
+What is important is *getting at inhibitory learning*; interventions should employ all available tools at disposal to achieve that goal, flexibly and pragmatically.
+
+## Respekt i kvadrat
+
+Respekt i kvadrat is an intervention that combines theories from 1st, 2nd and 3rd wave behavioral therapy to help activate assertive behaviors in anxiety-provoking contexts.
+
+## Clinical relevance
+
+- Low degrees of assertiveness is associated with (cite)
+  - Generalized anxiety
+  - Social phobia
+  - Depression
+  - Emotional dysregulation
+  - Schizophrenia
+- Also, *assertiveness* problems is thought to be at play in other ailments (cite)
+  - Strained relationships
+  - Work related stress
+
+## Research question
+
+Our aim is to investigate if *assertiveness* could be a relevant target in the treatment of psychiatric diagnoses and psychological problems.
+
+- Primary question: Does participation in the treatment arms benefit patients significantly compared to a waitlist condition, with regards to assertiveness?
+- Secondary question: What is the development trajectory over time with regards to levels of assertiveness?
+
+## (Export settings)
+
+\small
+
+- 2020-01-27 "Respekt i kvadrat - förmätning" PRE Groups 1+2+3
+- 2020-03-09 "Respekt i kvadrat - mittmätning utan Corona" DUR Groups 1+2+3
+- 2020-04-06 "Respekt i kvadrat - eftermätning" POST Groups 1+2
+- 2020-04-06 "Respekt i kvadrat - eftermätning väntelista" POST Group 3
+- 2021-04-21 "Respekt i kvadrat - 1-årsuppföljning" FU Groups 1+2
+
+Export settings recorded in "Screenshot 2021-12-12 at 11-29-37 Exportera.png"
+
+```{r data, echo = F}
+
+library("readxl")
+raw_excel = "Respekt_surveys_211213_101425.xlsx"
+r2fu.raw.data <- read_excel(raw_excel)
+
+# Remove cases that meet exclusion criteria but were erroneously included in the study
+r2fu.raw.data <- r2fu.raw.data[-c(13,48,52,97,158),]
+
+# Missing data as NA values
+r2fu.raw.data[r2fu.raw.data == "[missing data]" ] <- NA
+
+# As dataframe
+r2fu.raw.data <- as.data.frame(r2fu.raw.data)
+
+# Unite POST measurements for Groups 1+3 with those for Group 3
+cols.count <- 21
+g3key <- which(!is.na(r2fu.raw.data[3 * cols.count + 8]))
+r2fu.raw.data[g3key, c(1:cols.count) + 2 * cols.count] <-
+  r2fu.raw.data[g3key, c(1:cols.count) + 3 * cols.count]
+
+# Create vector with group designations
+r2fu.groups <-
+  factor(ifelse(
+    grepl("Grupp 1", r2fu.raw.data[,3]),
+    1,
+    ifelse(
+      grepl("Grupp 2", r2fu.raw.data[,3]),
+      2,
+      ifelse(grepl("Grupp 3", r2fu.raw.data[,3]), 3, NA)
+    )
+  ),
+  levels = c(3,1,2),
+  labels = c(xg3,xg1,xg2)) 
+
+# Only keep relevant columns
+r2fu.raw.data <-
+  r2fu.raw.data[, c(
+    c(9:cols.count) + 0 * cols.count,
+    c(9:cols.count) + 1 * cols.count,
+    c(9:cols.count) + 2 * cols.count,
+    c(9:cols.count) + 4 * cols.count
+  )]
+
+# Set colnames
+timepoint.names <- c(1,2,3,4)
+scale.names <- c(
+  "rathus",
+  "aaas_ag",
+  "aaas_ad",
+  "lsas_anx",
+  "lsas_avo",
+  "lsas_int",
+  "lsas_per",
+  "lsas_sum",
+  "gad_sum",
+  "phq_sum",
+  "phq_sui",
+  "phq_q10",
+  "well"
+)
+colnames(r2fu.raw.data) <- paste(scale.names,rep(timepoint.names,each=length(scale.names)),sep=".")
+
+# Add anonymous subject IDs
+r2fu.raw.data$subject <- factor(c(1:length(r2fu.raw.data[,1]))) 
+
+# Add in group designations
+r2fu.raw.data$group <- r2fu.groups 
+
+# Make sure numericals are numeric
+r2fu.raw.data[, c(1:52)] <-
+  sapply(r2fu.raw.data[, c(1:52)], as.numeric)
+
+# Save anonymised data in wide format
+saveRDS(r2fu.raw.data,file="r2fu.raw.data.RDS")
+
+# Pivot to long format
+r2fu.long.data <- r2fu.raw.data %>%
+  pivot_longer(c(1:52),
+               names_to = c(".value", "time"),
+               names_pattern = "(.*).(\\d+)") %>% as.data.frame()
+r2fu.long.data$time <- as.factor(r2fu.long.data$time)
+saveRDS(r2fu.raw.data,file="r2fu.long.data.RDS")
+write_xlsx(r2fu.long.data, "r2fu.long.data.xlsx")
+
+# Pivot back to wide format (should be equivalent to raw data)
+r2fu.wide.data <- r2fu.long.data %>%
+  pivot_wider(names_from = time,
+              names_sep = ".",
+              values_from = scale.names) %>% as.data.frame()
+saveRDS(r2fu.raw.data,file="r2fu.wide.data.RDS")
+write_xlsx(r2fu.wide.data, "r2fu.wide.data.xlsx")
+
+# Subsetting keys
+wg1 <- grepl(xg1, r2fu.wide.data$group)
+wg2 <- grepl(xg2, r2fu.wide.data$group)
+wg3 <- grepl(xg3, r2fu.wide.data$group)
+
+# Subsetting keys 
+lg1 <- grepl(xg1, r2fu.long.data$group)
+nlg1 <- !grepl(xg1, r2fu.long.data$group)
+lg2 <- grepl(xg2, r2fu.long.data$group)
+nlg2 <- !grepl(xg2, r2fu.long.data$group)
+lg3 <- grepl(xg3, r2fu.long.data$group)
+nlg3 <- !grepl(xg3, r2fu.long.data$group)
+lt1 <- grepl(xt1, r2fu.long.data$time)
+lt2 <- grepl(xt2, r2fu.long.data$time)
+lt3 <- grepl(xt3, r2fu.long.data$time)
+lg1t1 <- r2fu.long.data$group == xg1 & r2fu.long.data$time == xt1
+lg1t2 <- r2fu.long.data$group == xg1 & r2fu.long.data$time == xt2
+lg1t3 <- r2fu.long.data$group == xg1 & r2fu.long.data$time == xt3
+lg2t1 <- r2fu.long.data$group == xg2 & r2fu.long.data$time == xt1
+lg2t2 <- r2fu.long.data$group == xg2 & r2fu.long.data$time == xt2
+lg2t3 <- r2fu.long.data$group == xg2 & r2fu.long.data$time == xt3
+lg3t1 <- r2fu.long.data$group == xg3 & r2fu.long.data$time == xt1
+lg3t2 <- r2fu.long.data$group == xg3 & r2fu.long.data$time == xt2
+lg3t3 <- r2fu.long.data$group == xg3 & r2fu.long.data$time == xt3
+ll1 = length(r2fu.long.data[lg1t1,1])
+ll2 = length(r2fu.long.data[lg2t1,1])
+ll3 = length(r2fu.long.data[lg3t1,1])
+
+```
+
+## Method
+
+- Pre-registration, open science, reproducibility
+
+- Statistical significance testing of predictions from a mixed model; fixed and random effects (therapists?)
+
+- Clinical significance testing
+
+- Analyses using `r R.Version()$language` version `r paste(R.Version()[c("major", "minor")], collapse = ".")` with `r paste("@R-",packages,sep="")`
+
+## (Check plots: adaptive assertiveness)
+
+```{r ad.plot}
+
+lattice::xyplot(aaas_ad ~ time, group = subject, r2fu.long.data, type = "b")
+
+```
+
+## (Check plots: aggressive assertiveness)
+
+```{r ag.plot}
+
+lattice::xyplot(aaas_ag ~ time, group = subject, r2fu.long.data, type = "b")
+
+```
+
+## (Check plots: Rathus)
+
+```{r rathus.plot}
+
+lattice::xyplot(rathus ~ time, group = subject, r2fu.long.data, type = "b")
+
+```
+
+## Hmm ...
+
+- How to handle the fact that the waitlist has no follow-up values?
+  - Drop the waitlist from the model?
+  - Ignore warning about collinearity (group * time)?
+  - Neither, but performing two analyses to answer different questions?
+    - First like in the thesis (timepoints 1, 2, 3; groups 1, 2, 3)
+    - Dropping waitlist (timepoints 1, 2, 3, 4; groups 1, 2)
+
+## (aaas_ad ~ group * time + (1 | subject))
+
+```{r aaas_ad.lmer, results="asis", fig.width = 13, fig.asp = 0.75}
+
+aaas_ad.lmer <-
+  lme4::lmer(
+    aaas_ad ~ group * time + (1 | subject),
+    data = r2fu.long.data,
+    na.action = na.omit,
+    REML = T
+  )
+#aaas_ad.estimate <- jtools::plot_summs(aaas_ad.lmer)
+#aaas_ad.estimate
+
+performance::check_model(aaas_ad.lmer)
+
+```
+
+## (aaas_ad ~ group * time + (1 | subject),data=r2fu.long.data[nlg3,])
+
+```{r aaas_ad.lmer, results="asis", fig.width = 13, fig.asp = 0.75}
+
+aaas_ad.lmerB <-
+  lme4::lmer(
+    aaas_ad ~ group * time + (1 | subject),
+    data = r2fu.long.data[nlg3,],
+    na.action = na.omit,
+    REML = T
+  )
+#aaas_ad.estimate <- jtools::plot_summs(aaas_ad.lmer)
+#aaas_ad.estimate
+
+performance::check_model(aaas_ad.lmerB)
+
+```
+
+
+## (aaas_ad ~ group * time + (1 | subject))
+
+```{r aaas_ad.outliers, results="asis", fig.width = 8, fig.asp = .6}
+
+# install.packages("outliers")
+library(outliers)
+test <- grubbs.test(r2fu.long.data$aaas_ad)
+test
+
+out <- boxplot.stats(r2fu.long.data$aaas_ad)$out
+boxplot(r2fu.long.data$aaas_ad)
+mtext(paste("Outliers: ", paste(out, collapse = ", ")))
+
+```
+
+## (aaas_ag ~ group * time + (1 | subject))
+
+```{r aaas_ag.lmer, results="asis", fig.width = 13, fig.asp = 0.75}
+
+aaas_ag.lmer <-
+  lme4::lmer(
+    aaas_ag ~ group * time + (1 | subject),
+    data = r2fu.long.data,
+    na.action = na.omit,
+    REML = T
+  )
+#aaas_ag.estimate <- jtools::plot_summs(aaas_ag.lmer)
+#aaas_ag.estimate
+
+performance::check_model(aaas_ad.lmer)
+
+```
+
+## (aaas_ag ~ group * time + (1 | subject))
+
+```{r aaas_ag.outliers, results="asis", fig.width = 8, fig.asp = .6}
+
+# install.packages("outliers")
+library(outliers)
+test <- grubbs.test(r2fu.long.data$aaas_ag)
+test
+
+out <- boxplot.stats(r2fu.long.data$aaas_ag)$out
+boxplot(r2fu.long.data$aaas_ag)
+mtext(paste("Outliers: ", paste(out, collapse = ", ")))
+
+```
+
+## (rathus ~ group * time + (1 | subject))
+
+```{r rathus.lmer, results="asis", fig.width = 13, fig.asp = 0.75}
+
+rathus.lmer <-
+  lme4::lmer(
+    rathus ~ group * time + (1 | subject),
+    data = r2fu.long.data,
+    na.action = na.omit,
+    REML = T
+  )
+#rathus.estimate <- jtools::plot_summs(rathus.lmer)
+#rathus.estimate
+
+performance::check_model(rathus.lmer)
+
+```
+
+## (rathus ~ group * time + (1 | subject))
+
+```{r rathus.outliers, results="asis", fig.width = 8, fig.asp = .6}
+
+# install.packages("outliers")
+library(outliers)
+test <- grubbs.test(r2fu.long.data$rathus)
+test
+
+out <- boxplot.stats(r2fu.long.data$rathus)$out
+boxplot(r2fu.long.data$rathus)
+mtext(paste("Outliers: ", paste(out, collapse = ", ")))
+
+```
+
+
+```{r predictions}
+
+# Output predictions to new data frame
+# https://rdrr.io/cran/modelr/man/add_predictions.html
+
+# Create new data frame with factor variables in place
+r2fu.new.data <- r2fu.long.data[,c(1:3)]
+
+# Add predicted values to data frame
+r2fu.new.data <- r2fu.new.data %>% spread_predictions(
+  rathus.lmer,
+  aaas_ag.lmer,
+  aaas_ad.lmer
+)
+
+# Set column names
+colnames(r2fu.new.data) <-
+  c(
+    "subject",
+    "group",
+    "time",
+    "rathus",
+    "aaas_ag",
+    "aaas_ad"
+  )
+
+```
+
+## Adaptive assertiveness
+
+```{r aaas_ad.emm.plot}
+
+aaas_ad.emm.plot <- plot(ggemmeans(aaas_ad.lmer, terms = c("time", "group")))
+aaas_ad.emm.plot
+
+```
+
+## Aggressive assertiveness
+
+```{r aaas_ag.emm.plot}
+
+aaas_ag.emm.plot <- plot(ggemmeans(aaas_ag.lmer, terms = c("time", "group")))
+aaas_ag.emm.plot
+
+```
+
+## Rathus
+
+```{r rathus.emm.plot}
+
+rathus.emm.plot <- plot(ggemmeans(rathus.lmer, terms = c("time", "group")))
+rathus.emm.plot
+
+```
+
+## (Check plots: predicted adaptive assertiveness)
+
+```{r pred.ad.plot}
+
+lattice::xyplot(aaas_ad ~ time, group = subject, r2fu.new.data, type = "b")
+
+```
+
+## (Check plots: predicted aggressive assertiveness)
+
+```{r pred.ag.plot}
+
+lattice::xyplot(aaas_ag ~ time, group = subject, r2fu.new.data, type = "b")
+
+```
+
+## (Check plots: predicted Rathus)
+
+```{r pred.rathus.plot}
+
+lattice::xyplot(rathus ~ time, group = subject, r2fu.new.data, type = "b")
+
+```
+
+## Clinical significance and reliable change
+
+- And statistical significance testing of diffs
+
+## Secondary outcomes
+
+- PHQ-9
+- GAD-7
+- LSAS-24
+- Välmåendeskalan
+
+## Discussion -- results
+
+- Different trajectories for different groups but more or less the same outcome?
+  - Although not significantly different
+
+## 2do: discussion -- method 
+
+- Should have sampled at more time points?
+  - Would have allowed for individual slopes
+- Wait list is not ideal as control (although apparently regressing to the mean in for all primary outcomes)
+- De som väntelista med som uppföljning saknas inte slumpmässigt, kolla ev om de som inte svarat skiljt sig på något sätt (anova: vad är relevant att testa, testa endast de som är relevanta)
+
+## 2do: discussion -- new questions/more research
+
+- Is "assertiveness" acceptable as a treatment target
+  - Calls for qualitative research?
+- Operationalization of "assertiveness"
+  - How can it be improved?
+- How does positive behavioral targets compare to symptom reduction targets?
+  - Does it help to specify behavioral targets?
+  - Is putting more emphasis on valued living workable?
+- Validating scales + investigating normative means
+
+## 2do: tangents
+
+- Create a prototype for a treatment planning and administration tool that integrate with existing patient record systems and apps, allowing for flexible integration of selfhelp, tele-health and outpatient care ...
+  - Using evidence based kernels as building blocks
+  - Between session activities with quick feedback from therapist, i.e. worrying diaries, behavioral experiments, behavioral activation challenges ...
+  - Integration with publishing companies' offerings of treatment manuals (content, royalties)
+  - Integration with open source treatment manuals (KBT i primärvården, Respekt i kvadrat, etc.)
+  - Customization on the fly, including 100% patient tailored treatment plans
+
+## 2do: tangents, cont.d.
+
+- Create a prototype for a treatment planning and administration tool that integrate with existing patient record systems and apps, allowing for flexible integration of selfhelp, tele-health and outpatient care ...
+  - Pre-defined and automatic administration of self-assessments
+  - Allowing for internationalization/administration of modules in multiple languages
+  - Creation of patient records one session at a time
+  - Re-use of existing APIs, i.e. TC--Webbskattningar and Webbskattningar--Alltid öppet
+  - All while remaining future-proof
+
+```{r references, include=FALSE}
+
+knitr::write_bib(packages, "packages.bib")
+
+```
+
+## References
+
+\scriptsize
