@@ -1,9 +1,9 @@
 ---
 title: "R2 fu"
 author: "Tobias Hagberg"
-date: "211212"
-lang: sv-SE
-bibliography: [packages.bib]
+date: "220103"
+lang: en-US
+bibliography: ["packages.bib", "KSH.bib"]
 link-citations: yes
 output:
   beamer_presentation: 
@@ -14,6 +14,7 @@ header-includes:
   - \usepackage[T1]{fontenc}
   - \usepackage{setspace}
   - \setstretch{1.2}
+  - \widowpenalties 1 150
 ---
 
 ```{r setup, include=F}
@@ -62,41 +63,26 @@ xT4 = "Follow-up"
 
 ```
 
-## What is 'assertiveness'
+## What is 'assertiveness'?
 
-'Assertiveness' can be defined as ... (cite)
+'Assertive self-expression' can be hard to delineate from 'social skills' in general [@LINEHAN1979], but a common definition is *direct, firm, positive [...] action [enabling] us to act in our own best interests, to stand up for ourselves without undue anxiety, to **exercise personal rights without denying the rights of others**, and to express our feelings and needs [...] honestly and comfortably* [@alberti1974your]. Examples include:
 
-## 1st wave (skip?)
+- Politely saying 'no' to a boss requesting undue overtime
+- Actively participating in social activities
+- Verbalizing feelings in personal relationships without acting out
 
-- Assertiveness (saying "no" or making requests) was the target for the very first behavioral treatments of neuroses (wolpe) (??), which were based on the principle of inhibitory learning
-- According to (wolpe), being assertive is incompatible with being neurotic, thus the treatment consisted of pairing
-  - stressful thoughts ("I will fail the interview") with relaxation techniques; and
-  - anxiety inducing situations (doing the interview) with assertiveness skills
+<!-- ## Respect Squared (R^2^) -->
 
-## 2nd wave (skip?)
+<!-- Drawing on the definition from @alberti1974your this study investigates how promoting assertive actions that both respect personal rights and rights of others can alleviated psychological suffering. Respect Squared combines theories from 1st, 2nd and 3rd wave behavioral therapies to help activate assertive behaviors in anxiety-provoking contexts.  -->
 
-- (beck) added cognitive restructuring as an add-on to habituation; inhibition was framed as the product of restructuring following behavioral experiments
-  - An example of a 2nd wave intervention which targets assertiveness is (cite), which forms the basis for the intervention of interest in this RCT
 
-## 3rd wave (skip?)
+<!-- Assertive self-expression is 'direct, firm, positive, and when necessary, persistent, action intended to promote equality in person-to-person relationships. Assertiveness enables us to act in our own best interests, to stand up for ourselves without undue anxiety, to exercise personal rights without denying the rights of others, and to express our feelings and needs (affection, love, friendship, disappointment, annoyance, anger, regret, sorrow) honestly and comfortably. @alberti1974your  -->
 
-- Recently, 3rd wave CBT emphasized anxiety tolerance as especially helpful for exposure (hayes)
-  - The authors added 3rd wave values and tolerance tools to (cite) to form Respekt i kvadrat, the purpose of which is to help the client select new rules for behavior
-    - I.e. "Seeking out challenges will help med grow" rather than "I will only do something if I feel like it"
+<!-- https://books.google.se/books?id=iPAhDgAAQBAJ&pg=PT85&hl=sv&source=gbs_selected_pages&cad=2#v=onepage&q&f=false -->
 
-## Mediators of change
+## Brief history of assertiveness training
 
-<!-- https://pubmed.ncbi.nlm.nih.gov/20381224/ -->
-
-What are the mediators of inhibitory learning? (Craske) suggests that habituation and cognitive restructuring (including increased tolerance) all are part and parcel of the same mechanism; in fact, they may be both mediators and each others' moderators.
-
-<!-- Behavioral experiments may be effective because they use a real-life experience that will share many functional similarities with exposure but explicitly frame this as a test of a key cognition and so blend propositional and experiential learning. (Mcmillan2010) -->
-
-What is important is *getting at inhibitory learning*; interventions should employ all available tools at disposal to achieve that goal, flexibly and pragmatically.
-
-## Respekt i kvadrat
-
-Respekt i kvadrat is an intervention that combines theories from 1st, 2nd and 3rd wave behavioral therapy to help activate assertive behaviors in anxiety-provoking contexts.
+Assertiveness training goes back to the very first behvioral interventions, such as @salter1949conditioned and @Wolpe1966. In the 1970's, the concept was popularized in self-help books such as @alberti1974your, @smith1975say, and @fensterheim1975don. @LINEHAN1979 was a foundation for what later became Dialectical Behavior Therapy (DBT), in which assertiveness skills training is an integral part. It has implicitly been a target in treatments for anxiety disorders (such as social anxiety disorder) ever since.
 
 ## Clinical relevance
 
@@ -109,6 +95,12 @@ Respekt i kvadrat is an intervention that combines theories from 1st, 2nd and 3r
 - Also, *assertiveness* problems is thought to be at play in other ailments (cite)
   - Strained relationships
   - Work related stress
+
+## Respect Squared (R^2^)
+
+The aim of this study is to investigate the effectiveness of a newly developed CBT  internet-delivered treatment program targeting assertiveness. The program builds on the freely available online resource *Assert Yourself* [@michel2008], published by Centre for Clinical Interventions (CCI), part of the government of Western Australia in Australia. 
+
+Respect Squared combines theories from 1st, 2nd and 3rd wave behavioral therapies to help activate assertive behaviors in anxiety-provoking contexts. 
 
 ## Research question
 
@@ -508,23 +500,23 @@ lattice::xyplot(rathus ~ time, group = subject, r2fu.new.data, type = "b")
   - Is putting more emphasis on valued living workable?
 - Validating scales + investigating normative means
 
-## 2do: tangents
+<!-- ## 2do: tangents -->
 
-- Create a prototype for a treatment planning and administration tool that integrate with existing patient record systems and apps, allowing for flexible integration of selfhelp, tele-health and outpatient care ...
-  - Using evidence based kernels as building blocks
-  - Between session activities with quick feedback from therapist, i.e. worrying diaries, behavioral experiments, behavioral activation challenges ...
-  - Integration with publishing companies' offerings of treatment manuals (content, royalties)
-  - Integration with open source treatment manuals (KBT i primärvården, Respekt i kvadrat, etc.)
-  - Customization on the fly, including 100% patient tailored treatment plans
+<!-- - Create a prototype for a treatment planning and administration tool that integrate with existing patient record systems and apps, allowing for flexible integration of selfhelp, tele-health and outpatient care ... -->
+<!--   - Using evidence based kernels as building blocks -->
+<!--   - Between session activities with quick feedback from therapist, i.e. worrying diaries, behavioral experiments, behavioral activation challenges ... -->
+<!--   - Integration with publishing companies' offerings of treatment manuals (content, royalties) -->
+<!--   - Integration with open source treatment manuals (KBT i primärvården, Respekt i kvadrat, etc.) -->
+<!--   - Customization on the fly, including 100% patient tailored treatment plans -->
 
-## 2do: tangents, cont.d.
+<!-- ## 2do: tangents, cont.d. -->
 
-- Create a prototype for a treatment planning and administration tool that integrate with existing patient record systems and apps, allowing for flexible integration of selfhelp, tele-health and outpatient care ...
-  - Pre-defined and automatic administration of self-assessments
-  - Allowing for internationalization/administration of modules in multiple languages
-  - Creation of patient records one session at a time
-  - Re-use of existing APIs, i.e. TC--Webbskattningar and Webbskattningar--Alltid öppet
-  - All while remaining future-proof
+<!-- - Create a prototype for a treatment planning and administration tool that integrate with existing patient record systems and apps, allowing for flexible integration of selfhelp, tele-health and outpatient care ... -->
+<!--   - Pre-defined and automatic administration of self-assessments -->
+<!--   - Allowing for internationalization/administration of modules in multiple languages -->
+<!--   - Creation of patient records one session at a time -->
+<!--   - Re-use of existing APIs, i.e. TC--Webbskattningar and Webbskattningar--Alltid öppet -->
+<!--   - All while remaining future-proof -->
 
 ```{r references, include=FALSE}
 
@@ -532,6 +524,8 @@ knitr::write_bib(packages, "packages.bib")
 
 ```
 
-## References
+## References {.allowframebreaks}
 
-\scriptsize
+<!-- https://stackoverflow.com/questions/35677857/references-truncated-in-beamer-presentation-prepared-in-knitr-rmarkdown/35681531 -->
+
+\small
