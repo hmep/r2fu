@@ -31,8 +31,8 @@ knitr::opts_chunk$set(
   collapse = T,
   fig.retina = 4,
   dpi = 300,
-  # out.width = "100%",
-  # fig.width = 7.5,
+  out.width = "100%",
+  fig.width = 7.5,
   fig.asp = 0.618
 )
 
@@ -313,7 +313,7 @@ Study participants were recruited on social media between January 28 and Februar
 
 \small
 
-Out of 657 persons, 464 completed the sceening process, during which 126 were excluded for not meeting criteria for participation. A total of 338 persons were invited to the study, of which 253 accepted the invitation. Through randomization by a third party, 43 of these persons were excluded from the analysis (although not from participation in the treatment program) in order to reach the target sample size of $n$ = 210, which were further randomized into the three conditions by a third party. Another 5 persons ($n$ = 3 from `r xg1` and $n$ = 2 from `r xG3`) were excluded subsequently (from analysis, but not treatment) upon disclosure that they currently were in psychological treatment elsewhere, bringing down the final number of participants in the study to $n$ = 205. During the course of treatment, one additional participant asked to withdraw (and for which only pre-measurements were used in the analysis).
+Out of 657 persons, 464 completed the sceening process, during which 126 were excluded for not meeting criteria for participation. A total of 338 persons were invited to the study, of which 253 accepted the invitation. Through randomization by a third party, 43 of these persons were excluded from the analysis (although not from participation in the treatment program) in order to reach the target sample size of $n$ = 210, which were further randomized into the three conditions by a third party. Another 5 persons ($n$ = 3 from `r xG1` and $n$ = 2 from `r xG3`) were excluded subsequently (from analysis, but not treatment) upon disclosure that they currently were in psychological treatment elsewhere, bringing down the final number of participants in the study to $n$ = 205. During the course of treatment, one additional participant in the `r xG2` group asked to withdraw (and for which only pre-measurements were used in the analysis).
 
 ## Flowchart
 
@@ -322,9 +322,8 @@ cat <<EOF > flowchart.dot
 digraph G {
 
   node [ shape=box ]
-  #margin=0
   compound=true
-  ranksep=.4
+  ranksep=.35
   
   leads -> { screening_completers screening_non_completers }
   screening_completers -> { excluded invited }
@@ -335,13 +334,8 @@ digraph G {
   randomization -> { selfhelp_dur support_dur waitlist_dur }
   
   subgraph cluster_selfhelp { margin=8; labelloc="b"; label="Selfhelp\nn = 70 - 3" ; selfhelp_dur -> selfhelp_post -> selfhelp_fu; } 
-  subgraph cluster_support { margin=8; labelloc="b"; label="Support\nn = 70 - 1" ; support_dur -> support_post -> support_fu; } 
+  subgraph cluster_support { margin=8; labelloc="b"; label="Support\nn = 70" ; support_dur -> support_post -> support_fu; } 
   subgraph cluster_waitlist { margin=8; labelloc="b"; label="Waitlist\nn = 70 - 2" ; waitlist_dur -> waitlist_post; } 
-  
-  #subgraph cluster_selfhelp { margin=12; labelloc="t"; label="Selfhelp\nn = 70 - 3" ; selfhelp_pre -> selfhelp_dur -> selfhelp_post -> selfhelp_fu; } 
-  #subgraph cluster_support { margin=12; labelloc="t"; label="Support\nn = 70 - 1" ; support_pre -> support_dur -> support_post -> support_fu; } 
-  #subgraph cluster_waitlist { margin=12; labelloc="t"; label="Waitlist\nn = 70 - 2" ; waitlist_pre -> waitlist_dur -> waitlist_post; } 
-
   { selfhelp_fu support_fu waitlist_post } -> itt
 
   leads[label=<Leads from social media<BR/><I>n</I> = 657>]
@@ -354,27 +348,23 @@ digraph G {
   trimmed[label="Excluded by randomization\nn = 43"]
   keepers[label="Included by randomization\nn = 210"]
   randomization[label="Randomization to condition\nn = 70 each"]
-  #adjusted_inclusion[label="Included\nn = 205"]
-  #adjusted_exclusion[label="Excluded after randomization\nn = 5"]
-  #selfhelp_pre[label=""]
   selfhelp_dur[label="Completed 4 week measurement\nn = 44"]
   selfhelp_post[label="Completed post measurement\nn = 35"]
   selfhelp_fu[label="Completed 1 year follow-up\nn = x"]
-  #support_pre[label=""]
   support_dur[label="Completed 4 week measurement\nn = 48"]
   support_post[label="Completed post measurement\nn = 50"]
   support_fu[label="Completed 1 year follow-up\nn = x"]
-  #waitlist_pre[label=""]
   waitlist_dur[label="Completed 4 week measurement\nn = 58"]
   waitlist_post[label="Completed post measurement\nn = 61"]
   itt[label="Intention to treat\nn = 205"]
+
 }
 EOF
 /opt/homebrew/bin/dot -Tpdf -oflowchart.pdf flowchart.dot
 /Library/TeX/texbin/pdfcrop flowchart.pdf
 ```
 
-```{r flowchart, out.height="70%", fig.align="center", fig.cap='(ref:flow)'}
+```{r flowchart, out.width="76%", fig.align="center", fig.cap='Participant flow through the phases of the study.'}
 
 knitr::include_graphics("flowchart-crop.pdf")
 
@@ -398,7 +388,7 @@ The contents of the intervention is described in detail in @Hagberg1434243. The 
 
 The study has been approved by Swedish Ethical Review Authority (Etikprövningsmyndigheten) with diary number 2019-05165 and was pre-registred at https://clinicaltrials.gov/ct2/show/NCT04240249. 
 
-To improve reproducibility, only open-source and free tools were used in the analysis of data. Anonymized data and code are tracked at https://github.com/hmep/respektikvadrat (original master thesis study) and https://github.com/hmep/r2fu respectively (present study, which builds on the original study and includes follow-up measurements). The final versions are deposited at  https://doi.org/10.17045/sthlmuni.12148785 [@R2data2020] and (new figshare repository) respectively.
+To improve reproducibility, only open-source and freely licensed tools were used in the analysis of data. Anonymized data and code are tracked at https://github.com/hmep/respektikvadrat (original master thesis study) and https://github.com/hmep/r2fu respectively (present study, which builds on the original study and includes follow-up measurements). The final versions are deposited at  https://doi.org/10.17045/sthlmuni.12148785 [@R2data2020] and (new figshare repository) respectively.
 
 ## Statistical software
 
