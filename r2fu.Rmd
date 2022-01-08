@@ -1,9 +1,9 @@
 ---
-title: "R2 fu"
+title: "Efficacy of transdiagnostic cognitive-behavioral therapy for assertiveness: a randomized controlled trial of Respect Squared"
 author: "Tobias Hagberg"
 date: "220103"
 lang: en-US
-bibliography: ["packages.bib", "KSH.bib"]
+bibliography: ["packages.bib", "KSH.bib", "DBT.bib"]
 link-citations: yes
 output:
   beamer_presentation: 
@@ -63,63 +63,98 @@ xT4 = "Follow-up"
 
 ```
 
+# Background
+
 ## What is 'assertiveness'?
 
 'Assertive self-expression' can be hard to delineate from 'social skills' in general [@LINEHAN1979], but a common definition is *direct, firm, positive [...] action [enabling] us to act in our own best interests, to stand up for ourselves without undue anxiety, to **exercise personal rights without denying the rights of others**, and to express our feelings and needs [...] honestly and comfortably* [@alberti1974your]. Examples include:
 
 - Politely saying 'no' to a boss requesting undue overtime
 - Actively participating in social activities
+- Accepting/acknowledging a compliment without deflecting
 - Verbalizing feelings in personal relationships without acting out
-
-<!-- ## Respect Squared (R^2^) -->
-
-<!-- Drawing on the definition from @alberti1974your this study investigates how promoting assertive actions that both respect personal rights and rights of others can alleviated psychological suffering. Respect Squared combines theories from 1st, 2nd and 3rd wave behavioral therapies to help activate assertive behaviors in anxiety-provoking contexts.  -->
-
-
-<!-- Assertive self-expression is 'direct, firm, positive, and when necessary, persistent, action intended to promote equality in person-to-person relationships. Assertiveness enables us to act in our own best interests, to stand up for ourselves without undue anxiety, to exercise personal rights without denying the rights of others, and to express our feelings and needs (affection, love, friendship, disappointment, annoyance, anger, regret, sorrow) honestly and comfortably. @alberti1974your  -->
 
 <!-- https://books.google.se/books?id=iPAhDgAAQBAJ&pg=PT85&hl=sv&source=gbs_selected_pages&cad=2#v=onepage&q&f=false -->
 
-## Brief history of assertiveness training
+## Brief history of assertiveness training I
 
-Assertiveness training goes back to the very first behvioral interventions, such as @salter1949conditioned and @Wolpe1966. In the 1970's, the concept was popularized in self-help books such as @alberti1974your, @smith1975say, and @fensterheim1975don. @LINEHAN1979 was a foundation for what later became Dialectical Behavior Therapy (DBT), in which assertiveness skills training is an integral part. It has implicitly been a target in treatments for anxiety disorders (such as social anxiety disorder) ever since.
+Assertiveness training goes back to the very first behavioral therapies [@salter1949conditioned; @Wolpe1966]. In the 1970's, the concept was popularized in self-help books such as @alberti1974your, @smith1975say, and @fensterheim1975don. Research in assertiveness training peaked in the 1980's [@Speed2018a]. The @LINEHAN1979 manual was extended to Dialectical Behavior Therapy (DBT), of which assertiveness training remain an integral part [@linehan1993skills]. 
+
+## Brief history of assertiveness training II
+
+Although the behavioral techniques of the 1st wave of therapy were supplemented by cognitive restructuring techniques [@beck1979cognitive] in the following decades, behavioral techniques such as modeling and behavior rehearsal have remained active parts of treatments for psychological syndromes such as anxiety disorders (such as social anxiety disorder) and depression.
 
 ## Clinical relevance
 
-- Low degrees of assertiveness is associated with (cite)
-  - Generalized anxiety
-  - Social phobia
-  - Depression
-  - Emotional dysregulation
-  - Schizophrenia
-- Also, *assertiveness* problems is thought to be at play in other ailments (cite)
-  - Strained relationships
-  - Work related stress
+Low degrees of assertive self-expression is associated with both syndromal and non-syndromal suffering [@Speed2018a]:
 
-## Respect Squared (R^2^)
+:::: {.columns}
+::: {.column width="45%"}
+### @american1980diagnostic
 
-The aim of this study is to investigate the effectiveness of a newly developed CBT  internet-delivered treatment program targeting assertiveness. The program builds on the freely available online resource *Assert Yourself* [@michel2008], published by Centre for Clinical Interventions (CCI), part of the government of Western Australia in Australia. 
+- Generalized anxiety
+- Social phobia
+- Depression
+- Borderline personality
+- Schizophrenia
+- ...
+:::
+::: {.column width="45%"}
+### Non-syndromal
 
-Respect Squared combines theories from 1st, 2nd and 3rd wave behavioral therapies to help activate assertive behaviors in anxiety-provoking contexts. 
+- Emotional dysregulation
+- Strained relationships
+- Work related stress
+- Low self-esteem
+- ...
+:::
+::::
 
-## Research question
+## Prior research findings
 
-Our aim is to investigate if *assertiveness* could be a relevant target in the treatment of psychiatric diagnoses and psychological problems.
+### Assertiveness training
 
-- Primary question: Does participation in the treatment arms benefit patients significantly compared to a waitlist condition, with regards to assertiveness?
-- Secondary question: What is the development trajectory over time with regards to levels of assertiveness?
+TBW
 
-## (Export settings)
+### Internet-delivered vs. in-person CBT
 
-\small
+TBW
 
-- 2020-01-27 "Respekt i kvadrat - förmätning" PRE Groups 1+2+3
-- 2020-03-09 "Respekt i kvadrat - mittmätning utan Corona" DUR Groups 1+2+3
-- 2020-04-06 "Respekt i kvadrat - eftermätning" POST Groups 1+2
-- 2020-04-06 "Respekt i kvadrat - eftermätning väntelista" POST Group 3
-- 2021-04-21 "Respekt i kvadrat - 1-årsuppföljning" FU Groups 1+2
+### Self-help vs. therapist support
 
-Export settings recorded in "Screenshot 2021-12-12 at 11-29-37 Exportera.png"
+TBW
+
+# Respect^2^
+
+## Aim of Respect^2^ study
+
+This study aims to investigate the efficacy of an 8-week cognitive-behavioral therapy (CBT) program targeting assertiveness.
+
+## Respect^2^ treatment program
+
+The program extends *Assert Yourself* [@michel2008], published by Centre for Clinical Interventions (CCI), Government of Western Australia in Australia. Respect^2^ is delivered via internet (I-CBT), with or without e-mail support from a therapist, and combines theories from 1st, 2nd and 3rd wave behavioral therapies to help participants select assertive behaviors in anxiety-provoking situations. 
+
+## Primary research questions
+
+- What is the effect on both adaptive and aggressive assertiveness of participation in Respect^2^ `r xG1` and `r xG2` treatment arms, compared to a `r xG3` condition?
+
+- Is there a difference in efficacy betweeen  the `r xG1` and `r xG2` conditions?
+
+## Secondary research question
+
+- What is the effect on common measures for generalized anxiety, social anxiety, depression and overall well-being of participation in Respect^2^ `r xG1` and `r xG2` treatment arms, compared to a `r xG3` condition?
+
+<!-- ## (Export settings) -->
+
+<!-- \small -->
+
+<!-- - 2020-01-27 "Respekt i kvadrat - förmätning" PRE Groups 1+2+3 -->
+<!-- - 2020-03-09 "Respekt i kvadrat - mittmätning utan Corona" DUR Groups 1+2+3 -->
+<!-- - 2020-04-06 "Respekt i kvadrat - eftermätning" POST Groups 1+2 -->
+<!-- - 2020-04-06 "Respekt i kvadrat - eftermätning väntelista" POST Group 3 -->
+<!-- - 2021-04-21 "Respekt i kvadrat - 1-årsuppföljning" FU Groups 1+2 -->
+
+<!-- Export settings recorded in "Screenshot 2021-12-12 at 11-29-37 Exportera.png" -->
 
 ```{r prepare.data, echo = F, eval = F}
 
@@ -250,15 +285,71 @@ r2fu.wide.data <- readRDS("r2fu.wide.data.RDS")
 
 ```
 
-## Method
+# Method
 
-- Pre-registration, open science, reproducibility
+## Design
 
-- Statistical significance testing of predictions from a mixed model; fixed and random effects (therapists?)
+Respect^2^ is designed to fulfill the requirements for randomized controlled trials set out in @Chambless2001. The sample size for the three conditions (treatment arms `r xG1` and `r xG2`, and  control condition `r xG3`) were determined to 70 individuals each, based on an estimated effect size in agreement with the literature for CBT and I-CBT, $ES$ = 0.8, using $\alpha$ = 0.05.
 
-- Clinical significance testing
+## Conditions
 
-- Analyses using `r R.Version()$language` version `r paste(R.Version()[c("major", "minor")], collapse = ".")` with `r paste("@R-",packages,sep="")`
+### `r xG1`
+
+TBW
+
+### `r xG2`
+
+TBW
+
+### `r xG3`
+
+TBW
+
+## Recruitment
+
+Study participants were recruited on social media between January 28 and February 5, 2020. During sign-up, all participants were presented with an informed consent form as well as practical information about what participation in the study would entail, before progressing to pre-measurement and collection of sociodemographic data.
+
+## Participants
+
+Out of 657 persons, 464 completed the sceening process, during which 126 were excluded for not meeting criteria for participation. A total of 338 persons were invited to the study, of which 253 accepted the invitation. Through randomization, 43 of these persons were excluded from the analysis (although not from participation in the treatment program) in order to reach the target sample size of $n$ = 210. Another 5 persons ($n$ = 3 from `r xg1` and $n$ = 2 from `r xG3`) were excluded subsequently (from analysis, but not treatment) upon disclosure that they currently were in psychological treatment elsewhere, bringing down the final number of participants in the study to $n$ = 205. During the course of treatment, one additional participant asked to withdraw (and for which only pre-measurements were used in the analysis).
+
+## Flowchart
+
+2do
+
+## Measures
+
+### Primary questions
+
+The primary questions were investigated using Adaptive and Aggressive Assertiveness Scales, allowing for discrimination between adaptive assertiveness and aggressive assertiveness [@Thompson2011].
+
+### Secondary questions
+
+The secondary questions were assessed using Rathus [@Thompson2011] for a composite measure of assertiveness, PHQ-9 [@Kroenke2001a] for depression, GAD-7 [@Kroenke2006] for generalized anxiety, LSAS-24 [@Fresco2001] for social phobia and Välmåendeskalan for general well-being.
+
+## Respect^2^ intervention
+
+The contents of the intervention is described in detail in @Hagberg1434243. The intervention was delivered using the proven iTerapi internet platform [@Vlaescu2016], allowing for secure connections, two-factor authentication, content distribution, on-line exercises and quizzes, administration of scales/measures, medical record keeping, and built-in messaging between participants and therapists. All communications between participants and therapists were kept secure using SHA-256 cryptography.
+
+## Ethical considerations
+
+The study has been approved by Swedish Ethical Review Authority (Etikprövningsmyndigheten) with diary number 2019-05165 and was pre-registred at https://clinicaltrials.gov/ct2/show/NCT04240249. 
+
+To improve reproducibility, only open-source and free tools were used in the analysis of data. Anonymized data and code are tracked at https://github.com/hmep/respektikvadrat (original master thesis study) and https://github.com/hmep/r2fu respectively (present study, which builds on the original study and includes follow-up measurements). The final versions are deposited at  https://doi.org/10.17045/sthlmuni.12148785 [@R2data2020] and (new figshare repository) respectively.
+
+## Statistical software
+
+Analyses were performed using `r R.Version()$language` version `r paste(R.Version()[c("major", "minor")], collapse = ".")` with packages `r paste("@R-",packages,sep="")` through the @rstudio integrated development environment (IDE).
+
+## Analyses of fixed effects
+
+## Analyses of random effects
+
+## Analyses of reliable change and clinical significance
+
+## Additional checks
+
+- Internal reliablity of translated measures
 
 ## (Check plots: adaptive assertiveness)
 
@@ -484,6 +575,8 @@ lattice::xyplot(rathus ~ time, group = subject, r2fu.new.data, type = "b")
 
 ## 2do: discussion -- method 
 
+https://www.tandfonline.com/doi/full/10.1080/07853890.2018.1453233
+
 - Should have sampled at more time points?
   - Would have allowed for individual slopes
 - Wait list is not ideal as control (although apparently regressing to the mean for all primary outcomes)
@@ -499,6 +592,8 @@ lattice::xyplot(rathus ~ time, group = subject, r2fu.new.data, type = "b")
   - Does it help to specify behavioral targets?
   - Is putting more emphasis on valued living workable?
 - Validating scales + investigating normative means
+
+Speed notes that there is a lack of studies on assertiveness, making meta-analyses impossible to make. This study contributes to the literature.
 
 <!-- ## 2do: tangents -->
 
