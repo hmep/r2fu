@@ -324,7 +324,7 @@ digraph G {
   node [ shape=box ]
   #margin=0
   compound=true
-  ranksep=.7
+  ranksep=.4
   
   leads -> { screening_completers screening_non_completers }
   screening_completers -> { excluded invited }
