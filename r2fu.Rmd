@@ -330,7 +330,6 @@ digraph G {
   invited  -> { invitation_non_responders invitation_responders }
   invitation_responders -> { trimmed keepers }
   keepers -> randomization
-  #randomization -> { selfhelp_pre support_pre waitlist_pre }
   randomization -> { selfhelp_dur support_dur waitlist_dur }
 
   leads[label=<Leads from social media<BR/><I>n</I> = 657>]
@@ -345,10 +344,10 @@ digraph G {
   randomization[label=<Randomization to condition<BR/><I>n</I> = 70 each>]
   selfhelp_dur[label=<Completed 4 week measurement<BR/><I>n</I> = 44>]
   selfhelp_post[label=<Completed post measurement<BR/><I>n</I> = 35>]
-  selfhelp_fu[label=<Completed 1 year follow-up<BR/><I>n</I> = x>]
+  selfhelp_fu[label=<Completed 1 year follow-up<BR/><I>n</I> = 30>]
   support_dur[label=<Completed 4 week measurement<BR/><I>n</I> = 48>]
   support_post[label=<Completed post measurement<BR/><I>n</I> = 50>]
-  support_fu[label=<Completed 1 year follow-up<BR/><I>n</I> = x>]
+  support_fu[label=<Completed 1 year follow-up<BR/><I>n</I> = 38>]
   waitlist_dur[label=<Completed 4 week measurement<BR/><I>n</I> = 58>]
   waitlist_post[label=<Completed post measurement<BR/><I>n</I> = 61>]
   itt[label=<Intention to treat<BR/><I>n</I> = 205>]
