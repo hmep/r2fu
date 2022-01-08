@@ -309,6 +309,22 @@ TBW
 
 Study participants were recruited on social media between January 28 and February 5, 2020. During sign-up, all participants were presented with an informed consent form as well as practical information about what participation in the study would entail, before progressing to pre-measurement and collection of sociodemographic data.
 
+## Inclusion/exclusion criteria used during screening
+
+### Inclusion
+
+- Swedish citizen
+- Fluent in the Swedish language
+- 18 years or older
+- Internet access
+
+### Exclusion
+
+- Indication for depression (PHQ-9 result 15 or higher)
+- Recent (previous 3 months) changes in psychotropic medication
+- Concurrent therapy
+- Explicitly stated lack of motivation and/or time to participate
+
 ## Participants
 
 \small
@@ -318,12 +334,15 @@ Out of 657 persons, 464 completed the sceening process, during which 126 were ex
 ## Patient flow during the study
 
 ```{bash, include=F, eval = F}
-cat <<EOF > flowchart.dot
+
+filename="flowchart"
+
+cat <<EOF > $filename.dot
 digraph G {
 
   node [ shape=box ]
   compound=true
-  ranksep=.3
+  ranksep=.275
   
   leads -> { screening_non_completers screening_completers }
   screening_completers -> { excluded invited }
@@ -334,7 +353,7 @@ digraph G {
 
   leads[label=<Leads from social media<BR/><I>n</I> = 657>]
   screening_completers[label=<Completed screening<BR/><I>n</I> = 464>]
-  excluded[label=<Excluded from study<BR/><I>n</I> = 126, for the following reasons<BR/>PHQ-9 cutoff (≥ 15): <I>n</I> = 77;<BR/>Concurrent therapy: <I>n</I> = 29;<BR/>Recent change of psychotropic drugs: <I>n</I> = 7;<BR/>Low motivation/lack of time: <I>n</I> = 13>]
+  excluded[label=<Excluded from study<BR/><I>n</I> = 126, for the following reasons:<BR/>PHQ-9 cutoff (≥ 15), <I>n</I> = 77<BR/>Concurrent therapy, <I>n</I> = 29<BR/>Recent change in psychotropic drugs, <I>n</I> = 7<BR/>Low motivation/lack of time, <I>n</I> = 13>]
   screening_non_completers[label=<Did not complete screening<BR/><I>n</I> = 193>]
   invited[label=<Invited to participate in study<BR/><I>n</I> = 338>]
   invitation_non_responders[label=<Declined or did not respond<BR/><I>n</I> = 85>]
@@ -352,18 +371,150 @@ digraph G {
   waitlist_post[label=<Completed post measurement<BR/><I>n</I> = 61>]
   itt[label=<Intention to treat<BR/><I>n</I> = 205>]
 
-  subgraph cluster_selfhelp { margin=8; labelloc="t"; color=black; bgcolor=white; label=<Selfhelp<BR/><I>n</I> = 70 – 3 excluded> ; selfhelp_dur -> selfhelp_post -> selfhelp_fu; } 
+  subgraph cluster_selfhelp { margin=8; labelloc="t"; color=black; bgcolor=white; label=<Selfhelp<BR/><I>n</I> = 70 – 3 (excluded) = 67> ; selfhelp_dur -> selfhelp_post -> selfhelp_fu; } 
   subgraph cluster_support { margin=8; labelloc="t"; color=black; bgcolor=white; label=<Support<BR/><I>n</I> = 70> ; support_dur -> support_post -> support_fu; } 
-  subgraph cluster_waitlist { margin=8; labelloc="t"; color=black; bgcolor=white; label=<Waitlist<BR/><I>n</I> = 70 – 2 excluded> ; waitlist_dur -> waitlist_post; } 
+  subgraph cluster_waitlist { margin=8; labelloc="t"; color=black; bgcolor=white; label=<Waitlist<BR/><I>n</I> = 70 – 2 (excluded) = 68> ; waitlist_dur -> waitlist_post; } 
   { selfhelp_fu support_fu waitlist_post } -> itt
 
 }
 EOF
-/opt/homebrew/bin/dot -Tpdf -oflowchart.pdf flowchart.dot
-/Library/TeX/texbin/pdfcrop flowchart.pdf
+
+#> sum(r2fu.wide.data$group == "selfhelp" & !is.na(r2fu.wide.data$rathus.4))
+#[1] 30
+#> sum(r2fu.wide.data$group == "support" & !is.na(r2fu.wide.data$rathus.4))
+#[1] 38
+
+/opt/homebrew/bin/dot -Tpdf -o$filename.pdf $filename.dot
+/Library/TeX/texbin/pdfcrop $filename.pdf
+
 ```
 
-\centering\includegraphics[height=\textheight-1.5cm]{flowchart-crop.pdf}
+\centering\includegraphics[height=\textheight-1.75cm]{flowchart-crop.pdf}
+
+## Sociodemographic data
+
+```{r def demdata, cache = F, eval = F}
+
+xdemocat <-
+  c(
+  "M (SD)",
+  "Kvinna",
+  "Singel",
+  "Sambo",
+  "Gift",
+  "Annat",
+  "Annan utbildning",
+  "Folkskola/grundskola",
+  "Gymnasium",
+  "Yrkesutbildning",
+  "Pågående högre utbildning",
+  "Avslutad högre utbildning",
+  "Annan sysselsättning",
+  "Studerande",
+  "Arbetande",
+  "Arbetslös",
+  "Pensionär",
+  "Föräldraledig",
+  "Sjukskriven",
+  "Nej",
+  "Ja, tidigare",
+  "Ja, pågående",
+  "Nej",
+  "Ja"
+  )
+
+options(OutDec= ",")
+
+xdemodata <- rbind(
+  prop.table(cbind(
+    table(r2fu.wide.data$Demografi.Kon, r2fu.wide.data$group),
+    margin.table(table(
+      r2fu.wide.data$Demografi.Kon, r2fu.wide.data$group
+    ), 1)
+  ), 2),
+  prop.table(cbind(
+    table(r2fu.wide.data$Demografi.Civilstand, r2fu.wide.data$group),
+    margin.table(table(
+      r2fu.wide.data$Demografi.Civilstand, r2fu.wide.data$group
+    ), 1)
+  ), 2),
+  prop.table(cbind(
+    table(r2fu.wide.data$Demografi.Utbildning, r2fu.wide.data$group),
+    margin.table(table(
+      r2fu.wide.data$Demografi.Utbildning, r2fu.wide.data$group
+    ), 1)
+  ), 2),
+  prop.table(cbind(
+    table(r2fu.wide.data$Demografi.Sysselsattning, r2fu.wide.data$group),
+    margin.table(table(
+      r2fu.wide.data$Demografi.Sysselsattning, r2fu.wide.data$group
+    ), 1)
+  ), 2),
+  prop.table(cbind(
+    table(r2fu.wide.data$Demografi.Psykofarmaka, r2fu.wide.data$group),
+    margin.table(table(
+      r2fu.wide.data$Demografi.Psykofarmaka, r2fu.wide.data$group
+    ), 1)
+  ), 2),
+  prop.table(cbind(
+    table(
+      r2fu.wide.data$Demografi.PsykoBehandling, r2fu.wide.data$group),
+      margin.table(table(
+        r2fu.wide.data$Demografi.PsykoBehandling, r2fu.wide.data$group
+      ), 1)
+  ), 2)
+)
+
+xdemodatax <- as.data.frame(t(round(xdemodata[-1,],2) * 100))
+
+xdemodatax$x <- as.factor(c(
+    paste(xresultT(mean(r2fu.wide.data[wg3,64]),0)," (",xresultT(sd(r2fu.wide.data[wg3,64]),0),")",sep=""),
+    paste(xresultT(mean(r2fu.wide.data[wg1,64]),0)," (",xresultT(sd(r2fu.wide.data[wg1,64]),0),")",sep=""),
+    paste(xresultT(mean(r2fu.wide.data[wg2,64]),0)," (",xresultT(sd(r2fu.wide.data[wg2,64]),0),")",sep=""),
+    paste(xresultT(mean(r2fu.wide.data[,64]),0)," (",xresultT(sd(r2fu.wide.data[,64]),0),")",sep="")
+  ))
+
+xdemodatax <- xdemodatax[,c(24,1:23)]
+
+colnames(xdemodatax) <- xdemocat
+
+demdata.tabell <- t(xdemodatax)
+
+colnames(demdata.tabell) <- c(
+  paste(xG3," (n = ",ll3,")",sep=""),
+  paste(xG1," (n = ",ll1,")",sep=""),
+  paste(xG2," (n = ",ll2,")",sep=""),
+  paste("Sammanlagt (n = ",length(r2fu.wide.data[,1]),")",sep="")
+)
+
+options(OutDec= ".")
+
+```
+
+```{r demdata, out.width="100%", tab.align="center", cache = F, escape=F, eval = F}
+
+library("kableExtra")
+# http://haozhu233.github.io/kableExtra/best_practice_for_newline_in_latex_table.pdf
+
+knitr::kable(demdata.tabell, format="latex", booktabs=T, caption = "(ref:dem)", align="ccc") %>%
+  kable_styling(full_width = F) %>%
+  column_spec(1, width = "12em") %>%
+  column_spec(2, width = "4em") %>%
+  column_spec(3, width = "4em") %>%
+  column_spec(4, width = "6.3em") %>%
+  column_spec(5, width = "5em") %>%
+  pack_rows("Age (years)", 1, 1, bold = F) %>%
+  pack_rows("Sex (%)", 2, 2, bold = F) %>%
+  pack_rows("Marital status (%)", 3, 6, bold = F) %>%
+  pack_rows("Education (%)", 7, 12, bold = F) %>%
+  pack_rows("Occupation (%)", 13, 19, bold = F) %>%
+  pack_rows("Use of psychogropic drugs (%)", 20, 22, bold = F) %>%
+  pack_rows("Previous therapy experience (%)", 23, 24, bold = F) %>%
+  row_spec(c(1,2,6,12,19,22), extra_latex_after = "\\midrule")
+
+```
+
+2do: table
 
 ## Measures
 
@@ -379,11 +530,20 @@ The secondary questions were assessed using Rathus [@Thompson2011] for a composi
 
 The contents of the intervention is described in detail in @Hagberg1434243. The intervention was delivered using the proven iTerapi internet platform [@Vlaescu2016], allowing for secure connections, two-factor authentication, content distribution, on-line exercises and quizzes, administration of scales/measures, medical record keeping, and built-in messaging between participants and therapists. All communications between participants and therapists were kept secure using SHA-256 cryptography.
 
-## Ethical considerations
+## Ethical considerations I
 
-The study has been approved by Swedish Ethical Review Authority (Etikprövningsmyndigheten) with diary number 2019-05165 and was pre-registred at https://clinicaltrials.gov/ct2/show/NCT04240249. 
+The study was approved by Swedish Ethical Review Authority (Etikprövningsmyndigheten) with diary number 2019-05165 and was pre-registred at https://clinicaltrials.gov/ct2/show/NCT04240249. 
 
-To improve reproducibility, only open-source and freely licensed tools were used in the analysis of data. Anonymized data and code are tracked at https://github.com/hmep/respektikvadrat (original master thesis study) and https://github.com/hmep/r2fu respectively (present study, which builds on the original study and includes follow-up measurements). The final versions are deposited at  https://doi.org/10.17045/sthlmuni.12148785 [@R2data2020] and (new figshare repository) respectively.
+To improve reproducibility, only open-source and freely licensed tools were used in the analysis of data. Source code and anonymized data are published at https://github.com/hmep/respektikvadrat (original master thesis study) and https://github.com/hmep/r2fu respectively (present study, which also includes follow-up measurements). The final versions are deposited at  https://doi.org/10.17045/sthlmuni.12148785 [@R2data2020] and (new figshare repository) respectively.
+
+## Ethical considerations II
+
+Participants were subjected to possible risks, including:
+
+- Increased levels of anxiety in the short term
+  - This is expected; by design behavioral experiments allow for reflection and inhibitory learning that alleviates anxiety in the long run
+- Increased levels of interpersonal problems
+  - This can be problematic if a person cannot control the effects participation has on their interpersonal environment; however we tried to mitigate this issue by excluding persons at higher risk for depression, by offering clear guidelines for terminating participation, as well as referring severely ill participants to external care givers where appropriate
 
 ## Statistical software
 
