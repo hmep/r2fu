@@ -19,7 +19,12 @@ header-includes:
 
 ```{r setup, include=F}
 
-packages <- c("lme4", "jtools", "broom.mixed", "readxl", "writexl", "tidyr", "jtools", "interactions", "lattice", "modelr", "ggeffects", "emmeans", "patchwork", "outliers", "performance")
+# https://www.lcampanelli.org/mixed-effects-modeling-lme4/
+# https://fukamilab.github.io/BIO202/04-A-mixed-models.html
+# https://easystats.github.io/performance/index.html
+# https://jtools.jacob-long.com/index.html
+
+packages <- c("lmerTest", "jtools", "broom.mixed", "readxl", "writexl", "tidyr", "jtools", "interactions", "lattice", "modelr", "ggeffects", "emmeans", "patchwork", "outliers", "performance")
 if (!require("install.load")) install.packages("install.load")
 library(install.load)
 install_load(packages)
@@ -174,11 +179,11 @@ r2fu.raw.data[r2fu.raw.data == "[missing data]" ] <- NA
 # As dataframe
 r2fu.raw.data <- as.data.frame(r2fu.raw.data)
 
-# Unite POST measurements for Groups 1+3 with those for Group 3
+# Unite POST measurements for Groups 1 + 2 with those for Group 3
 cols.count <- 21
 g3key <- which(!is.na(r2fu.raw.data[3 * cols.count + 8]))
 r2fu.raw.data[g3key, c(1:cols.count) + 2 * cols.count] <-
-  r2fu.raw.data[g3key, c(1:cols.count) + 3 * cols.count]
+  r2fu.raw.data[g3key, c(1:cols.count) + 3 * cols.count] # 2do: check if this is correct
 
 # Create vector with group designations
 r2fu.groups <-
@@ -252,6 +257,20 @@ r2fu.wide.data <- r2fu.long.data %>%
 saveRDS(r2fu.wide.data,file="r2fu.wide.data.RDS")
 write_xlsx(r2fu.wide.data, "r2fu.wide.data.xlsx")
 
+```
+
+```{r import.data}
+
+r2fu.wide.data <- readRDS("r2fu.wide.data.RDS")
+
+r2fu.long.data <- readRDS("r2fu.long.data.RDS")
+
+# Add labels to time factor
+r2fu.long.data$time <- factor(r2fu.long.data$time, labels = c(xt1,xt2,xt3,xt4))
+
+# Add variable to discern between participants included/not included in fu 
+r2fu.long.data$studylength <- ifelse(r2fu.long.data$group == "waitlist", "no-fu", "fu")
+
 # Subsetting keys
 wg1 <- grepl(xg1, r2fu.wide.data$group)
 wg2 <- grepl(xg2, r2fu.wide.data$group)
@@ -259,14 +278,16 @@ wg3 <- grepl(xg3, r2fu.wide.data$group)
 
 # Subsetting keys 
 lg1 <- grepl(xg1, r2fu.long.data$group)
-nlg1 <- !grepl(xg1, r2fu.long.data$group)
+lng1 <- !grepl(xg1, r2fu.long.data$group)
 lg2 <- grepl(xg2, r2fu.long.data$group)
-nlg2 <- !grepl(xg2, r2fu.long.data$group)
+lng2 <- !grepl(xg2, r2fu.long.data$group)
 lg3 <- grepl(xg3, r2fu.long.data$group)
-nlg3 <- !grepl(xg3, r2fu.long.data$group)
+lng3 <- !grepl(xg3, r2fu.long.data$group)
 lt1 <- grepl(xt1, r2fu.long.data$time)
 lt2 <- grepl(xt2, r2fu.long.data$time)
 lt3 <- grepl(xt3, r2fu.long.data$time)
+lt4 <- grepl(xt4, r2fu.long.data$time)
+lnt4 <-!grepl(xt4, r2fu.long.data$time)
 lg1t1 <- r2fu.long.data$group == xg1 & r2fu.long.data$time == xt1
 lg1t2 <- r2fu.long.data$group == xg1 & r2fu.long.data$time == xt2
 lg1t3 <- r2fu.long.data$group == xg1 & r2fu.long.data$time == xt3
@@ -279,13 +300,6 @@ lg3t3 <- r2fu.long.data$group == xg3 & r2fu.long.data$time == xt3
 ll1 = length(r2fu.long.data[lg1t1,1])
 ll2 = length(r2fu.long.data[lg2t1,1])
 ll3 = length(r2fu.long.data[lg3t1,1])
-
-```
-
-```{r import.data}
-
-r2fu.long.data <- readRDS("r2fu.long.data.RDS")
-r2fu.wide.data <- readRDS("r2fu.wide.data.RDS")
 
 ```
 
@@ -555,7 +569,7 @@ Analyses were performed using `r R.Version()$language` version `r paste(R.Versio
 
 ## Mixed model analysis
 
-Primary analyses were performed employing a *mixed model*, sometimes called *multilevel model* or *hierarchical linear model*, in order to gain insights into random effects (in this case, observed but unrestrained effects within individuals) as well as fixed effects (controlled by the study design). A mixed model also handles missing data gracefully by means of predicting outcomes for all participants, respecting the intention-to-treat assignments.
+Primary analyses were performed employing a *mixed-effects model*, sometimes called *multilevel model* or *hierarchical linear model*, in order to gain insights into random effects (in this case, observed but unrestrained effects within individuals) as well as fixed effects (controlled by the study design). Mixed-effects models maximize use of info in the data. They also handle missing data gracefully by means of predicting outcomes for all combinations of subjects and time-points, respecting the intention-to-treat assignments. 
 
 ## Analyses of reliable change and clinical significance
 
@@ -581,6 +595,9 @@ aaas_ad.lmer <-
     REML = T
   )
 # performance::check_model(aaas_ad.lmer) # OK!
+# jtools::summ(aaas_ad.lmer, confint = T)
+# jtools::plot_summs(aaas_ad.lmer)
+# interactions::cat_plot(well.lmer, pred = "time", modx = "group", geom = "line", plot.points = T, vary.lty = T, line.thickness = .5, point.size = .5, pred.point.size = 4, jitter = .35) + theme_apa()
 
 aaas_ag.lmer <-
   lme4::lmer(
@@ -590,6 +607,8 @@ aaas_ag.lmer <-
     REML = T
   )
 # performance::check_model(aaas_ad.lmer) # OK!
+# jtools::summ(aaas_ag.lmer, confint = T)
+# jtools::plot_summs(aaas_ag.lmer)
 
 ### Secondary measures
 
@@ -601,6 +620,8 @@ rathus.lmer <-
     REML = T
   )
 # performance::check_model(rathus.lmer) # OK!
+# jtools::summ(rathus.lmer, confint = T)
+# jtools::plot_summs(rathus.lmer)
 
 lsas_sum.lmer <-
   lme4::lmer(
@@ -610,6 +631,8 @@ lsas_sum.lmer <-
     REML = T
   )
 # performance::check_model(lsas_sum.lmer) # OK!
+# jtools::summ(lsas_sum.lmer, confint = T)
+# jtools::plot_summs(lsas_sum.lmer)
 
 phq_sum.lmer <-
   lme4::lmer(
@@ -619,6 +642,8 @@ phq_sum.lmer <-
     REML = T
   )
 # performance::check_model(phq_sum.lmer) # OK!
+# jtools::summ(phq_sum.lmer, confint = T)
+# jtools::plot_summs(phq_sum.lmer)
 
 gad_sum.lmer <-
   lme4::lmer(
@@ -628,6 +653,8 @@ gad_sum.lmer <-
     REML = T
   )
 # performance::check_model(gad_sum.lmer) # OK!
+# jtools::summ(gad_sum.lmer, confint = T)
+# jtools::plot_summs(gad_sum.lmer)
 
 well.lmer <-
   lme4::lmer(
@@ -637,6 +664,85 @@ well.lmer <-
     REML = T
   )
 # performance::check_model(well.lmer) # OK!
+# jtools::summ(well.lmer, confint = T)
+# jtools::plot_summs(well.lmer)
+
+```
+
+```{r exp, eval = F, include = F}
+
+####### EXPERIMENTS
+
+# https://stats.stackexchange.com/questions/35071/what-is-rank-deficiency-and-how-to-deal-with-it
+# https://stackoverflow.com/questions/37090722/lme4lmer-reports-fixed-effect-model-matrix-is-rank-deficient-do-i-need-a-fi
+
+well.lmer <-
+  lme4::lmer(
+    well ~ group * time + (1 | subject),
+    data = r2fu.long.data,
+    na.action = na.omit,
+    REML = T
+  )
+well.emm.plot <- plot(ggemmeans(well.lmer, terms = c("time", "group")))
+well.emm.plot + theme_apa()
+
+well.lmer.lnt4 <-
+  lme4::lmer(
+    well ~ group * time + (1 | subject),
+    data = r2fu.long.data[lnt4,],
+    na.action = na.omit,
+    REML = T
+  )
+well.emm.plot <- plot(ggemmeans(well.lmer.lnt4, terms = c("time", "group")))
+well.emm.plot + theme_apa()
+
+well.lmer.lng3 <-
+  lme4::lmer(
+    well ~ group * time + (1 | subject),
+    data = r2fu.long.data[lng3,],
+    na.action = na.omit,
+    REML = T
+  )
+well.emm.plot <- plot(ggemmeans(well.lmer.lng3, terms = c("time", "group")))
+well.emm.plot + theme_apa()
+
+well.lmer.fix <-
+  lme4::lmer(
+    well ~ group * time + (1 | subject),
+    data = r2fu.long.data,
+    na.action = na.omit,
+    REML = T
+  )
+well.emm.plot <- plot(ggemmeans(well.lmer.fix, terms = c("time", "group")))
+well.emm.plot + theme_apa()
+
+well.lmer.fix <-
+  lme4::lmer(
+    well ~ group * time + (1 | subject),
+    data = r2fu.long.data,
+    na.action = na.omit,
+    REML = T
+  )
+well.emm.plot <- plot(ggemmeans(well.lmer.fix, terms = c("time", "group")))
+well.emm.plot + theme_apa()
+
+fix.formula <- well ~ group * time
+
+X <- model.matrix (fix.formula, r2fu.long.data)
+caret::findLinearCombos(X)
+
+fix.fit <- lm(fix.formula, r2fu.long.data, method = "qr", singular.ok = TRUE)
+p <- length(coef)
+coef <- fix.fit$coef
+no.NA <- sum(is.na(coef))
+rank <- fix.fit$rank
+
+#https://easystats.github.io/performance/
+#performance::model_performance(m3)
+#performance::compare_performance(m1, m2, m3, m4)
+#performance::compare_performance(m1, m2, m3, m4, rank = TRUE)
+#performance::plot(compare_performance(m1, m2, m4, rank = TRUE))
+
 
 ```
 
@@ -711,6 +817,15 @@ rathus.emm.plot + theme_apa()
 # https://interactions.jacob-long.com/reference/cat_plot.html
 
 cat_plot(rathus.lmer, data = r2fu.long.data, pred = "time", modx = "group", geom = "line", plot.points = T, vary.lty = T, int.type = "confidence", line.thickness = 0.5, point.size = 1, pred.point.size = 4, jitter = 0.25) + theme_apa()
+
+```
+
+## Well plot (ggemmeans)
+
+```{r well.emm.plot}
+
+well.emm.plot <- plot(ggemmeans(well.lmer, terms = c("time", "group")))
+well.emm.plot + theme_apa()
 
 ```
 
