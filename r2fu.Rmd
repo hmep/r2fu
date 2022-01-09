@@ -561,42 +561,11 @@ To assess clinically relevant changes, analyses of reliable change and clinical 
 
 Internal reliablity of translated measures was estimated using Cronbach's $\alpha$ calculations.
 
-## (Check plots: adaptive assertiveness)
+<!-- Check original alpha values in literature! -->
 
-```{r ad.plot}
+```{r primary, results="asis", fig.width = 13, fig.asp = 0.75}
 
-lattice::xyplot(aaas_ad ~ time, group = subject, r2fu.long.data, type = "b")
-
-```
-
-## (Check plots: aggressive assertiveness)
-
-```{r ag.plot}
-
-lattice::xyplot(aaas_ag ~ time, group = subject, r2fu.long.data, type = "b")
-
-```
-
-## (Check plots: Rathus)
-
-```{r rathus.plot}
-
-lattice::xyplot(rathus ~ time, group = subject, r2fu.long.data, type = "b")
-
-```
-
-## Hmm ...
-
-- How to handle the fact that the waitlist has no follow-up values?
-  - Drop the waitlist from the model?
-  - Ignore warning about collinearity (group * time)?
-  - Neither, but performing two analyses to answer different questions?
-    - First like in the thesis (timepoints 1, 2, 3; groups 1, 2, 3)
-    - Dropping waitlist (timepoints 1, 2, 3, 4; groups 1, 2)
-
-## (aaas_ad ~ group * time + (1 | subject))
-
-```{r aaas_ad.lmer, results="asis", fig.width = 13, fig.asp = 0.75}
+## Primary measures
 
 aaas_ad.lmer <-
   lme4::lmer(
@@ -605,29 +574,7 @@ aaas_ad.lmer <-
     na.action = na.omit,
     REML = T
   )
-#aaas_ad.estimate <- jtools::plot_summs(aaas_ad.lmer)
-#aaas_ad.estimate
-
-performance::check_model(aaas_ad.lmer)
-
-```
-
-## (aaas_ad ~ group * time + (1 | subject))
-
-```{r aaas_ad.outliers, results="asis", fig.width = 8, fig.asp = .6}
-
-test <- grubbs.test(r2fu.long.data$aaas_ad)
-test
-
-out <- boxplot.stats(r2fu.long.data$aaas_ad)$out
-boxplot(r2fu.long.data$aaas_ad)
-mtext(paste("Outliers: ", paste(out, collapse = ", ")))
-
-```
-
-## (aaas_ag ~ group * time + (1 | subject))
-
-```{r aaas_ag.lmer, results="asis", fig.width = 13, fig.asp = 0.75}
+# performance::check_model(aaas_ad.lmer) # OK!
 
 aaas_ag.lmer <-
   lme4::lmer(
@@ -636,29 +583,7 @@ aaas_ag.lmer <-
     na.action = na.omit,
     REML = T
   )
-#aaas_ag.estimate <- jtools::plot_summs(aaas_ag.lmer)
-#aaas_ag.estimate
-
-performance::check_model(aaas_ad.lmer)
-
-```
-
-## (aaas_ag ~ group * time + (1 | subject))
-
-```{r aaas_ag.outliers, results="asis", fig.width = 8, fig.asp = .6}
-
-test <- grubbs.test(r2fu.long.data$aaas_ag)
-test
-
-out <- boxplot.stats(r2fu.long.data$aaas_ag)$out
-boxplot(r2fu.long.data$aaas_ag)
-mtext(paste("Outliers: ", paste(out, collapse = ", ")))
-
-```
-
-## (rathus ~ group * time + (1 | subject))
-
-```{r rathus.lmer, results="asis", fig.width = 13, fig.asp = 0.75}
+# performance::check_model(aaas_ad.lmer) # OK!
 
 rathus.lmer <-
   lme4::lmer(
@@ -667,23 +592,10 @@ rathus.lmer <-
     na.action = na.omit,
     REML = T
   )
-#rathus.estimate <- jtools::plot_summs(rathus.lmer)
-#rathus.estimate
+# performance::check_model(rathus.lmer) # OK!
 
-performance::check_model(rathus.lmer)
+## Secondary measures
 
-```
-
-## (rathus ~ group * time + (1 | subject))
-
-```{r rathus.outliers, results="asis", fig.width = 8, fig.asp = .6}
-
-test <- grubbs.test(r2fu.long.data$rathus)
-test
-
-out <- boxplot.stats(r2fu.long.data$rathus)$out
-boxplot(r2fu.long.data$rathus)
-mtext(paste("Outliers: ", paste(out, collapse = ", ")))
 
 ```
 
@@ -743,93 +655,13 @@ rathus.emm.plot
 
 ```
 
-## (Check plots: predicted adaptive assertiveness)
-
-```{r pred.ad.plot}
-
-lattice::xyplot(aaas_ad ~ time, group = subject, r2fu.new.data, type = "b")
-
-```
-
-## (Check plots: predicted aggressive assertiveness)
-
-```{r pred.ag.plot}
-
-lattice::xyplot(aaas_ag ~ time, group = subject, r2fu.new.data, type = "b")
-
-```
-
-## (Check plots: predicted Rathus)
-
-```{r pred.rathus.plot}
-
-lattice::xyplot(rathus ~ time, group = subject, r2fu.new.data, type = "b")
-
-```
-
-## Clinical significance and reliable change
-
-- And statistical significance testing of diffs
-
-## Secondary outcomes
-
-- PHQ-9
-- GAD-7
-- LSAS-24
-- Välmåendeskalan
-
-## Discussion -- results
-
-- Different trajectories for different groups but more or less the same outcome?
-  - Although not significantly different
-
-## 2do: discussion -- method 
-
-https://www.tandfonline.com/doi/full/10.1080/07853890.2018.1453233
-
-- Should have sampled at more time points?
-  - Would have allowed for individual slopes
-- Wait list is not ideal as control (although apparently regressing to the mean for all primary outcomes)
-- MNAR, MAR, MCAR -- kolla ev om de som inte svarat på uppföljningen skiljer sig på något sätt från övriga (anova: vad är relevant att testa, testa endast de som är relevanta från teoretisk synpunkt för att inte fiska p-värden)
-
-## 2do: discussion -- new questions/more research
-
-- Is "assertiveness" acceptable as a treatment target
-  - Calls for qualitative research?
-- Operationalization of "assertiveness"
-  - How can it be improved?
-- How does positive behavioral targets compare to symptom reduction targets?
-  - Does it help to specify behavioral targets?
-  - Is putting more emphasis on valued living workable?
-- Validating scales + investigating normative means
-
-Speed notes that there is a lack of studies on assertiveness, making meta-analyses impossible to make. This study contributes to the literature.
-
-<!-- ## 2do: tangents -->
-
-<!-- - Create a prototype for a treatment planning and administration tool that integrate with existing patient record systems and apps, allowing for flexible integration of selfhelp, tele-health and outpatient care ... -->
-<!--   - Using evidence based kernels as building blocks -->
-<!--   - Between session activities with quick feedback from therapist, i.e. worrying diaries, behavioral experiments, behavioral activation challenges ... -->
-<!--   - Integration with publishing companies' offerings of treatment manuals (content, royalties) -->
-<!--   - Integration with open source treatment manuals (KBT i primärvården, Respekt i kvadrat, etc.) -->
-<!--   - Customization on the fly, including 100% patient tailored treatment plans -->
-
-<!-- ## 2do: tangents, cont.d. -->
-
-<!-- - Create a prototype for a treatment planning and administration tool that integrate with existing patient record systems and apps, allowing for flexible integration of selfhelp, tele-health and outpatient care ... -->
-<!--   - Pre-defined and automatic administration of self-assessments -->
-<!--   - Allowing for internationalization/administration of modules in multiple languages -->
-<!--   - Creation of patient records one session at a time -->
-<!--   - Re-use of existing APIs, i.e. TC--Webbskattningar and Webbskattningar--Alltid öppet -->
-<!--   - All while remaining future-proof -->
+## References {.allowframebreaks}
 
 ```{r references, include=FALSE}
 
 knitr::write_bib(packages, "packages.bib")
 
 ```
-
-## References {.allowframebreaks}
 
 <!-- https://stackoverflow.com/questions/35677857/references-truncated-in-beamer-presentation-prepared-in-knitr-rmarkdown/35681531 -->
 
