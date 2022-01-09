@@ -682,7 +682,7 @@ colnames(r2fu.predicted.data) <-
 ```{r aaas_ad.emm.plot}
 
 aaas_ad.emm.plot <- plot(ggemmeans(aaas_ad.lmer, terms = c("time", "group")))
-aaas_ad.emm.plot
+aaas_ad.emm.plot + theme_apa()
 
 ```
 
@@ -691,7 +691,7 @@ aaas_ad.emm.plot
 ```{r aaas_ag.emm.plot}
 
 aaas_ag.emm.plot <- plot(ggemmeans(aaas_ag.lmer, terms = c("time", "group")))
-aaas_ag.emm.plot
+aaas_ag.emm.plot + theme_apa()
 
 ```
 
@@ -700,7 +700,7 @@ aaas_ag.emm.plot
 ```{r rathus.emm.plot}
 
 rathus.emm.plot <- plot(ggemmeans(rathus.lmer, terms = c("time", "group")))
-rathus.emm.plot
+rathus.emm.plot + theme_apa()
 
 ```
 
@@ -710,7 +710,7 @@ rathus.emm.plot
 
 # https://interactions.jacob-long.com/reference/cat_plot.html
 
-cat_plot(rathus.lmer, data = r2fu.long.data, pred = "time", modx = "group", geom = "line", plot.points = T, vary.lty = T, int.type = "confidence", line.thickness = 0.5, point.size = 1, pred.point.size = 4, jitter = 0.25, robust = T)
+cat_plot(rathus.lmer, data = r2fu.long.data, pred = "time", modx = "group", geom = "line", plot.points = T, vary.lty = T, int.type = "confidence", line.thickness = 0.5, point.size = 1, pred.point.size = 4, jitter = 0.25) + theme_apa()
 
 ```
 
