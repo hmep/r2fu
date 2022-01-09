@@ -21,9 +21,13 @@ header-includes:
 
 # https://www.lcampanelli.org/mixed-effects-modeling-lme4/
 # https://fukamilab.github.io/BIO202/04-A-mixed-models.html
-# https://easystats.github.io/performance/index.html
 # https://jtools.jacob-long.com/index.html
 # https://arxiv.org/abs/1308.5499
+# https://easystats.github.io/performance/
+
+#performance::model_performance(m3)
+#performance::compare_performance(m1, m2, m3, m4, rank = TRUE)
+#performance::plot(compare_performance(m1, m2, m4, rank = TRUE))
 
 packages <- c("lmerTest", "broom.mixed", "readxl", "writexl", "tidyr", "jtools", "interactions", "lattice", "modelr", "ggeffects", "emmeans", "patchwork", "outliers", "performance")
 if (!require("install.load")) install.packages("install.load")
@@ -154,19 +158,17 @@ The program extends *Assert Yourself* [@michel2008], published by Centre for Cli
 
 - What is the effect on common measures for generalized anxiety, social anxiety, depression and overall well-being of participation in Respect^2^ `r xG1` and `r xG2` treatment arms, compared to a `r xG3` condition?
 
-<!-- ## (Export settings) -->
-
-<!-- \small -->
-
-<!-- - 2020-01-27 "Respekt i kvadrat - förmätning" PRE Groups 1+2+3 -->
-<!-- - 2020-03-09 "Respekt i kvadrat - mittmätning utan Corona" DUR Groups 1+2+3 -->
-<!-- - 2020-04-06 "Respekt i kvadrat - eftermätning" POST Groups 1+2 -->
-<!-- - 2020-04-06 "Respekt i kvadrat - eftermätning väntelista" POST Group 3 -->
-<!-- - 2021-04-21 "Respekt i kvadrat - 1-årsuppföljning" FU Groups 1+2 -->
-
-<!-- Export settings recorded in "Screenshot 2021-12-12 at 11-29-37 Exportera.png" -->
-
 ```{r prepare.data, echo = F, eval = F}
+
+## Export settings
+
+# - 2020-01-27 "Respekt i kvadrat - förmätning" PRE Groups 1+2+3
+# - 2020-03-09 "Respekt i kvadrat - mittmätning utan Corona" DUR Groups 1+2+3
+# - 2020-04-06 "Respekt i kvadrat - eftermätning" POST Groups 1+2
+# - 2020-04-06 "Respekt i kvadrat - eftermätning väntelista" POST Group 3
+# - 2021-04-21 "Respekt i kvadrat - 1-årsuppföljning" FU Groups 1+2
+
+# Export settings recorded in "Screenshot 2021-12-12 at 11-29-37 Exportera.png"
 
 raw_excel = "Respekt_surveys_211213_101425.xlsx"
 r2fu.raw.data <- read_excel(raw_excel)
@@ -341,7 +343,7 @@ Study participants were recruited on social media between January 28 and Februar
 
 - Indication for depression (PHQ-9 result 15 or higher)
 - Recent (previous 3 months) changes in psychotropic medication
-- Concurrent therapy
+- Concurrent psychological treatment
 - Explicitly stated lack of motivation and/or time to participate
 
 ## Participants
@@ -553,14 +555,14 @@ The contents of the intervention is described in detail in @Hagberg1434243. The 
 
 The study was approved by Swedish Ethical Review Authority (Etikprövningsmyndigheten) with diary number 2019-05165 and was pre-registred at https://clinicaltrials.gov/ct2/show/NCT04240249. 
 
-To improve reproducibility, only open-source and freely licensed tools were used in the analysis of data. Source code and anonymized data are published at https://github.com/hmep/respektikvadrat (original master thesis study) and https://github.com/hmep/r2fu respectively (present study, which also includes follow-up measurements). The final versions are deposited at  https://doi.org/10.17045/sthlmuni.12148785 [@R2data2020] and (new figshare repository) respectively.
+To improve reproducibility, only open-source and freely licensed tools were used in the analysis of data. Source code and anonymized data are published at https://github.com/hmep/respektikvadrat (original master thesis study) and https://github.com/hmep/r2fu respectively (present study, which also includes follow-up measurements). The final versions are deposited at https://doi.org/10.17045/sthlmuni.12148785 [@R2data2020] and (new figshare repository) respectively.
 
 ## Ethical considerations II
 
 Participants were subjected to possible risks, including:
 
 - Increased levels of anxiety in the short term
-  - This is expected; by design behavioral experiments allow for reflection and inhibitory learning that alleviates anxiety in the long run
+  - This is expected; by design behavioral experiments allow inhibitory learning (habituation and/or increased tolerance) that alleviates anxiety in the long run
 - Increased levels of interpersonal problems
   - This can be problematic if a person cannot control the effects of participation on their interpersonal environment; however we tried to mitigate this issue by excluding persons at higher risk for depression, by offering clear guidelines for terminating participation, as well as referring severely ill participants to external care givers where appropriate
 
@@ -570,7 +572,11 @@ Analyses were performed using `r R.Version()$language` version `r paste(R.Versio
 
 ## Mixed model analysis
 
-Primary analyses were performed employing a *mixed-effects model*, sometimes called *multilevel model* or *hierarchical linear model*, in order to gain insights into random effects (in this case, observed but unrestrained effects within individuals) as well as fixed effects (controlled by the study design). Mixed-effects models maximize use of info in the data. They also handle missing data gracefully by means of predicting outcomes for all combinations of subjects and time-points, respecting the intention-to-treat assignments. 
+Primary analyses were performed employing a *mixed-effects model*, sometimes called *multilevel model* or *hierarchical linear model*, in order to gain insights into random effects (in this case, observed but unrestrained effects within individuals) as well as fixed effects (controlled through study design). Mixed-effects models thus maximize use of info in the data. They also handle missing data gracefully by means of predicting outcomes for all combinations of subjects and time-points, respecting the intention-to-treat assignments. 
+
+## Estimation of effect sizes
+
+*Estimated marginal means* or *least square means* were calculated for all combinations of condition assignment and measurement time point. Additionally, pairwise comparisons across these were performed, and effect sizes between assignments and time points were estimated.
 
 ## Analyses of reliable change and clinical significance
 
@@ -578,11 +584,36 @@ To assess clinically relevant changes, analyses of reliable change and clinical 
 
 ## Additional checks
 
-Internal reliablity of translated measures was estimated using Cronbach's $\alpha$ calculations.
+Internal reliability of translated measures was estimated using Cronbach's $\alpha$ calculations.
 
 <!-- Check original alpha values in literature! -->
 
 # Results
+
+```{r checks, eval = F, include = F}
+
+rathus.alpha <- performance::cronbachs_alpha(r2.item.data[,1:30])
+
+#Adaptive = #1 + #2 + #5 + #7 + #9 + #10 + #13 + #15 + #17 + #19 + #21 + #22 + #24 + #26 + #28
+#Aggressive = #3 + #4 + #6 + #8 + #11 + #12 + #14 + #16 + #18 + #20 + #23 + #25 + #27 + #29 + #30
+ad_selection <- c(1,2,5,7,9,10,13,15,17,19,21,22,24,26,28) + 30
+ag_selection <- c(3,4,6,8,11,12,14,16,18,20,23,25,27,29,30) + 30
+aaas_ad.alpha <- performance::cronbachs_alpha(r2.item.data[,ad_selection])
+aaas_ag.alpha <- performance::cronbachs_alpha(r2.item.data[,ag_selection])
+
+lsas.alpha <- performance::cronbachs_alpha(r2.item.data[,61:108])
+
+gad.alpha <- performance::cronbachs_alpha(r2.item.data[,109:115])
+
+phq.alpha <- performance::cronbachs_alpha(r2.item.data[,116:124])
+
+well.alpha <- performance::cronbachs_alpha(r2.item.data[,126:143])
+
+```
+
+```{r modelselection}
+
+```
 
 ```{r mixedmodels, results="asis", fig.width = 13, fig.asp = 0.75}
 
@@ -596,6 +627,7 @@ aaas_ad.lmer <-
     REML = T
   )
 # performance::check_model(aaas_ad.lmer) # OK!
+# performance::model_performance(aaas_ad.lmer)
 # jtools::summ(aaas_ad.lmer, confint = T)
 # jtools::plot_summs(aaas_ad.lmer)
 
@@ -606,7 +638,8 @@ aaas_ag.lmer <-
     na.action = na.omit,
     REML = T
   )
-# performance::check_model(aaas_ad.lmer) # OK!
+# performance::check_model(aaas_ag.lmer) # OK!
+# performance::model_performance(aaas_ag.lmer)
 # jtools::summ(aaas_ag.lmer, confint = T)
 # jtools::plot_summs(aaas_ag.lmer)
 
@@ -620,6 +653,7 @@ rathus.lmer <-
     REML = T
   )
 # performance::check_model(rathus.lmer) # OK!
+# performance::model_performance(rathus.lmer)
 # jtools::summ(rathus.lmer, confint = T)
 # jtools::plot_summs(rathus.lmer)
 
@@ -631,6 +665,7 @@ lsas_sum.lmer <-
     REML = T
   )
 # performance::check_model(lsas_sum.lmer) # OK!
+# performance::model_performance(lsas_sum.lmer)
 # jtools::summ(lsas_sum.lmer, confint = T)
 # jtools::plot_summs(lsas_sum.lmer)
 
@@ -642,6 +677,7 @@ phq_sum.lmer <-
     REML = T
   )
 # performance::check_model(phq_sum.lmer) # OK!
+# performance::model_performance(phq_sum.lmer)
 # jtools::summ(phq_sum.lmer, confint = T)
 # jtools::plot_summs(phq_sum.lmer)
 
@@ -653,6 +689,7 @@ gad_sum.lmer <-
     REML = T
   )
 # performance::check_model(gad_sum.lmer) # OK!
+# performance::model_performance(gad_sum.lmer)
 # jtools::summ(gad_sum.lmer, confint = T)
 # jtools::plot_summs(gad_sum.lmer)
 
@@ -664,6 +701,7 @@ well.lmer <-
     REML = T
   )
 # performance::check_model(well.lmer) # OK!
+# performance::model_performance(well.lmer)
 # jtools::summ(well.lmer, confint = T)
 # jtools::plot_summs(well.lmer)
 
@@ -746,11 +784,7 @@ coef <- fix.fit$coef
 no.NA <- sum(is.na(coef))
 rank <- fix.fit$rank
 
-#https://easystats.github.io/performance/
-#performance::model_performance(m3)
-#performance::compare_performance(m1, m2, m3, m4)
-#performance::compare_performance(m1, m2, m3, m4, rank = TRUE)
-#performance::plot(compare_performance(m1, m2, m4, rank = TRUE))
+
 
 # interactions::cat_plot(well.lmer, pred = "time", modx = "group", geom = "line", plot.points = T, vary.lty = T, line.thickness = .5, point.size = .5, pred.point.size = 4, jitter = .35) + theme_apa()
 
