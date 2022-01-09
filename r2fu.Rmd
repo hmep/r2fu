@@ -677,7 +677,7 @@ colnames(r2fu.predicted.data) <-
 
 ```
 
-## Adaptive assertiveness
+## Adaptive assertiveness plot
 
 ```{r aaas_ad.emm.plot}
 
@@ -686,7 +686,7 @@ aaas_ad.emm.plot
 
 ```
 
-## Aggressive assertiveness
+## Aggressive assertiveness plot
 
 ```{r aaas_ag.emm.plot}
 
@@ -695,7 +695,7 @@ aaas_ag.emm.plot
 
 ```
 
-## Rathus (ggemmeans)
+## Rathus plot (ggemmeans)
 
 ```{r rathus.emm.plot}
 
@@ -704,11 +704,13 @@ rathus.emm.plot
 
 ```
 
-## Rathus (interactions)
+## Rathus plot (interactions)
 
 ```{r rathus.interactions.plot}
 
-cat_plot(rathus.lmer, data = r2fu.long.data, pred = time,modx=group, geom = "line", plot.points = T, vary.lty = T, int.type = "confidence", line.thickness = 0.5, point.size = 1, pred.point.size = 4, jitter = 0.25, robust = T)
+# https://interactions.jacob-long.com/reference/cat_plot.html
+
+cat_plot(rathus.lmer, data = r2fu.long.data, pred = "time", modx = "group", geom = "line", plot.points = T, vary.lty = T, int.type = "confidence", line.thickness = 0.5, point.size = 1, pred.point.size = 4, jitter = 0.25, robust = T)
 
 ```
 
