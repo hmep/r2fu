@@ -23,8 +23,9 @@ header-includes:
 # https://fukamilab.github.io/BIO202/04-A-mixed-models.html
 # https://easystats.github.io/performance/index.html
 # https://jtools.jacob-long.com/index.html
+# https://arxiv.org/abs/1308.5499
 
-packages <- c("lmerTest", "jtools", "broom.mixed", "readxl", "writexl", "tidyr", "jtools", "interactions", "lattice", "modelr", "ggeffects", "emmeans", "patchwork", "outliers", "performance")
+packages <- c("lmerTest", "broom.mixed", "readxl", "writexl", "tidyr", "jtools", "interactions", "lattice", "modelr", "ggeffects", "emmeans", "patchwork", "outliers", "performance")
 if (!require("install.load")) install.packages("install.load")
 library(install.load)
 install_load(packages)
@@ -269,7 +270,7 @@ r2fu.long.data <- readRDS("r2fu.long.data.RDS")
 r2fu.long.data$time <- factor(r2fu.long.data$time, labels = c(xt1,xt2,xt3,xt4))
 
 # Add variable to discern between participants included/not included in fu 
-r2fu.long.data$studylength <- ifelse(r2fu.long.data$group == "waitlist", "no-fu", "fu")
+#r2fu.long.data$studylength <- ifelse(r2fu.long.data$group == "waitlist", "no-fu", "fu")
 
 # Subsetting keys
 wg1 <- grepl(xg1, r2fu.wide.data$group)
@@ -597,7 +598,6 @@ aaas_ad.lmer <-
 # performance::check_model(aaas_ad.lmer) # OK!
 # jtools::summ(aaas_ad.lmer, confint = T)
 # jtools::plot_summs(aaas_ad.lmer)
-# interactions::cat_plot(well.lmer, pred = "time", modx = "group", geom = "line", plot.points = T, vary.lty = T, line.thickness = .5, point.size = .5, pred.point.size = 4, jitter = .35) + theme_apa()
 
 aaas_ag.lmer <-
   lme4::lmer(
@@ -726,6 +726,15 @@ well.lmer.fix <-
 well.emm.plot <- plot(ggemmeans(well.lmer.fix, terms = c("time", "group")))
 well.emm.plot + theme_apa()
 
+well.lm <-
+  lm(
+    well ~ group * time ,
+    data = r2fu.long.data
+  )
+well.emm.plot <- plot(ggemmeans(well.lm, terms = c("time", "group")))
+well.emm.plot + theme_apa()
+interactions::cat_plot(well.lm, pred = "time", modx = "group", geom = "line", plot.points = T, vary.lty = T, line.thickness = .5, point.size = .5, pred.point.size = 4, jitter = .35) + theme_apa()
+
 fix.formula <- well ~ group * time
 
 X <- model.matrix (fix.formula, r2fu.long.data)
@@ -743,6 +752,7 @@ rank <- fix.fit$rank
 #performance::compare_performance(m1, m2, m3, m4, rank = TRUE)
 #performance::plot(compare_performance(m1, m2, m4, rank = TRUE))
 
+# interactions::cat_plot(well.lmer, pred = "time", modx = "group", geom = "line", plot.points = T, vary.lty = T, line.thickness = .5, point.size = .5, pred.point.size = 4, jitter = .35) + theme_apa()
 
 ```
 
@@ -781,7 +791,12 @@ colnames(r2fu.predicted.data) <-
     "well"
   )
 
+#lattice::xyplot(well ~ time, r2fu.predicted.data, type = "b")
 ```
+
+## Primary questions
+
+TBW
 
 ## Adaptive assertiveness plot
 
@@ -801,7 +816,11 @@ aaas_ag.emm.plot + theme_apa()
 
 ```
 
-## Rathus plot (ggemmeans)
+## Secondary questions
+
+TBW
+
+## Rathus plot
 
 ```{r rathus.emm.plot}
 
@@ -810,24 +829,15 @@ rathus.emm.plot + theme_apa()
 
 ```
 
-## Rathus plot (interactions)
+<!-- ## Rathus plot (interactions) -->
 
-```{r rathus.interactions.plot}
+<!-- ```{r rathus.interactions.plot} -->
 
-# https://interactions.jacob-long.com/reference/cat_plot.html
+<!-- # https://interactions.jacob-long.com/reference/cat_plot.html -->
 
-cat_plot(rathus.lmer, data = r2fu.long.data, pred = "time", modx = "group", geom = "line", plot.points = T, vary.lty = T, int.type = "confidence", line.thickness = 0.5, point.size = 1, pred.point.size = 4, jitter = 0.25) + theme_apa()
+<!-- cat_plot(rathus.lmer, data = r2fu.long.data, pred = "time", modx = "group", geom = "line", plot.points = T, vary.lty = T, int.type = "confidence", line.thickness = 0.5, point.size = 1, pred.point.size = 4, jitter = 0.25) + theme_apa() -->
 
-```
-
-## Well plot (ggemmeans)
-
-```{r well.emm.plot}
-
-well.emm.plot <- plot(ggemmeans(well.lmer, terms = c("time", "group")))
-well.emm.plot + theme_apa()
-
-```
+<!-- ``` -->
 
 ## Discussion
 
