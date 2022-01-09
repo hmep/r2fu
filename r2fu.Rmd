@@ -714,7 +714,7 @@ cat_plot(rathus.lmer, data = r2fu.long.data, pred = time,modx=group, geom = "lin
 
 ## Discussion
 
-Topics to discuss:
+Topics from Background section to discuss:
 
 - Assertiveness training
 - Internet-delivered vs. in-person CBT
