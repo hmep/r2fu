@@ -19,7 +19,7 @@ header-includes:
 
 ```{r setup, include=F}
 
-packages <- c("lme4", "jtools", "broom.mixed", "readxl", "writexl", "tidyr", "jtools", "lattice", "modelr", "ggeffects", "emmeans", "patchwork", "outliers")
+packages <- c("lme4", "jtools", "broom.mixed", "readxl", "writexl", "tidyr", "jtools", "lattice", "modelr", "ggeffects", "emmeans", "patchwork", "outliers", "performance")
 if (!require("install.load")) install.packages("install.load")
 library(install.load)
 install_load(packages)
@@ -398,29 +398,29 @@ EOF
 xdemocat <-
   c(
   "M (SD)",
-  "Kvinna",
-  "Singel",
-  "Sambo",
-  "Gift",
-  "Annat",
-  "Annan utbildning",
-  "Folkskola/grundskola",
-  "Gymnasium",
-  "Yrkesutbildning",
-  "Pågående högre utbildning",
-  "Avslutad högre utbildning",
-  "Annan sysselsättning",
-  "Studerande",
-  "Arbetande",
-  "Arbetslös",
-  "Pensionär",
-  "Föräldraledig",
-  "Sjukskriven",
-  "Nej",
-  "Ja, tidigare",
-  "Ja, pågående",
-  "Nej",
-  "Ja"
+  "Female",
+  "Single",
+  "Partner",
+  "Married",
+  "Other",
+  "Other education",
+  "Primary/lower secondary",
+  "Higher secondary",
+  "Vocational training ",
+  "Current higher education",
+  "Finished higher education",
+  "Other occupation",
+  "Student",
+  "Working",
+  "Unemployed",
+  "Pensioner",
+  "Parental leave",
+  "On sick leave",
+  "No",
+  "Yes, previously",
+  "Yes, currently",
+  "No",
+  "Yes"
   )
 
 options(OutDec= ",")
@@ -484,7 +484,7 @@ colnames(demdata.tabell) <- c(
   paste(xG3," (n = ",ll3,")",sep=""),
   paste(xG1," (n = ",ll1,")",sep=""),
   paste(xG2," (n = ",ll2,")",sep=""),
-  paste("Sammanlagt (n = ",length(r2fu.wide.data[,1]),")",sep="")
+  paste("Total (n = ",length(r2fu.wide.data[,1]),")",sep="")
 )
 
 options(OutDec= ".")
@@ -508,7 +508,7 @@ knitr::kable(demdata.tabell, format="latex", booktabs=T, caption = "(ref:dem)", 
   pack_rows("Marital status (%)", 3, 6, bold = F) %>%
   pack_rows("Education (%)", 7, 12, bold = F) %>%
   pack_rows("Occupation (%)", 13, 19, bold = F) %>%
-  pack_rows("Use of psychogropic drugs (%)", 20, 22, bold = F) %>%
+  pack_rows("Use of psychotropic drugs (%)", 20, 22, bold = F) %>%
   pack_rows("Previous therapy experience (%)", 23, 24, bold = F) %>%
   row_spec(c(1,2,6,12,19,22), extra_latex_after = "\\midrule")
 
@@ -543,21 +543,23 @@ Participants were subjected to possible risks, including:
 - Increased levels of anxiety in the short term
   - This is expected; by design behavioral experiments allow for reflection and inhibitory learning that alleviates anxiety in the long run
 - Increased levels of interpersonal problems
-  - This can be problematic if a person cannot control the effects participation has on their interpersonal environment; however we tried to mitigate this issue by excluding persons at higher risk for depression, by offering clear guidelines for terminating participation, as well as referring severely ill participants to external care givers where appropriate
+  - This can be problematic if a person cannot control the effects of participation on their interpersonal environment; however we tried to mitigate this issue by excluding persons at higher risk for depression, by offering clear guidelines for terminating participation, as well as referring severely ill participants to external care givers where appropriate
 
 ## Statistical software
 
 Analyses were performed using `r R.Version()$language` version `r paste(R.Version()[c("major", "minor")], collapse = ".")` with packages `r paste("@R-",packages,sep="")` through the @rstudio integrated development environment (IDE).
 
-## Analyses of fixed effects
+## Mixed model analysis
 
-## Analyses of random effects
+Primary analyses were performed employing a *mixed model*, sometimes called *multilevel model* or *hierarchical linear model*, in order to gain insights into random effects (in this case, observed but unrestrained effects within individuals) as well as fixed effects (controlled by the study design). A mixed model also handles missing data gracefully by means of predicting outcomes for all participants, respecting the intention-to-treat assignments.
 
 ## Analyses of reliable change and clinical significance
 
+To assess clinically relevant changes, analyses of reliable change and clinical significance [@Jacobson1991] were performed using raw (not predicted) data. To check if the number of clinically relevant changes were significantly different between assignments, a Kruskal-Wallis $\chi^2$-test was employed.
+
 ## Additional checks
 
-- Internal reliablity of translated measures
+Internal reliablity of translated measures was estimated using Cronbach's $\alpha$ calculations.
 
 ## (Check plots: adaptive assertiveness)
 
