@@ -19,7 +19,7 @@ header-includes:
 
 ```{r setup, include=F}
 
-packages <- c("lme4", "jtools", "broom.mixed", "readxl", "writexl", "tidyr", "jtools", "lattice", "modelr", "ggeffects", "emmeans", "patchwork", "outliers", "performance")
+packages <- c("lme4", "jtools", "broom.mixed", "readxl", "writexl", "tidyr", "jtools", "interactions", "lattice", "modelr", "ggeffects", "emmeans", "patchwork", "outliers", "performance")
 if (!require("install.load")) install.packages("install.load")
 library(install.load)
 install_load(packages)
@@ -121,6 +121,10 @@ TBW
 TBW
 
 ### Self-help vs. therapist support
+
+TBW
+
+### Transdiagnostic vs. specialized treatments
 
 TBW
 
@@ -691,7 +695,7 @@ aaas_ag.emm.plot
 
 ```
 
-## Rathus
+## Rathus (ggemmeans)
 
 ```{r rathus.emm.plot}
 
@@ -699,6 +703,23 @@ rathus.emm.plot <- plot(ggemmeans(rathus.lmer, terms = c("time", "group")))
 rathus.emm.plot
 
 ```
+
+## Rathus (interactions)
+
+```{r rathus.interactions.plot}
+
+cat_plot(rathus.lmer, data = r2fu.long.data, pred = time,modx=group, geom = "line", plot.points = T, vary.lty = T, int.type = "confidence", line.thickness = 0.5, point.size = 1, pred.point.size = 4, jitter = 0.25, robust = T)
+
+```
+
+## Discussion
+
+Topics to discuss:
+
+- Assertiveness training
+- Internet-delivered vs. in-person CBT
+- Self-help vs. therapist support
+- Transdiagnostic vs. specialized treatments
 
 ## References {.allowframebreaks}
 
