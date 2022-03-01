@@ -798,90 +798,6 @@ well.emm.plot <- plot(ggemmeans(well.lmer, terms = c("time", "group")))
 
 ```
 
-```{r exp, eval = F, include = F}
-
-####### EXPERIMENTS
-
-# https://stats.stackexchange.com/questions/35071/what-is-rank-deficiency-and-how-to-deal-with-it
-# https://stackoverflow.com/questions/37090722/lme4lmer-reports-fixed-effect-model-matrix-is-rank-deficient-do-i-need-a-fi
-
-well.lmer <-
-  lme4::lmer(
-    well ~ group * time + (1 | subject),
-    data = r2fu.long.data,
-    na.action = na.omit,
-    REML = T
-  )
-well.emm.plot <- plot(ggemmeans(well.lmer, terms = c("time", "group")))
-well.emm.plot + theme_apa()
-
-well.lmer.lnt4 <-
-  lme4::lmer(
-    well ~ group * time + (1 | subject),
-    data = r2fu.long.data[lnt4,],
-    na.action = na.omit,
-    REML = T
-  )
-well.emm.plot <- plot(ggemmeans(well.lmer.lnt4, terms = c("time", "group")))
-well.emm.plot + theme_apa()
-
-well.lmer.lng3 <-
-  lme4::lmer(
-    well ~ group * time + (1 | subject),
-    data = r2fu.long.data[lng3,],
-    na.action = na.omit,
-    REML = T
-  )
-well.emm.plot <- plot(ggemmeans(well.lmer.lng3, terms = c("time", "group")))
-well.emm.plot + theme_apa()
-
-well.lmer.fix <-
-  lme4::lmer(
-    well ~ group * time + (1 | subject),
-    data = r2fu.long.data,
-    na.action = na.omit,
-    REML = T
-  )
-well.emm.plot <- plot(ggemmeans(well.lmer.fix, terms = c("time", "group")))
-well.emm.plot + theme_apa()
-
-well.lmer.fix <-
-  lme4::lmer(
-    well ~ group * time + (1 | subject),
-    data = r2fu.long.data,
-    na.action = na.omit,
-    REML = T
-  )
-well.emm.plot <- plot(ggemmeans(well.lmer.fix, terms = c("time", "group")))
-well.emm.plot + theme_apa()
-
-well.lm <-
-  lm(
-    well ~ group * time ,
-    data = r2fu.long.data
-  )
-well.emm.plot <- plot(ggemmeans(well.lm, terms = c("time", "group")))
-well.emm.plot + theme_apa()
-interactions::cat_plot(well.lm, pred = "time", modx = "group", geom = "line", plot.points = T, vary.lty = T, line.thickness = .5, point.size = .5, pred.point.size = 4, jitter = .35) + theme_apa()
-
-# fix.formula <- well ~ group * time
-# 
-# X <- model.matrix (fix.formula, r2fu.long.data)
-# caret::findLinearCombos(X)
-# 
-# fix.fit <- lm(fix.formula, r2fu.long.data, method = "qr", singular.ok = TRUE)
-# p <- length(coef)
-# coef <- fix.fit$coef
-# no.NA <- sum(is.na(coef))
-# rank <- fix.fit$rank
-
-
-
-# interactions::cat_plot(well.lmer, pred = "time", modx = "group", geom = "line", plot.points = T, vary.lty = T, line.thickness = .5, point.size = .5, pred.point.size = 4, jitter = .35) + theme_apa()
-
-```
-
-
 ```{r predictions}
 
 ### Output predictions to new data frame
@@ -920,91 +836,75 @@ colnames(r2fu.predicted.data) <-
 
 ```
 
-
 ```{r emmeff, eval = T}
 
-effsel <- c(1:3,5:8,9:12)
+effsel.group <- c(1:3,5:8,9:12)
+effsel.time <- -10
 
 # AAA-S Adaptive
-
 aaas_ad.emm.by.group <- emmeans(aaas_ad.lmer, ~ time | group, adjust="bonferroni")
 aaas_ad.emm.by.time <- emmeans(aaas_ad.lmer, ~ group | time, adjust="bonferroni")
-aaas_ad.emmpairs.by.group <- tidy(pairs(emmeans(aaas_ad.lmer, ~ time | group), adjust="bonferroni"))
-aaas_ad.emmpairs.by.time <- tidy(pairs(emmeans(aaas_ad.lmer, ~ group | time), adjust="bonferroni"))
-
-# aaas_ad.sd <- sqrt(6.7247^2 + 4.6582^2) # VarCorr(aaas_ad.lmer)
-# aaas_ad.eff.by.group <- tidy(eff_size(aaas_ad.emm.by.group, sigma = aaas_ad.sd, edf = df.residual(aaas_ad.lmer)))
-# aaas_ad.eff.by.time <- tidy(eff_size(aaas_ad.emm.by.time, sigma = aaas_ad.sd, edf = df.residual(aaas_ad.lmer)))
+aaas_ad.emmpairs.by.group <- pairs(aaas_ad.emm.by.group)
+aaas_ad.emmpairs.by.time <- pairs(aaas_ad.emm.by.time)
+aaas_ad.sd <- sqrt(6.7432^2 + 4.7000^2) # VarCorr(aaas_ad.lmer)
+aaas_ad.eff.by.group <- eff_size(aaas_ad.emm.by.group[effsel.group], sigma = aaas_ad.sd, edf = df.residual(aaas_ad.lmer))
+aaas_ad.eff.by.time <- eff_size(aaas_ad.emm.by.time[effsel.time], sigma = aaas_ad.sd, edf = df.residual(aaas_ad.lmer))
 
 # AAA-S Aggressive
-
 aaas_ag.emm.by.group <- emmeans(aaas_ag.lmer, ~ time | group, adjust="bonferroni")
 aaas_ag.emm.by.time <- emmeans(aaas_ag.lmer, ~ group | time, adjust="bonferroni")
-aaas_ag.emmpairs.by.group <- tidy(pairs(emmeans(aaas_ag.lmer, ~ time | group), adjust="bonferroni"))
-aaas_ag.emmpairs.by.time <- tidy(pairs(emmeans(aaas_ag.lmer, ~ group | time), adjust="bonferroni"))
-
-# aaas_ag.sd <- sqrt(5.6919^2 + 3.3895^2) # VarCorr(aaas_ag.lmer)
-# aaas_ag.eff.by.group <- tidy(eff_size(aaas_ag.emm.by.group, sigma = aaas_ag.sd, edf = df.residual(aaas_ag.lmer)))
-# aaas_ag.eff.by.time <- tidy(eff_size(aaas_ag.emm.by.time, sigma = aaas_ag.sd, edf = df.residual(aaas_ag.lmer)))
+aaas_ag.emmpairs.by.group <- pairs(aaas_ag.emm.by.group)
+aaas_ag.emmpairs.by.time <- pairs(aaas_ag.emm.by.time)
+aaas_ag.sd <- sqrt(5.8868^2 + 3.4881^2) # VarCorr(aaas_ag.lmer)
+aaas_ag.eff.by.group <- eff_size(aaas_ag.emm.by.group[effsel.group], sigma = aaas_ag.sd, edf = df.residual(aaas_ag.lmer))
+aaas_ag.eff.by.time <- eff_size(aaas_ag.emm.by.time[effsel.time], sigma = aaas_ag.sd, edf = df.residual(aaas_ag.lmer))
 
 # Rathus
-
 rathus.emm.by.group <- emmeans(rathus.lmer, ~ time | group, adjust="bonferroni")
 rathus.emm.by.time <- emmeans(rathus.lmer, ~ group | time, adjust="bonferroni")
-rathus.emmpairs.by.group <- tidy(pairs(emmeans(rathus.lmer, ~ time | group), adjust="bonferroni"))
-rathus.emmpairs.by.time <- tidy(pairs(emmeans(rathus.lmer, ~ group | time), adjust="bonferroni"))
-
-# rathus.sd <- sqrt(19.908^2 + 11.678^2) # VarCorr(rathus.lmer)
-# rathus.eff.by.group <- tidy(eff_size(rathus.emm.by.group, sigma = rathus.sd, edf = df.residual(rathus.lmer)))
+rathus.emmpairs.by.group <- pairs(rathus.emm.by.group)
+rathus.emmpairs.by.time <- pairs(rathus.emm.by.time)
+rathus.sd <- sqrt(19.750^2 + 12.553^2) # VarCorr(rathus.lmer)
+rathus.eff.by.group <- eff_size(rathus.emm.by.group[effsel.group], sigma = rathus.sd, edf = df.residual(rathus.lmer))
+rathus.eff.by.time <- eff_size(rathus.emm.by.time[effsel.time], sigma = rathus.sd, edf = df.residual(rathus.lmer))
 
 # LSAS-SR
-
 lsas_sum.emm.by.group <- emmeans(lsas_sum.lmer, ~ time | group, adjust="bonferroni")
-lsas_sum.emmpairs.by.group <- tidy(pairs(emmeans(lsas_sum.lmer, ~ time | group), adjust="bonferroni"))
-
-# lsas_sum.sd <- sqrt(19.1059^2 + 8.7701^2) # VarCorr(lsas_sum.lmer)
-# lsas_sum.eff.by.group <- tidy(eff_size(lsas_sum.emm.by.group, sigma = lsas_sum.sd, edf = df.residual(lsas_sum.lmer)))
+lsas_sum.emm.by.time <- emmeans(lsas_sum.lmer, ~ group | time, adjust="bonferroni")
+lsas_sum.emmpairs.by.group <- pairs(lsas_sum.emm.by.group)
+lsas_sum.emmpairs.by.time <- pairs(lsas_sum.emm.by.time)
+lsas_sum.sd <- sqrt(18.6303^2 + 9.1658^2) # VarCorr(lsas_sum.lmer)
+lsas_sum.eff.by.group <- eff_size(lsas_sum.emm.by.group[effsel.group], sigma = lsas_sum.sd, edf = df.residual(lsas_sum.lmer))
+lsas_sum.eff.by.time <- eff_size(lsas_sum.emm.by.time[effsel.time], sigma = lsas_sum.sd, edf = df.residual(lsas_sum.lmer))
 
 # GAD-7
-
 gad_sum.emm.by.group <- emmeans(gad_sum.lmer, ~ time | group, adjust="bonferroni")
-gad_sum.emmpairs.by.group <- tidy(pairs(emmeans(gad_sum.lmer, ~ time | group), adjust="bonferroni"))
-
-# gad_sum.sd <- sqrt(3.1746^2 + 2.72911^2) # VarCorr(gad_sum.lmer)
-# gad_sum.eff.by.group <- tidy(eff_size(gad_sum.emm.by.group, sigma = gad_sum.sd, edf = df.residual(gad_sum.lmer)))
+gad_sum.emm.by.time <- emmeans(gad_sum.lmer, ~ group | time, adjust="bonferroni")
+gad_sum.emmpairs.by.group <- pairs(gad_sum.emm.by.group)
+gad_sum.emmpairs.by.time <- pairs(gad_sum.emm.by.time)
+gad_sum.sd <- sqrt(3.0683^2 + 2.8042^2) # VarCorr(gad_sum.lmer)
+gad_sum.eff.by.group <- eff_size(gad_sum.emm.by.group[effsel.group], sigma = gad_sum.sd, edf = df.residual(gad_sum.lmer))
+gad_sum.eff.by.time <- eff_size(gad_sum.emm.by.time[effsel.time], sigma = gad_sum.sd, edf = df.residual(gad_sum.lmer))
 
 # PHQ-9
-
 phq_sum.emm.by.group <- emmeans(phq_sum.lmer, ~ time | group, adjust="bonferroni")
-phq_sum.emmpairs.by.group <- tidy(pairs(emmeans(phq_sum.lmer, ~ time | group), adjust="bonferroni"))
-
-# phq_sum.rg <- ref_grid(phq_sum.lmer)
-# summary(phq_sum.rg[c(1:9,11:12)])
-# phq_sum.sav <- as.list(phq_sum.rg[c(1:9,11:12)])
-# phq_sum.anew <- as.emmGrid(phq_sum.sav)
-# emmeans(phq_sum.anew)
-
-# pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
-# pigs.sav <- as.list(ref_grid(pigs.lm))
-# pigs.anew <- as.emmGrid(pigs.sav)
-# emmeans(pigs.anew, "source")
-
-phq_sum.sd <- sqrt(2.9778^2 + 3.0234^2) # VarCorr(phq_sum.lmer)
-############### FIXAT! ############
-phq_sum.eff.by.group <- eff_size(phq_sum.emm.by.group[effsel], sigma = phq_sum.sd, edf = df.residual(phq_sum.lmer))
-# phq_sum.eff.by.group <- tidy(eff_size(phq_sum.emm.by.group, sigma = phq_sum.sd, edf = df.residual(phq_sum.lmer)))
-
-
+phq_sum.emm.by.time <- emmeans(phq_sum.lmer, ~ group | time, adjust="bonferroni")
+phq_sum.emmpairs.by.group <- pairs(phq_sum.emm.by.group)
+phq_sum.emmpairs.by.time <- pairs(phq_sum.emm.by.time)
+phq_sum.sd <- sqrt(2.9232^2 + 3.0568^2) # VarCorr(phq_sum.lmer)
+phq_sum.eff.by.group <- eff_size(phq_sum.emm.by.group[effsel.group], sigma = phq_sum.sd, edf = df.residual(phq_sum.lmer))
+phq_sum.eff.by.time <- eff_size(phq_sum.emm.by.time[effsel.time], sigma = phq_sum.sd, edf = df.residual(phq_sum.lmer))
 
 # Välmåendeskalan
-
 well.emm.by.group <- emmeans(well.lmer, ~ time | group, adjust="bonferroni")
-well.emmpairs.by.group <- tidy(pairs(emmeans(well.lmer, ~ time | group), adjust="bonferroni"))
+well.emm.by.time <- emmeans(well.lmer, ~ group | time, adjust="bonferroni")
+well.emmpairs.by.group <- pairs(well.emm.by.group)
+well.emmpairs.by.group <- pairs(well.emm.by.time)
+well.sd <- sqrt(8.6916^2 + 7.6614^2) # VarCorr(well.lmer)
+well.eff.by.group <- eff_size(well.emm.by.group[effsel.group], sigma = well.sd, edf = df.residual(well.lmer))
+well.eff.by.time <- eff_size(well.emm.by.time[effsel.time], sigma = well.sd, edf = df.residual(well.lmer))
 
-# well.sd <- sqrt(8.6002^2 + 7.2944^2) # VarCorr(well.lmer)
-# well.eff.by.group <- tidy(eff_size(well.emm.by.group, sigma = well.sd, edf = df.residual(well.lmer)))
-
-options(OutDec= ",")
+# options(OutDec= ",")
 
 ```
 
