@@ -1075,7 +1075,7 @@ xcolnames <-
 
 colnames(clinsig.table) <- xcolnames
 
-knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of patients that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Followup-time-points respectively. For missing values (i.e. caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rccccc", escape = F) %>%
+knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of participants that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Followup-time-points respectively. For missing values (i.e. caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rccccc", escape = F) %>%
   kable_styling(full_width = F, font_size = 9) %>%
   pack_rows(measurementnames[1], 1, 5, bold = F) %>%
   pack_rows(measurementnames[2], 6, 10, bold = F) %>%
