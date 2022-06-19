@@ -293,6 +293,8 @@ r2fu.long.data$group <- factor(r2fu.long.data$group, labels = c(xG3,xG1,xG2))
 
 Before recruitment started, the study received ethics approval from the Swedish Ethical Review Authority (Diary number: 2019-05165). The study was pre-registered at ClinicalTrials.gov (NCT04240249).
 
+## Design
+
 ```{r powercalc, echo = F, eval = F}
 
 round(pwr.f2.test(
@@ -306,9 +308,7 @@ digits = -1) * 3
 
 ```
 
-## Design
-
-The study design follows the RCT criteria proposed by @Chambless2001, with a randomized allocation of participants to three groups: (1) guided self-help intervention, (2) self-help intervention (unguided), and (3) a ten-week waitlist control. A sample size of 210 (70 per group) was decided on through an a priori power calculation according to guidelines for linear models set forth in @cohen1988statistical, assuming a between-group effect size of Cohen’s d of 0.8 on the primary measure for assertiveness, power 0.9, alpha 0.05, and a 15% drop-out rate per week (8 weeks in total).
+The study design follows the RCT criteria proposed by @Chambless2001, with a randomized allocation of participants to three groups: (1) Guided self-help intervention, (2) Self-help intervention (unguided), and (3) a ten-week Waitlist control. A sample size of 210 (70 per group) was decided on through an a priori power calculation according to guidelines for linear models set forth in @cohen1988statistical, assuming a between-group effect size of Cohen’s d of 0.8 on the primary measure for assertiveness, power 0.9, alpha 0.05, and a 15% drop-out rate per week (8 weeks in total).
 
 ## Participants
 
