@@ -1,0 +1,1158 @@
+---
+title: 'Efficacy of Transdiagnostic Cognitive-behavioral Therapy for Assertiveness:
+  A Randomized Controlled Trial'
+author:
+- Tobias Hagberg^[University of Somewhere]
+- Martin Oscarsson^[University of Nowhere]
+- Patrik Manhem^[University of Nowhere]
+- Fiona Michel^[University of Nowhere]
+- Gerhard Andersson^[University of Nowhere]
+- Per Carlbring^[University of Nowhere]
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: yes
+  html_document:
+    toc: yes
+    df_print: paged
+  word_document: default
+tags:
+- nothing
+- nothingness
+bibliography:
+- packages.bib
+- KSH.bib
+- DBT.bib
+link-citations: yes
+csl: apa.csl
+lang: en-US
+header-includes:
+- \widowpenalties 1 150
+- \setlength{\tabcolsep}{0bp}
+- \usepackage{fontspec}
+- \setmainfont[BoldFont={texgyretermes-bold.otf},ItalicFont={texgyretermes-italic.otf},BoldItalicFont={texgyretermes-bolditalic.otf}]{texgyretermes-regular.otf}
+- \usepackage{unicode-math}
+- \setmathfont{texgyretermes-math.otf}
+- \hyphenation{}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=F}
+
+# - \usepackage{setspace}
+# - \setstretch{1.2}
+
+# https://yihui.org/knitr/options/
+# https://www.lcampanelli.org/mixed-effects-modeling-lme4/
+# https://fukamilab.github.io/BIO202/04-A-mixed-models.html
+# https://jtools.jacob-long.com/index.html
+# https://arxiv.org/abs/1308.5499
+# https://easystats.github.io/performance/
+# http://glmm.wikidot.com/pkg-comparison
+# http://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#should-i-treat-factor-xxx-as-fixed-or-random
+
+#performance::model_performance(m3)
+#performance::compare_performance(m1, m2, m3, m4, rank = TRUE)
+#performance::plot(compare_performance(m1, m2, m4, rank = TRUE))
+
+packages <-
+  c(
+    "pwr",
+    "lmerTest",
+    "broom.mixed",
+    "readxl",
+    "writexl",
+    "ggplot2",
+    "tidyr",
+    "jtools",
+    "interactions",
+    "lattice",
+    "modelr",
+    "ggeffects",
+    "emmeans",
+    "patchwork",
+    "outliers",
+    "performance",
+    "gridExtra",
+    "sjPlot",
+    "kableExtra",
+    "clinicalsignificance"
+  )
+if (!require("install.load")) install.packages("install.load")
+library(install.load)
+install_load(packages)
+
+knitr::opts_chunk$set(
+  warning = F,
+  message = F,
+  echo = F,
+  collapse = T,
+  fig.retina = 4,
+  dpi = 196,
+  out.width = "100%",
+  fig.width = 7.5,
+  fig.asp = 0.618
+)
+
+xg1 = "selfhelp"
+xg2 = "support"
+xg3 = "waitlist"
+xG1 = "Self-help"
+xG2 = "Support"
+xG3 = "Waitlist"
+
+xpre = "pre measurement"
+xdur = "during measurement"
+xpost = "post measurement"
+xfu = "follow-up measurement"
+xPre = "Pre measurement"
+xDur = "During measurement"
+xPost = "Post measurement"
+xFu = "Follow-up measurement"
+
+xt1 = "pre"
+xt2 = "during"
+xt3 = "post"
+xt4 = "followup"
+xT1 = "Pre"
+xT2 = "During"
+xT3 = "Post"
+xT4 = "Follow-up"
+
+```
+
+```{r functions, eval = T, echo = F} 
+
+xresult <-
+  function(x, d) {
+    paste("$",
+          formatC(
+            x,
+            digits = d,
+            decimal.mark = ".",
+            drop0trailing = F,
+            format = "f"
+          ),
+          "$",
+          sep = "")
+  }
+
+xresulttext <- function(x,d){formatC(x,digits=d,decimal.mark=".",drop0trailing = F,format="f")}
+
+xpercent <- function(x,d){paste("$",formatC(x * 100,digits=d,decimal.mark=".",drop0trailing = F,format="f"),"$","\\xspace%",sep="")}
+
+xpr <- function(x) {
+  paste("$p$",
+        ifelse(x < 0.001, "< 0,001", ifelse(x < 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=".")), ifelse(x > 0.05, "DO NOT REPORT", "= 0.05")))
+  )
+}
+
+xpr_special <- function(x) {
+  paste("$p$",
+        ifelse(x < 0.001, "< 0,001", ifelse(x < 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=",")), ifelse(x > 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=".")), "= 0.05")))
+  )
+}
+
+xps <- function(x) {
+  paste(ifelse(x < 0.001, "\\textsuperscript{***}", ifelse(x < 0.01, "\\textsuperscript{**}", ifelse(x > 0.05, "", "\\textsuperscript{*}")))
+  )
+}
+
+xpss <- function(x) {
+  paste(ifelse(x < 0.001, "\\hbox to 0bp{\\textsuperscript{***}}", ifelse(x < 0.01, "\\hbox to 0bp{\\textsuperscript{**}}", ifelse(x > 0.05, "", "\\hbox to 0bp{\\textsuperscript{*}}")))
+  )
+}
+
+enkable = function(...) {
+  knitr::kable(..., format.args = list(decimal.mark = '.', big.mark = ','), linesep='', format="latex")
+}
+
+```
+
+# Introduction
+
+Experiences of stress, anxiety, and depression are often associated with avoidance. A person who is all too stressed from an ever-increasing workload may want nothing more than to tell their supervisor there are too many tasks on the table, yet still takes on another assignment when the supervisor asks. A person with social anxiety may want nothing more than to take part in social gatherings, yet chooses to abstain to avoid the feeling of being judged or scrutinized by others. A person who is depressed may want nothing more than to call a friend, yet chooses not to, as to not risk being put down if the friend were to not pick up the phone. These behaviors may all be associated with inadequate assertiveness, i.e., avoidance of constructively presenting one’s thoughts, feelings, needs, and wishes in relation to others.
+
+Assertiveness can be difficult to delineate from social skills in general (Linehan, 1979), but a common definition is “direct, firm, positive [...] action [enabling] us to act in our own best interests, to stand up for ourselves without undue anxiety, to exercise personal rights without denying the rights of others, and to express our feelings and needs [...] honestly and comfortably” [@alberti2017your,p.34]. Examples include politely saying ‘no’ to a boss requesting undue overtime, actively participating in social activities, accepting/acknowledging a compliment without deflecting, and verbalizing feelings in personal relationships without acting out. Lack of assertiveness is associated with several psychological problems, including stress, anxiety, depression, and panic disorder, as well as emotional instability, strained relationships, and low self-esteem [@Speed2018a]. While there are diagnoses, diagnostic tools, and treatment manuals for these conditions, no evidence-based interventions specifically target assertiveness for a broader population.
+
+Assertiveness training in general, however, goes back to the very first behavioral therapies, for example, as described by @salter1949conditioned or @Wolpe1966. Assertiveness was presented as a behavioristic alternative to psychoanalysis. In the 1970s, the concept was popularized in self-help books by @alberti1974your, @smith1975say, as well as @fensterheim1975don. Research in assertiveness training peaked in the 1980s [@Speed2018a]. Although the behavioral techniques of the first wave of therapy were supplemented by cognitive restructuring techniques [e.g. @beck1979cognitive] in the following decades, techniques such as modeling and behavior rehearsal have remained active parts of treatments for psychological syndromes such as anxiety disorders and depression. The @LINEHAN1979 manual for assertion therapy combining behavior rehearsal with cognitive restructuring was a stepping stone towards Dialectical Behavior Therapy (DBT), of which assertion skills training in a group setting is an integral part @linehan1993skills.
+
+(Säga något här om ev för- och nackdelar med transdiagnostiska behandlingsmål jämfört med syndromal symptomreduktion som mål, relatera till ex ACT och Rozentals prokrastineringsmål? Kolla upp vad forskningen säger här.)
+
+Building on the definition from @alberti2017your, assertiveness can be operationalized as acting with respect to both personal rights and rights of others. Assertion, when made in a constructive way, thus takes into account not only the expected result of the interaction (e.g. having said no to someone else’s demand, or having made a request) but also negotiates the strength of the interaction with regards to both the importance of the relationship (“Having stated my refusal/request, what do I want the other person to think of me?”) and what @linehan1993skills refers to as ‘self-respect’ (“Having stated my refusal/request, what do I want to think of myself?”). Assertive behavior, thus, is the product of respect of rights of others, and respect of rights of self – in the service of getting the outcome that the interlocutor wants. This definition might be offensive to someone who believes relationships to transcend function and self-interest. However, beyond taking into account the importance of the relationship with the counterpart in the transaction, it is not normative, and offers plenty  of opportunities for idiographic and contextual descriptions of assertion in therapy, i.e. when designing in vivo behavioral experiments, regardless of cultural influences on what is considered to be acceptable behavior (within a family, community, society, et.c.).
+
+@Speed2018a conclude that while assertiveness training remains part of DBT, as well as acceptance and commitment therapy (ACT), general assertiveness training has otherwise fallen into oblivion in favor of interventions designed for specific psychiatric disorders. Very little research on assertiveness training has been published since the early 1980s. Recent exceptions include @Baker2015, showing a negative relationship between social anxiety and assertiveness, and @Vagos2019 showing a negative relationship between mental distress in general and assertiveness. @Speed2018a further conclude that there is potential for assertiveness training as an intervention for individuals suffering from anxiety and depression, and as a means to increase relationship satisfaction. The lack of contemporary evidence for the assertiveness construct and assertiveness training as a transdiagnostic intervention calls for new research on the subject.
+
+The Western Australian Centre for Clinical Interventions (CCI) offers various self-help resources for mental health problems. These resources include Assert Yourself [@michel2008], a series of ten modules with concepts and strategies primarily based on CBT, with a focus on assertiveness. While current evidence for assertiveness training is scarce, at best, there is great evidence for CBT for symptoms and syndromes associated with inadequate assertiveness. In a review of meta-analyses, @Hofmann2012 conclude that CBT is one of the most effective forms of therapy. This includes the application for symptoms related to trauma and stress, as well as syndromes related to depression and anxiety. A review by @Andrews2018 also lends support to internet-delivered CBT (iCBT) for anxiety and depression, showing an average between-group effect size g = 0.8, compared to controls. @Carlbring2018 have also shown that iCBT, on average, produces equivalent overall effects compared to face-to-face treatment. Both guided and unguided iCBT (i.e., with or without therapist support) have been shown to be effective, though guided iCBT tends to produce slightly larger effects [@Baumeister2014a]. iCBT has further been proven effective in transdiagnostic applications, including interventions targeting stress [@Day2013], procrastination [@Rozental2015], and perfectionism [@Rozental2017].
+
+This study aims to evaluate the effects of an eight-week iCBT intervention for assertiveness, Respekt^2^, based on the @michel2008 modules, through a randomized controlled trial. The research questions are:
+
+- What are the effects on assertiveness (adaptive, aggressive, and aggregated) of guided and unguided participation in Respect^2^, compared to a waitlist control?
+
+- What are the effects of guided and unguided participation on measures of anxiety and depression, compared to the control?
+
+```{r prepare.data, echo = F, eval = F}
+
+## Export settings
+
+# - 2020-01-27 "Respekt i kvadrat - förmätning" PRE Groups 1+2+3
+# - 2020-03-09 "Respekt i kvadrat - mittmätning utan Corona" DUR Groups 1+2+3
+# - 2020-04-06 "Respekt i kvadrat - eftermätning" POST Groups 1+2
+# - 2020-04-06 "Respekt i kvadrat - eftermätning väntelista" POST Group 3
+# - 2021-04-21 "Respekt i kvadrat - 1-årsuppföljning" FU Groups 1+2
+
+# Export settings recorded in "Screenshot 2021-12-12 at 11-29-37 Exportera.png"
+
+raw_excel = "Respekt_surveys_211213_101425.xlsx"
+r2fu.raw.data <- read_excel(raw_excel)
+
+# Remove cases that meet exclusion criteria but were erroneously included in the study
+r2fu.raw.data <- r2fu.raw.data[-c(13,48,52,97,158),]
+
+# Missing data as NA values
+r2fu.raw.data[r2fu.raw.data == "[missing data]" ] <- NA
+
+# As dataframe
+r2fu.raw.data <- as.data.frame(r2fu.raw.data)
+
+# Unite POST measurements for Groups 1 + 2 with those for Group 3
+cols.count <- 21
+g3key <- which(!is.na(r2fu.raw.data[3 * cols.count + 8]))
+r2fu.raw.data[g3key, c(1:cols.count) + 2 * cols.count] <-
+  r2fu.raw.data[g3key, c(1:cols.count) + 3 * cols.count] # 2do: check if this is correct
+
+# Create vector with group designations
+r2fu.groups <-
+  factor(ifelse(
+    grepl("Grupp 1", r2fu.raw.data[,3]),
+    1,
+    ifelse(
+      grepl("Grupp 2", r2fu.raw.data[,3]),
+      2,
+      ifelse(grepl("Grupp 3", r2fu.raw.data[,3]), 3, NA)
+    )
+  ),
+  levels = c(3,1,2),
+  labels = c(xg3,xg1,xg2))
+
+# Only keep relevant columns
+r2fu.raw.data <-
+  r2fu.raw.data[, c(
+    c(9:cols.count) + 0 * cols.count,
+    c(9:cols.count) + 1 * cols.count,
+    c(9:cols.count) + 2 * cols.count,
+    c(9:cols.count) + 4 * cols.count
+  )]
+
+# Set colnames
+timepoint.names <- c(1,2,3,4)
+scale.names <- c(
+  "rathus",
+  "aaas_ag",
+  "aaas_ad",
+  "lsas_anx",
+  "lsas_avo",
+  "lsas_int",
+  "lsas_per",
+  "lsas_sum",
+  "gad_sum",
+  "phq_sum",
+  "phq_sui",
+  "phq_q10",
+  "well"
+)
+colnames(r2fu.raw.data) <- paste(scale.names,rep(timepoint.names,each=length(scale.names)),sep=".")
+
+# Add anonymous subject IDs
+r2fu.raw.data$subject <- factor(c(1:length(r2fu.raw.data[,1]))) 
+
+# Add in group designations
+r2fu.raw.data$group <- r2fu.groups 
+
+# Make sure numericals are numeric
+r2fu.raw.data[, c(1:52)] <-
+  sapply(r2fu.raw.data[, c(1:52)], as.numeric)
+
+# Save anonymised data in wide format
+saveRDS(r2fu.raw.data,file="r2fu.raw.data.RDS")
+
+# Pivot to long format
+r2fu.long.data <- r2fu.raw.data %>%
+  pivot_longer(c(1:52),
+               names_to = c(".value", "time"),
+               names_pattern = "(.*).(\\d+)") %>% as.data.frame()
+r2fu.long.data$time <- as.factor(r2fu.long.data$time)
+saveRDS(r2fu.long.data,file="r2fu.long.data.RDS")
+write_xlsx(r2fu.long.data, "r2fu.long.data.xlsx")
+
+# Pivot back to wide format (should be equivalent to raw data)
+r2fu.wide.data <- r2fu.long.data %>%
+  pivot_wider(names_from = time,
+              names_sep = ".",
+              values_from = scale.names) %>% as.data.frame()
+saveRDS(r2fu.wide.data,file="r2fu.wide.data.RDS")
+write_xlsx(r2fu.wide.data, "r2fu.wide.data.xlsx")
+
+```
+
+```{r import.data, echo = F, eval = T}
+
+r2fu.wide.data <- readRDS("r2fu.wide.data.RDS")
+r2fu.long.data <- readRDS("r2fu.long.data.RDS")
+
+# Update factor labels to use initial Uppercase character
+r2fu.long.data$time <- factor(r2fu.long.data$time, labels = c(xT1,xT2,xT3,xT4))
+r2fu.long.data$group <- factor(r2fu.long.data$group, labels = c(xG3,xG1,xG2))
+
+```
+
+# Method
+
+## Ethics and pre-registration
+
+Before recruitment started, the study received ethics approval from the Swedish Ethical Review Authority (Diary number: 2019-05165). The study was pre-registered at ClinicalTrials.gov (NCT04240249).
+
+```{r powercalc, echo = F, eval = F}
+
+round(pwr.f2.test(
+  u = 3,
+  v = NULL, # Solve for sample size
+  f2 = 0.8,
+  power = 0.9,
+  sig.level = 0.05
+)$v / 0.85 ^ 8,
+digits = -1) * 3
+
+```
+
+## Design
+
+The study design follows the RCT criteria proposed by @Chambless2001, with a randomized allocation of participants to three groups: (1) guided self-help intervention, (2) self-help intervention (unguided), and (3) a ten-week waitlist control. A sample size of 210 (70 per group) was decided on through an a priori power calculation according to guidelines for linear models set forth in @cohen1988statistical, assuming a between-group effect size of Cohen’s d of 0.8 on the primary measure for assertiveness, power 0.9, alpha 0.05, and a 15% drop-out rate per week (8 weeks in total).
+
+## Participants
+
+Participants were recruited from the public through advertisements on social media and other websites. Interested individuals were referred to a purpose-built website with more information on the study, including criteria for participation. Participants were required to be Swedish citizens, at least 18 years of age, have access to the internet, and be fluent in Swedish. Information on the website also included risks associated with participation, as well as terms and conditions for participation. People were invited to submit their email addresses and those who did were sent a link to complete online screening. The online self-report screening battery included measures of anxiety, depression, and assertiveness, as well as questions regarding socio-demographics, experiences of psychological treatment, any current medication, and motivation for participation.
+
+In total, 657 individuals submitted their email addresses, of which 464 completed the screening questionnaire. Among those, 126 were excluded for meeting exclusion criteria. Exclusion criteria were concurrent psychological treatment, a recent change in psychotropic medication, lack of time and/or motivation for participation, and a rating of 15 or above on the PHQ-9 measure of depression. The remaining 338 individuals were invited to participate in the study. Of those, 253 accepted the invitation.
+
+## Procedure
+
+In accordance with the a priori power calculation, 210 participants were randomized to be included in the study. The remaining 43 individuals were offered access to treatment materials but were excluded from all analyses. The 210 participants were randomized to the three treatment conditions. Participants in the guided condition were randomized to one of two therapists. All randomization was performed by an independent third party at Stockholm University, using the online services random.org [@RandomOrg] and sealedenvelope.com [@sealed].
+
+## Measures
+
+Measurements were collected using the below scales pre treatment (week 0), midway during the intervention (week 4), post treatment (week 8), and at 1 year follow-up.
+
+### Primary measures
+
+Assertiveness style was measured using a Swedish translation (contributed by TH) of the Adaptive and Aggressive Assertiveness Scales (AAA-S; @Thompson2011) which contained 30 items, including “When someone I don’t know well borrows something from me and forgets to return it, I… a. Demand it back b. Ask if she/he is done and ask for it back” (a. and b. both scored 1 = Never, 5 = Always). The AAA-S has good and excellent internal consistency for aggressive (0.88) and adaptive (0.93) assertiveness, respectively. A Swedish translation (contributed by TH) of the Rathus Assertiveness Schedule (RAS; @Rathus1973) was used as an additional measure of assertiveness style with 30 items, including “I find it embarrassing to return merchandise”, (+3 = Very characteristic of me, extremely descriptive, -3 = Very uncharacteristic of me, extremely nondescriptive).
+
+### Secondary measures
+
+Depression was measured using the Patient Health Questionnaire (PHQ-9; @Kroenke2010) which contained nine items, including “Feeling down, depressed, or hopeless” (0 = Not at all, 3 = Nearly every day). Anxiety was measured using the Generalised Anxiety Disorder 7-item Scale (GAD-7; @Kroenke2006) which contained seven items, including “Feeling nervous, anxious or on edge” (0 = Not at all, 3 = Nearly every day). Social anxiety was measured using the Liebowitz Social Anxiety Scale (LSAS-SR; @Fresco2001) which contained 24 items, including “Calling someone you don’t know very well” (Fear or anxiety, 0 = None, 3 = Severe; Avoidance, 0 = Never, 3 = Usually). These self-report measures have reported either good or excellent internal consistency (0.87, 0.89, 0.92, and 0.96, respectively).
+
+## Intervention
+
+The intervention was based on the Assert Yourself modules by @michel2008, adapted to Swedish by TH with permission from the copyright holders. The self-help material teaches the distinction between different types of assertiveness (constructive, aggressive, passive, and passive-aggressive). It also aids the reader in finding reasons to act more assertive and constructive. The material is inspired by and cites works by @alberti1974your, @gambrill1975assertion, and @smith1975say, among others. In the material, assertiveness is described and operationalized based on the theoretic assumptions by @wolpe1990practice regarding reciprocal inhibition and classic conditioning: By assertively practicing the expression of feelings, wishes, and demands in anxiety-evoking situations and relationships (where the person previously were prone to non-assertive behaviors, e.g., subdued disappointment or anger), a person may experience less discomfort from autonomous anxiety responses, over time. This is to be practiced in vivo, not just by acting. The long-term goal is to learn how to inhibit anxiety by being assertive. In cases where a physical counterpart is missing and anxiety is invoked by places, objects, or words, @Wolpe1952 suggests relaxation as a means to inhibit the anxiety response.
+
+The material also includes a rationale for cognitive restructuring with methods by @beck1979cognitive, @Clark1986, @clark1995cognitive, and @powell2017mental. Through behavioral experiments, readers are to test the validity of negative thoughts, with the purpose of achieving greater flexibility in responses. Furthermore, the material includes a passage on progressive muscle relaxation, for the reader to recognize bodily tension, reduce general strain, and practice an active coping technique for stressful situations. Finally, chapters on specific challenges, such as saying no, dealing with criticism, and coping with disappointment, conclude the material.
+
+The Swedish adaptation prompted some additions to @michel2008, some of which are presented in this paragraph. Based on recent research on exposure and inhibitory learning (e.g., @Craske2008), participants were encouraged to actively vary learning situations and work on new skills in as many environments as possible. In another new passage, inspired by the works on acceptance by Hayes [e.g., -@Hayes2004a] and others, participants were encouraged to actively search for and remain in the respondent discomfort they previously avoided. In line with Öst’s [-@ost2006tillampad] recommendations for applied tension, progressive muscle relaxation was introduced early in the intervention and expanded over several weeks. The written material was also complemented by downloadable audio with relaxation exercises, video of conversations and role-playing, and several new, interactive exercises.
+
+Additional support for participants in the guided Self-help condition included weekly messages in the treatment platform, including homework feedback, encouragement, validation, psychoeducation, and answers to any questions. Time for guiding participants was allocated not to require more than 15 minutes per participant and week.
+
+### Therapists
+
+Both therapists supporting participants in the guided condition were final-year psychology students at Stockholm University, training to become clinical psychologists. Both had completed basic training in CBT and received continuous supervision from a licensed psychotherapist with more than two decades of iCBT experience.
+
+## Data preparation
+
+Five participants were excluded from the analyses due to wrongful inclusion as they were receiving concurrent psychological treatment.
+
+```{bash, include = F, eval = T, dpi = 300}
+
+filename="flowchart"
+
+cat <<EOF > $filename.dot
+digraph G {
+
+  dpi=600
+  fontname=Helvetica
+  fontsize=10
+  node [ shape=box, fontname=Helvetica, fontsize=10 ]
+  compound=true
+  ranksep=.275
+  
+  leads -> { screening_non_completers screening_completers }
+  screening_completers -> { excluded invited }
+  invited  -> { invitation_non_responders invitation_responders }
+  invitation_responders -> { trimmed keepers }
+  keepers -> randomization
+  randomization -> { selfhelp_dur support_dur waitlist_dur }
+
+  leads[label=<Leads from social media<BR/><I>n</I> = 657>]
+  screening_completers[label=<Completed screening<BR/><I>n</I> = 464>]
+  excluded[label=<Excluded from study<BR/><I>n</I> = 126, for the following reasons:<BR/>PHQ-9 cutoff (≥ 15), <I>n</I> = 77<BR/>Concurrent therapy, <I>n</I> = 29<BR/>Recent change in psychotropic drugs, <I>n</I> = 7<BR/>Low motivation/lack of time, <I>n</I> = 13>]
+  screening_non_completers[label=<Did not complete screening<BR/><I>n</I> = 193>]
+  invited[label=<Invited to participate in study<BR/><I>n</I> = 338>]
+  invitation_non_responders[label=<Declined or did not respond<BR/><I>n</I> = 85>]
+  invitation_responders[label=<Accepted invitation<BR/><I>n</I> = 253>]
+  trimmed[label=<Excluded through randomization<BR/><I>n</I> = 43>]
+  keepers[label=<Included through randomization<BR/><I>n</I> = 210>]
+  randomization[label=<Randomization to condition<BR/><I>n</I> = 70 each>]
+  selfhelp_dur[label=<Completed 4 week measurement<BR/><I>n</I> = 44>]
+  selfhelp_post[label=<Completed post measurement<BR/><I>n</I> = 35>]
+  selfhelp_fu[label=<Completed 1 year follow-up<BR/><I>n</I> = 30>]
+  support_dur[label=<Completed 4 week measurement<BR/><I>n</I> = 48>]
+  support_post[label=<Completed post measurement<BR/><I>n</I> = 50>]
+  support_fu[label=<Completed 1 year follow-up<BR/><I>n</I> = 38>]
+  waitlist_dur[label=<Completed 4 week measurement<BR/><I>n</I> = 58>]
+  waitlist_post[label=<Completed post measurement<BR/><I>n</I> = 61>]
+  itt[label=<Intention to treat<BR/><I>n</I> = 205>]
+
+  subgraph cluster_selfhelp { margin=8; labelloc="t"; color=black; bgcolor=white; label=<Selfhelp<BR/><I>n</I> = 70 – 3 (excluded) = 67> ; selfhelp_dur -> selfhelp_post -> selfhelp_fu; } 
+  subgraph cluster_support { margin=8; labelloc="t"; color=black; bgcolor=white; label=<Support<BR/><I>n</I> = 70> ; support_dur -> support_post -> support_fu; } 
+  subgraph cluster_waitlist { margin=8; labelloc="t"; color=black; bgcolor=white; label=<Waitlist<BR/><I>n</I> = 70 – 2 (excluded) = 68> ; waitlist_dur -> waitlist_post; } 
+  { selfhelp_fu support_fu waitlist_post } -> itt
+
+}
+EOF
+
+/opt/homebrew/bin/dot -Tpng -o$filename.png $filename.dot
+/opt/homebrew/bin/dot -Tpdf -o$filename.pdf $filename.dot
+/Library/TeX/texbin/pdfcrop $filename.pdf $filename.pdf
+
+```
+
+```{r flowchartout, out.width="100%", fig.align="center", fig.cap="A total of 210 participants were included in the study through randomization; they were further randomized into groups Self-help, Support, and Waitlist, with 70 participants each."}
+
+knitr::include_graphics("flowchart.png", auto_pdf = T)
+
+```
+
+## Analysis
+
+All data were organized in one dataset and analyzed using `r R.Version()$language` `r paste(R.Version()[c("major", "minor")], collapse = ".")`, using lmerTest [@R-lmerTest], emmeans [@R-emmeans], ggeffects [@R-ggeffects], performance [@R-performance], and clinicalsignificance [@R-clinicalsignificance] packages. All syntax is available at https://github.com/hmep/r2fu/, together with anonymized data. A mixed-effects model was used to estimate fixed and random effects of group, time, and group-time interaction. Post-hoc comparisons were performed using T-tests with Bonferroni-corrected p-values. The proportions of participants showing reliable change and reaching clinical significance were determined in accordance with  @Jacobson1991, using the 'c' definition to select the cutoff value. (Eller 'a' för att vara maximalt konservativ?)
+
+```{r mixedmodels, results="asis", fig.width = 13, fig.asp = 0.75, eval = T, cache = F}
+
+### Primary measures
+
+aaas_ad.lmer <-
+  lmerTest::lmer(
+    aaas_ad ~ group * time + (1 | subject),
+    data = r2fu.long.data,
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(aaas_ad.lmer) # Checked, found to be OK!
+aaas_ad.emm.plot <-
+  plot(
+    ggemmeans(aaas_ad.lmer, terms = c("time", "group")),
+    show.title = F,
+    show.x.title = F,
+    colors = "bw",
+    connect.lines = T,
+    line.size = .4,
+    dot.size = 3
+  ) + scale_shape_manual(values=c(1, 17, 15))
+aaas_ad.emm.plot <- aaas_ad.emm.plot +
+  labs(y = "AAA-S, Adaptive subscale") + theme_apa(legend.pos = "topleft", legend.font.size = 14, y.font.size = 10)
+
+aaas_ag.lmer <-
+  lmerTest::lmer(
+    aaas_ag ~ group * time + (1 | subject),
+    data = r2fu.long.data,
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(aaas_ag.lmer) # Checked, found to be OK!
+aaas_ag.emm.plot <-
+  plot(
+    ggemmeans(aaas_ag.lmer, terms = c("time", "group")),
+    show.title = F,
+    show.x.title = F,
+    colors = "bw",
+    connect.lines = T,
+    line.size = .4,
+    dot.size = 3
+  ) + scale_shape_manual(values=c(1, 17, 15))
+aaas_ag.emm.plot <- aaas_ag.emm.plot + 
+  labs(y = "AAA-S, Aggressive subscale") + theme_apa(legend.pos = "topleft", legend.font.size = 14, y.font.size = 10)
+
+rathus.lmer <-
+  lmerTest::lmer(
+    rathus ~ group * time + (1 | subject),
+    data = r2fu.long.data,
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(rathus.lmer) # Checked, found to be OK!
+rathus.emm.plot <-
+  plot(
+    ggemmeans(rathus.lmer, terms = c("time", "group")),
+    show.title = F,
+    show.x.title = F,
+    colors = "bw",
+    connect.lines = T,
+    line.size = .4,
+    dot.size = 3
+  ) + scale_shape_manual(values=c(1, 17, 15))
+rathus.emm.plot <- rathus.emm.plot +
+  labs(y = "Rathus Assertiveness Schedule (RAS)") + theme_apa(legend.pos = "topleft", legend.font.size = 14, y.font.size = 10) 
+
+### Secondary measures
+
+lsas_sum.lmer <-
+  lmerTest::lmer(
+    lsas_sum ~ group * time + (1 | subject),
+    data = r2fu.long.data,
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(lsas_sum.lmer) # Checked, found to be OK!
+lsas_sum.emm.plot <-
+  plot(
+    ggemmeans(lsas_sum.lmer, terms = c("time", "group")),
+    show.title = F,
+    show.x.title = F,
+    colors = "bw",
+    connect.lines = T,
+    line.size = .4,
+    dot.size = 3
+  ) + scale_shape_manual(values=c(1, 17, 15))
+lsas_sum.emm.plot <- lsas_sum.emm.plot +
+  labs(y = "Liebowitz Social Anxiety Scale (LSAS-SR)") + theme_apa(legend.pos = "bottomleft", legend.font.size = 14, y.font.size = 10) +
+  geom_hline(yintercept = lsas_sum.emm.plot$data$predicted[4], linetype="dotted")
+
+phq_sum.lmer <-
+  lmerTest::lmer(
+    phq_sum ~ group * time + (1 | subject),
+    data = r2fu.long.data,
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(phq_sum.lmer) # Checked, found to be OK!
+phq_sum.emm.plot <-
+  plot(
+    ggemmeans(phq_sum.lmer, terms = c("time", "group")),
+    show.title = F,
+    show.x.title = F,
+    colors = "bw",
+    connect.lines = T,
+    line.size = .4,
+    dot.size = 3
+  ) + scale_shape_manual(values=c(1, 17, 15))
+phq_sum.emm.plot <- phq_sum.emm.plot +
+  labs(y = "Patient Health Questionnaire, 9 items (PHQ-9)") + theme_apa(legend.pos = "bottomleft", legend.font.size = 14, y.font.size = 10) +
+  geom_hline(yintercept = phq_sum.emm.plot$data$predicted[1], linetype="dotted")
+
+gad_sum.lmer <-
+  lmerTest::lmer(
+    gad_sum ~ group * time + (1 | subject),
+    data = r2fu.long.data,
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(gad_sum.lmer) # Checked, found to be OK!
+gad_sum.emm.plot <-
+  plot(
+    ggemmeans(gad_sum.lmer, terms = c("time", "group")),
+    show.title = F,
+    show.x.title = F,
+    colors = "bw",
+    connect.lines = T,
+    line.size = .4,
+    dot.size = 3
+  ) + scale_shape_manual(values=c(1, 17, 15))
+gad_sum.emm.plot <- gad_sum.emm.plot +
+  labs(y = "Generalised Anxiety Disorder 7-item Scale (GAD-7)") + theme_apa(legend.pos = "bottomleft", legend.font.size = 14, y.font.size = 10) +
+  geom_hline(yintercept = gad_sum.emm.plot$data$predicted[4], linetype="dotted")
+
+well.lmer <-
+  lmerTest::lmer(
+    well ~ group * time + (1 | subject),
+    data = r2fu.long.data,
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(well.lmer) # Checked, found to be OK!
+well.emm.plot <-
+  plot(
+    ggemmeans(well.lmer, terms = c("time", "group")),
+    show.title = F,
+    show.x.title = F,
+    colors = "bw",
+    connect.lines = T,
+    line.size = .4,
+    dot.size = 3
+  )
+
+```
+
+```{r predictions, eval = T, cache = F}
+
+### Output predictions to new data frame
+
+# Create new data frame with factor variables in place
+r2fu.predicted.data <- r2fu.long.data[,c(1:3)]
+
+# Add predicted values to data frame
+r2fu.predicted.data <- r2fu.predicted.data %>% spread_predictions(
+  rathus.lmer,
+  aaas_ag.lmer,
+  aaas_ad.lmer,
+  lsas_sum.lmer,
+  gad_sum.lmer,
+  phq_sum.lmer,
+  well.lmer
+)
+
+# Set column names
+colnames(r2fu.predicted.data) <-
+  c(
+    "subject",
+    "group",
+    "time",
+    "rathus",
+    "aaas_ag",
+    "aaas_ad",
+    "lsas_sum",
+    "gad_sum",
+    "phq_sum",
+    "well"
+  )
+
+```
+
+```{r emmeff, echo = F, eval = T, cache = F}
+
+effsel.group <- c(1:3,5:8,9:12)
+effsel.time <- -10
+
+rout <- function(lmerobj) {
+  x.emm.by.group <- emmeans(lmerobj, ~ time | group)
+  x.emm.by.time <- emmeans(lmerobj, ~ group | time)
+  x.emmpairs.by.group <- pairs(x.emm.by.group, adjust="bonferroni")
+  x.emmpairs.by.time <- pairs(x.emm.by.time, adjust="bonferroni")
+  x.sd <- sqrt(as.data.frame(VarCorr(lmerobj))[1,4] + as.data.frame(VarCorr(lmerobj))[2,4])
+  x.eff.by.group <- as.data.frame(eff_size(x.emm.by.group[effsel.group], sigma = x.sd, edf = df.residual(lmerobj)))
+  x.eff.by.time <- as.data.frame(eff_size(x.emm.by.time[effsel.time], sigma = x.sd, edf = df.residual(lmerobj)))
+  return(
+    list(
+      emm.by.group = as.data.frame(x.emm.by.group),
+      emm.by.time = as.data.frame(x.emm.by.time),
+      emmpairs.by.group = as.data.frame(x.emmpairs.by.group),
+      emmpairs.by.time = as.data.frame(x.emmpairs.by.time),
+      sd = x.sd,
+      eff.by.group = as.data.frame(x.eff.by.group),
+      eff.by.time = as.data.frame(x.eff.by.time)
+    )
+  )
+}
+
+```
+
+# Results
+
+```{r emm.primary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of estimated fixed effects for the primary transdiagnostic scales used to measure skillful, assertive behaviors. Participants’ estimated means for all three measures exhibit increasing levels of assertiveness during the course of treatment in the Support and Self-help groups, with negligable or only small differences between the two treatment conditions. The trends continue beyond the Post time point, showing further increased estimated mean levels of assertive behaviors at 1-year Follow-up. The Waitlist group’s estimated marginal means recover spontaneously, although not significantly, between the Pre and Post time points, for all three measures.'}
+
+(aaas_ad.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
+  (aaas_ag.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
+  (rathus.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) + 
+  guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2) 
+
+```
+
+<!-- ## Within-group effects -->
+
+<!-- For all three primary measures of assertiveness, there was a significant increase in assertiveness from Pre to Post time points (with an more pronounced effect between the Pre to Follow-up time points) for the two treatment groups.  -->
+
+<!-- For the estimated marginal mean of the Adaptive subscale of AAA-S (capturing presumably healthy assertiveness behaviors that lower the odds for both desirable short- and long-term consequences with regards to the goal of the exchange, the relationship and the person’s self-respect) the change [$\Delta M$] between Pre and Post time points was `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$estimate[8] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ad.lmer)$emmpairs.by.group$df[8],0)`}\) = `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$t.ratio[8],1)`; `r xpr(rout(aaas_ad.lmer)$emmpairs.by.group$p.value[8])`; $ES$ = `r xresult(rout(aaas_ad.lmer)$eff.by.group$effect.size[29] * -1,1)`, 95% CI [`r xresult(rout(aaas_ad.lmer)$eff.by.group$upper.CL[29] * -1,1)`, `r xresult(rout(aaas_ad.lmer)$eff.by.group$lower.CL[29] * -1,1)`]. The estimated $\Delta M$ between Pre and Follow-up time points was `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$estimate[9] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ad.lmer)$emmpairs.by.group$df[9],0)`}\) = `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$t.ratio[9],1)`; `r xpr(rout(aaas_ad.lmer)$emmpairs.by.group$p.value[9])`; $ES$ = `r xresult(rout(aaas_ad.lmer)$eff.by.group$effect.size[30] * -1,1)`, 95% CI [`r xresult(rout(aaas_ad.lmer)$eff.by.group$upper.CL[30] * -1,1)`, `r xresult(rout(aaas_ad.lmer)$eff.by.group$lower.CL[30] * -1,1)`]. -->
+
+<!-- (Although the difference between Post and Follow-up time points was not significant, the upward trend was sustained 1 year after completion of the treatment: The estimated marginal mean increase [$\Delta M$] was `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$estimate[12] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ad.lmer)$emmpairs.by.group$df[12],0)`}\) = `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$t.ratio[12],1)`; `r xpr_special(rout(aaas_ad.lmer)$emmpairs.by.group$p.value[12])`; $ES$ = `r xresult(rout(aaas_ad.lmer)$eff.by.group$effect.size[41] * -1,1)`.) -->
+
+<!-- We observed a similar but less pronounced trend for the estimated $\Delta M$ of the Aggressive subscale of AAA-S (capturing behaviors that the person deems assertive but possibly too much so, putting the relationship and/or the person’s self-respect at risk): the change between Pre and Post time points was `r xresult(rout(aaas_ag.lmer)$emmpairs.by.group$estimate[8] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ag.lmer)$emmpairs.by.group$df[8],0)`}\) = `r xresult(rout(aaas_ag.lmer)$emmpairs.by.group$t.ratio[8],1)`; `r xpr(rout(aaas_ag.lmer)$emmpairs.by.group$p.value[8])`; $ES$ = `r xresult(rout(aaas_ag.lmer)$eff.by.group$effect.size[29] * -1,1)`, 95% CI [`r xresult(rout(aaas_ag.lmer)$eff.by.group$upper.CL[29] * -1,1)`, `r xresult(rout(aaas_ag.lmer)$eff.by.group$lower.CL[29] * -1,1)`]. The estimated marginal mean increase $\Delta M$ between Pre and Follow-up time points was `r xresult(rout(aaas_ag.lmer)$emmpairs.by.group$estimate[9] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ag.lmer)$emmpairs.by.group$df[9],0)`}\) = `r xresult(rout(aaas_ag.lmer)$emmpairs.by.group$t.ratio[9],1)`; `r xpr(rout(aaas_ag.lmer)$emmpairs.by.group$p.value[9])`; $ES$ = `r xresult(rout(aaas_ag.lmer)$eff.by.group$effect.size[30] * -1,1)`, 95% CI [`r xresult(rout(aaas_ag.lmer)$eff.by.group$upper.CL[30] * -1,1)`, `r xresult(rout(aaas_ag.lmer)$eff.by.group$lower.CL[30] * -1,1)`]. -->
+
+<!-- The $\Delta M$ of the RAS scale (a composite measure of perceived assertivness) between Pre and Post time points was `r xresult(rout(rathus.lmer)$emmpairs.by.group$estimate[8] * -1,1)`, $t$\(_{`r xresulttext(rout(rathus.lmer)$emmpairs.by.group$df[8],0)`}\) = `r xresult(rout(rathus.lmer)$emmpairs.by.group$t.ratio[8],1)`; `r xpr(rout(rathus.lmer)$emmpairs.by.group$p.value[8])`; $ES$ = `r xresult(rout(rathus.lmer)$eff.by.group$effect.size[29] * -1,1)`, 95% CI [`r xresult(rout(rathus.lmer)$eff.by.group$upper.CL[29] * -1,1)`, `r xresult(rout(rathus.lmer)$eff.by.group$lower.CL[29] * -1,1)`]. The $\Delta M$ between Pre and Follow-up time points was `r xresult(rout(rathus.lmer)$emmpairs.by.group$estimate[9] * -1,1)`, $t$\(_{`r xresulttext(rout(rathus.lmer)$emmpairs.by.group$df[9],0)`}\) = `r xresult(rout(rathus.lmer)$emmpairs.by.group$t.ratio[9],1)`; `r xpr(rout(rathus.lmer)$emmpairs.by.group$p.value[9])`; $ES$ = `r xresult(rout(rathus.lmer)$eff.by.group$effect.size[30] * -1,1)`, 95% CI [`r xresult(rout(rathus.lmer)$eff.by.group$upper.CL[30] * -1,1)`, `r xresult(rout(rathus.lmer)$eff.by.group$lower.CL[30] * -1,1)`]. -->
+
+```{r emm.secondary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of estimated fixed effects for the secondary syndromal outcome measures. Participation in the Support and Self-help conditions lead to signficant symptom alleviation between the Pre and Post as well as and 1-year Follow-up time points for depression, generalized anxiety and social anxiety, as captured with their respective measures. As with the transdiagnostic measures of assertive behaviors, the difference between the two treatment groups is small or statistically inappreciable at both Post and 1-year Follow-up time points. The Waitlist control group did not significantly change between time points. However, to counteract any nocebo effect for the between-group comparisons the most conservative estimate for the Waitlist control condition was used; see dotted line.'}
+
+(phq_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
+  (gad_sum.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
+  (lsas_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) + 
+  guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2) 
+
+```
+
+```{r measures, echo = F, eval = T}
+
+### AAA-S Adaptive assertiveness
+# Norms: Thompson (2011) 
+# Adaptive assertiveness
+# Student sample 1: 57.6 (7.5), alpha .82 <- Let's use these
+# Student sample 2: 56.8 (7.4), alpha .82
+# Clinical sample: 50.0 (8.4), alpha .69
+r.AAAS_ad = 0.82 # s 329 @Thompson2011
+sd.AAAS_ad.norm = 7.5 # s 329 @Thompson2011
+mean.AAAS_ad.norm = 57.6 # s 329 @Thompson2011
+ref.AAAS_ad = "icke-kliniskt stickprov (student-sample 1) från @Thompson2011"
+
+### AAA-S Aggressive assertiveness
+# Norms: Thompson (2011) 
+# Aggressive assertiveness
+# Student sample 1: 33.2 (9.7), alpha .88 <- Let's use these
+# Student sample 2: 31.6 (8.7), alpha .87
+# Clinical sample: 27.5 (7.6), alpha .82
+r.AAAS_ag = 0.88 # s 329 @Thompson2011
+sd.AAAS_ag.norm = 9.7 # s 329 @Thompson2011
+mean.AAAS_ag.norm = 33.2 # s 329 @Thompson2011
+ref.AAAS_ag = "icke-kliniskt stickprov (student-sample 1) från @Thompson2011"
+
+### PHQ9
+# Normdata: Kroenke, K., Spitzer, R. L., & Williams, J. B. (2001). The PHQ-9: validity of a brief depression severity measure. Journal of General Internal Medicine, 16(9), 606–613. Retrieved from http://www.ncbi.nlm.nih.gov/pubmed/11556941
+r.PHQ9 = 0.89 # @Kroenke2001 s 3
+sd.PHQ9.norm = 3.8 # @Kroenke2001 s 3
+mean.PHQ9.norm = 3.3 # @Kroenke2001 s 3
+ref.PHQ9 = "icke-kliniskt stickprov från @Kroenke2001"
+
+### GAD7
+# Normdata: Spitzer, R. L., Kroenke, K., Williams, J. B. W., & Löwe, B. (2006). A Brief Measure for Assessing Generalized Anxiety Disorder. Archives of Internal Medicine, 166(10), 1092. https://doi.org/10.1001/archinte.166.10.1092
+# Löwe, B., Decker, O., Müller, S., Brähler, E., Schellberg, D., Herzog, W., & Herzberg, P. Y. (2008). Validation and Standardization of the Generalized Anxiety Disorder Screener (GAD-7) in the General Population. Medical Care, 46(3), 266–274. https://doi.org/10.1097/MLR.0b013e318160d093
+r.GAD7 = 0.92 # @Kroenke2006 s 3
+sd.GAD7.norm = 4.8 # @Kroenke2006 s 3
+mean.GAD7.norm = 4.9 # @Kroenke2006 s 3
+ref.PHQ9 = "icke-kliniskt stickprov från @Kroenke2006"
+
+### LSAS-24
+# Normdata: Fresco, D. M., Coles, M. E., Heimberg, R. G., Liebowitz, M. R., Hami, S., Stein, M. B., & Goetz, D. (2001). The Liebowitz Social Anxiety Scale: a comparison of the psychometric properties of self-report and clinician-administered formats. Psychol Med 31, 1025-1035.
+# Svenska normer: https://www.fbanken.se/form/34/liebowitz-social-anxiety-scale-self-report
+r.LSAS24 = 0.96 # @Fresco2001 s 1026
+sd.LSAS24.norm = 12.70 # @Fresco2001 s 1031
+mean.LSAS24.norm = 13.49 # @Fresco2001 s 1031
+ref.LSAS24 = "icke-kliniskt stickprov från @Fresco2001"
+
+### Rathus
+# Normdata: Thompson (2011) 
+r.Rathus = 0.87 # s 326 @Thompson2011
+sd.Rathus.norm = 23.9 # s 326 @Thompson2011
+mean.Rathus.norm = 6.2 # s 326 @Thompson2011
+ref.Rathus = "icke-kliniskt stickprov (student-sample 1) från @Thompson2011"
+
+measurementnames <-
+  c("AAA-S Adaptive",
+    "AAA-S Aggressive",
+    "RAS",
+    "PHQ-9",
+    "GAD-7",
+    "LSAS-SR")
+
+measurementshortnames <-
+  c("aaas_ad",
+    "aaas_ag",
+    "rathus",
+    "phq_sum",
+    "gad_sum",
+    "lsas_sum")
+
+norms <- rbind(
+  c(r.AAAS_ad, mean.AAAS_ad.norm, sd.AAAS_ad.norm),
+  c(r.AAAS_ag, mean.AAAS_ag.norm, sd.AAAS_ag.norm),
+  c(r.Rathus, mean.Rathus.norm, sd.Rathus.norm),
+  c(r.PHQ9, mean.PHQ9.norm, sd.PHQ9.norm),
+  c(r.GAD7, mean.GAD7.norm, sd.GAD7.norm),
+  c(r.LSAS24, mean.LSAS24.norm, sd.LSAS24.norm)
+)
+
+```
+
+
+```{r buildeffsizetab, echo = F, cache = F, eval = F}
+
+comparison <- linebreak(c(
+  "Self-help, Pre vs. Post",
+  "Self-help, Pre vs. 1-year Follow-up",
+  "Guided self-help, Pre vs. Post",
+  "Guided self-help, Pre vs. 1-year Follow-up",
+  "Waitlist, Pre vs. Post",
+  "Self-help at Post vs. Waitlist at Post",
+  "Self-help at 1-year Follow-up vs. Waitlist at Post",
+  "Self-help at 1-year Follow-up vs. Waitlist at *",
+  "Guided self-help at Post vs. Waitlist at Post",
+  "Guided self-help at 1-year Follow-up vs. Waitlist at Post",
+  "Guided self-help at 1-year Follow-up vs. Waitlist at *",
+  "Guided self-help at Post vs. Self-help at Post",
+  "Guided self-help at 1-year Follow-up vs. Self-help at Follow-up"
+  ), align = "r")
+
+within.effsize <- function(lmerobj,row,direction) {
+    linebreak(paste0(
+      xresult(rout(lmerobj)$eff.by.group$effect.size[row] * direction, 1),
+      " [",
+      xresult(rout(lmerobj)$eff.by.group$upper.CL[row] * direction, 1),
+      ", ",
+      xresult(rout(lmerobj)$eff.by.group$lower.CL[row] * direction, 1),
+      "]"
+    ), align = "c")
+}
+
+between.effsize <- function(lmerobj,row,direction) {
+    linebreak(paste0(
+      xresult(rout(lmerobj)$eff.by.time$effect.size[row] * direction, 1),
+      " [",
+      xresult(rout(lmerobj)$eff.by.time$upper.CL[row] * direction, 1),
+      ", ",
+      xresult(rout(lmerobj)$eff.by.time$lower.CL[row] * direction, 1),
+      "]"
+    ), align = "c")
+}
+
+aaas_ad.effsizes <-
+  c(
+    within.effsize(aaas_ad.lmer,29,-1),  #Pre Self-help - Post Self-help
+    within.effsize(aaas_ad.lmer,30,-1),  #Pre Self-help - Follow-up Self-help
+    within.effsize(aaas_ad.lmer,51,-1),  #Pre Support - Post Support
+    within.effsize(aaas_ad.lmer,52,-1),  #Pre Support - Follow-up Support
+    within.effsize(aaas_ad.lmer,2,-1),   #Pre Waitlist - Post Waitlist
+    between.effsize(aaas_ad.lmer,46,-1), #Waitlist Post - Self-help Post
+    between.effsize(aaas_ad.lmer,48,-1), #Waitlist Post - Self-help Follow-up
+    "(idem)",
+    between.effsize(aaas_ad.lmer,47,-1), #Waitlist Post - Support Post
+    between.effsize(aaas_ad.lmer,49,-1), #Waitlist Post - Support Follow-up
+    "(idem)",
+    between.effsize(aaas_ad.lmer,50,-1), #Self-help Post - Support Post
+    between.effsize(aaas_ad.lmer,55,-1)  #Self-help Follow-up - Support Follow-up
+  )
+
+aaas_ag.effsizes <-
+  c(
+    within.effsize(aaas_ag.lmer,29,-1),  #Pre Self-help - Post Self-help
+    within.effsize(aaas_ag.lmer,30,-1),  #Pre Self-help - Follow-up Self-help
+    within.effsize(aaas_ag.lmer,51,-1),  #Pre Support - Post Support
+    within.effsize(aaas_ag.lmer,52,-1),  #Pre Support - Follow-up Support
+    within.effsize(aaas_ag.lmer,2,-1),   #Pre Waitlist - Post Waitlist
+    between.effsize(aaas_ag.lmer,46,-1), #Waitlist Post - Self-help Post
+    between.effsize(aaas_ag.lmer,48,-1), #Waitlist Post - Self-help Follow-up
+    "(idem)",
+    between.effsize(aaas_ag.lmer,47,-1), #Waitlist Post - Support Post
+    between.effsize(aaas_ag.lmer,49,-1), #Waitlist Post - Support Follow-up
+    "(idem)",
+    between.effsize(aaas_ag.lmer,50,-1), #Self-help Post - Support Post
+    between.effsize(aaas_ag.lmer,55,-1)  #Self-help Follow-up - Support Follow-up
+  )
+
+rathus.effsizes <-
+  c(
+    within.effsize(rathus.lmer,29,-1),  #Pre Self-help - Post Self-help
+    within.effsize(rathus.lmer,30,-1),  #Pre Self-help - Follow-up Self-help
+    within.effsize(rathus.lmer,51,-1),  #Pre Support - Post Support
+    within.effsize(rathus.lmer,52,-1),  #Pre Support - Follow-up Support
+    within.effsize(rathus.lmer,2,-1),   #Pre Waitlist - Post Waitlist
+    between.effsize(rathus.lmer,46,-1), #Waitlist Post - Self-help Post
+    between.effsize(rathus.lmer,48,-1), #Waitlist Post - Self-help Follow-up
+    "(idem)",
+    between.effsize(rathus.lmer,47,-1), #Waitlist Post - Support Post
+    between.effsize(rathus.lmer,49,-1), #Waitlist Post - Support Follow-up
+    "(idem)",
+    between.effsize(rathus.lmer,50,-1), #Self-help Post - Support Post
+    between.effsize(rathus.lmer,55,-1)  #Self-help Follow-up - Support Follow-up
+  )
+
+phq_sum.effsizes <-
+  c(
+    within.effsize(phq_sum.lmer,29,1),  #Pre Self-help - Post Self-help
+    within.effsize(phq_sum.lmer,30,1),  #Pre Self-help - Follow-up Self-help
+    within.effsize(phq_sum.lmer,51,1),  #Pre Support - Post Support
+    within.effsize(phq_sum.lmer,52,1),  #Pre Support - Follow-up Support
+    within.effsize(phq_sum.lmer,2,1),   #Pre Waitlist - Post Waitlist
+    between.effsize(phq_sum.lmer,46,1), #Waitlist Post - Self-help Post
+    between.effsize(phq_sum.lmer,48,1), #Waitlist Post - Self-help Follow-up
+    between.effsize(phq_sum.lmer,9,1),  #Waitlist Pre - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(phq_sum.lmer,47,1), #Waitlist Post - Support Post
+    between.effsize(phq_sum.lmer,49,1), #Waitlist Post - Support Follow-up
+    between.effsize(phq_sum.lmer,10,1), #Waitlist Pre - Support Follow-up; levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(phq_sum.lmer,50,1), #Self-help Post - Support Post
+    between.effsize(phq_sum.lmer,55,1)  #Self-help Follow-up - Support Follow-up
+  )
+
+gad_sum.effsizes <-
+  c(
+    within.effsize(gad_sum.lmer,29,1),  #Pre Self-help - Post Self-help
+    within.effsize(gad_sum.lmer,30,1),  #Pre Self-help - Follow-up Self-help
+    within.effsize(gad_sum.lmer,51,1),  #Pre Support - Post Support
+    within.effsize(gad_sum.lmer,52,1),  #Pre Support - Follow-up Support
+    within.effsize(gad_sum.lmer,2,1),   #Pre Waitlist - Post Waitlist
+    between.effsize(gad_sum.lmer,46,1), #Waitlist Post - Self-help Post
+    between.effsize(gad_sum.lmer,48,1), #Waitlist Post - Self-help Follow-up
+    between.effsize(gad_sum.lmer,33,1), #Waitlist During - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(gad_sum.lmer,47,1), #Waitlist Post - Support Post
+    between.effsize(gad_sum.lmer,49,1), #Waitlist Post - Support Follow-up
+    between.effsize(gad_sum.lmer,34,1), #Waitlist During - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(gad_sum.lmer,50,1), #Self-help Post - Support Post
+    between.effsize(gad_sum.lmer,55,1)  #Self-help Follow-up - Support Follow-up
+  )
+
+lsas_sum.effsizes <-
+  c(
+    within.effsize(lsas_sum.lmer,29,1),  #Pre Self-help - Post Self-help
+    within.effsize(lsas_sum.lmer,30,1),  #Pre Self-help - Follow-up Self-help
+    within.effsize(lsas_sum.lmer,51,1),  #Pre Support - Post Support
+    within.effsize(lsas_sum.lmer,52,1),  #Pre Support - Follow-up Support
+    within.effsize(lsas_sum.lmer,2,1),   #Pre Waitlist - Post Waitlist
+    between.effsize(lsas_sum.lmer,46,1), #Waitlist Post - Self-help Post
+    between.effsize(lsas_sum.lmer,48,1), #Waitlist Post - Self-help Follow-up
+    between.effsize(lsas_sum.lmer,33,1), #Waitlist During - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(lsas_sum.lmer,47,1), #Waitlist Post - Support Post
+    between.effsize(lsas_sum.lmer,49,1), #Waitlist Post - Support Follow-up
+    between.effsize(lsas_sum.lmer,34,1), #Waitlist During - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(lsas_sum.lmer,50,1), #Self-help Post - Support Post
+    between.effsize(lsas_sum.lmer,55,1)  #Self-help Follow-up - Support Follow-up
+  )
+
+effectsize.table <- cbind.data.frame(
+  comparison,
+  aaas_ad.effsizes,
+  aaas_ag.effsizes,
+  rathus.effsizes,
+  phq_sum.effsizes,
+  gad_sum.effsizes,
+  lsas_sum.effsizes
+  )
+
+colnames(effectsize.table) <- c(" ",measurementnames)
+
+saveRDS(effectsize.table,file="effectsize.table.RDS")
+
+```
+
+```{r effsizetab, echo = F, eval = T}
+
+effectsize.table <- readRDS("effectsize.table.RDS")
+
+knitr::kable(effectsize.table, caption="Within group effect sizes [95\\% CI] comparing estimated marginal means between Pre- and Post-treatment, as well as between Pre-treatment and 1-year Follow-up, and between group effect sizes [95\\% CI] at Post-treatment and 1-year Follow-up.", align="rcccccc", escape=F, booktabs = T, format = "latex") %>%
+  kable_styling(full_width = F, font_size = 7) %>%
+  pack_rows("Within-group effect sizes", 1, 5, bold = F) %>%
+  pack_rows("Between-group effect sizes", 6, 11, bold = F) %>%
+  row_spec(c(2,4,5,8,11), extra_latex_after = "\\midrule") %>%
+  column_spec(c(1), width = "27em") %>%
+  column_spec(c(2:7), width = "11em") %>%
+  add_header_above(c(" ", "Primary transdiagnostic measures of skillful behaviors" = 3, "Secondary measures of syndromal symptoms" = 3)) %>%
+  footnote(
+    general = c(
+      "CI = confidence interval",
+      "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale.",
+      "Pre = pre-treatment measurement at 0 weeks; During = measurement during week 4; Post = measurement after completion of treatment at week 8; Follow-up = measurement at 1 year after completion.",
+      "* = the most conservative measurement for the Waitlist control condition, in order to suppress any  nocebo effects; see dotted lines in graphs in Figure 3 for identification of time point."
+    ),
+    general_title = "Notes.",
+    footnote_as_chunk = F,
+    threeparttable = T
+  ) %>%
+  kableExtra::landscape()
+
+```
+
+```{r clinsigtab, echo = F, eval = T}
+
+# Intention-to-treat data frame
+r2fu.itt.data <- r2fu.long.data
+
+# Group keys
+ig1 <- grepl(xG1, r2fu.itt.data$group)
+ig2 <- grepl(xG2, r2fu.itt.data$group)
+ig3 <- grepl(xG3, r2fu.itt.data$group)
+
+# Time keys
+it1 <- grepl(xT1, r2fu.itt.data$time)
+it2 <- grepl(xT2, r2fu.itt.data$time)
+it3 <- grepl(xT3, r2fu.itt.data$time)
+it4 <- grepl(xT4, r2fu.itt.data$time)
+
+# Copy values over, starting with it2 and working upwards
+for (xmeasure in measurementshortnames) {
+  copyvalues <-
+    which(is.na(r2fu.itt.data[it2, xmeasure])) # Pre --> During
+  r2fu.itt.data[it2, xmeasure][copyvalues] <-
+    r2fu.itt.data[it1, xmeasure][copyvalues]
+  copyvalues <-
+    which(is.na(r2fu.itt.data[it3, xmeasure])) # Pre --> Post
+  r2fu.itt.data[it3, xmeasure][copyvalues] <-
+    r2fu.itt.data[it2, xmeasure][copyvalues]
+  copyvalues <-
+    which(is.na(r2fu.itt.data[it4, xmeasure])) # Pre --> Follow-up
+  r2fu.itt.data[it4, xmeasure][copyvalues] <-
+    r2fu.itt.data[it3, xmeasure][copyvalues]
+}
+
+# Clinical significant change data.frame output
+clinsigraw <- function(measure, direction, first, last, group) {
+  clinsig <- clinical_significance(
+    data = r2fu.itt.data[group, ],
+    better_is = direction,
+    id = subject,
+    time = time,
+    outcome = measure,
+    pre = first,
+    post = last,
+    reliability = norms[which(measurementshortnames == measure), 1],
+    m_functional = norms[which(measurementshortnames == measure), 2],
+    sd_functional = norms[which(measurementshortnames == measure), 3],
+    type = "c"
+  )
+  return(cbind(
+    "recovered" = clinsig$categories$recovered#,
+    #"improved" = clinsig$categories$improved
+    ))
+}
+
+# Clinical significant change table output
+clinsig <- function(measure, direction, first, last, group) {
+  clinsig <- clinical_significance(
+    data = r2fu.itt.data[group, ],
+    better_is = direction,
+    id = subject,
+    time = time,
+    outcome = measure,
+    pre = first,
+    post = last,
+    reliability = norms[which(measurementshortnames == measure), 1],
+    m_functional = norms[which(measurementshortnames == measure), 2],
+    sd_functional = norms[which(measurementshortnames == measure), 3],
+    type = "c"
+  )
+  output <- as.matrix(clinsig$summary[c(2:3)])
+  output <- cbind(paste0("$",output[, 1],"$ ($",round(output[, 2] * 100),"$\\%)"))
+  return(output)
+}
+
+xclinsigcategories <- c("Recovered", "Improved", "Unchanged", "Deteriorated", "Harmed")
+
+clinsig.table <- rbind(
+  cbind(
+    xclinsigcategories,
+    clinsig("aaas_ad", "higher", "Pre", "Post", ig3),
+    clinsig("aaas_ad", "higher", "Pre", "Post", ig1),
+    clinsig("aaas_ad", "higher", "Pre", "Follow-up", ig1),
+    clinsig("aaas_ad", "higher", "Pre", "Post", ig2),
+    clinsig("aaas_ad", "higher", "Pre", "Follow-up", ig2)
+  ),
+  cbind(
+    xclinsigcategories,
+    clinsig("aaas_ag", "higher", "Pre", "Post", ig3),
+    clinsig("aaas_ag", "higher", "Pre", "Post", ig1),
+    clinsig("aaas_ag", "higher", "Pre", "Follow-up", ig1),
+    clinsig("aaas_ag", "higher", "Pre", "Post", ig2),
+    clinsig("aaas_ag", "higher", "Pre", "Follow-up", ig2)
+  ),
+  cbind(
+    xclinsigcategories,
+    clinsig("rathus", "higher", "Pre", "Post", ig3),
+    clinsig("rathus", "higher", "Pre", "Post", ig1),
+    clinsig("rathus", "higher", "Pre", "Follow-up", ig1),
+    clinsig("rathus", "higher", "Pre", "Post", ig2),
+    clinsig("rathus", "higher", "Pre", "Follow-up", ig2)
+  ),
+  cbind(
+    xclinsigcategories,
+    clinsig("phq_sum", "lower", "Pre", "Post", ig3),
+    clinsig("phq_sum", "lower", "Pre", "Post", ig1),
+    clinsig("phq_sum", "lower", "Pre", "Follow-up", ig1),
+    clinsig("phq_sum", "lower", "Pre", "Post", ig2),
+    clinsig("phq_sum", "lower", "Pre", "Follow-up", ig2)
+  ),
+  cbind(
+    xclinsigcategories,
+    clinsig("gad_sum", "lower", "Pre", "Post", ig3),
+    clinsig("gad_sum", "lower", "Pre", "Post", ig1),
+    clinsig("gad_sum", "lower", "Pre", "Follow-up", ig1),
+    clinsig("gad_sum", "lower", "Pre", "Post", ig2),
+    clinsig("gad_sum", "lower", "Pre", "Follow-up", ig2)
+  ),
+  cbind(
+    xclinsigcategories,
+    clinsig("lsas_sum", "lower", "Pre", "Post", ig3),
+    clinsig("lsas_sum", "lower", "Pre", "Post", ig1),
+    clinsig("lsas_sum", "lower", "Pre", "Follow-up", ig1),
+    clinsig("lsas_sum", "lower", "Pre", "Post", ig2),
+    clinsig("lsas_sum", "lower", "Pre", "Follow-up", ig2)
+  )
+)
+
+# xG3 = "Waitlist"
+# xG1 = "Self-help"
+# xG2 = "Support"
+
+xcolnames <-
+  c(
+    " ",
+    paste(xG3, xT3),
+    paste(xG1, xT3),
+    paste(xG1, xT4),
+    paste(xG2, xT3),
+    paste(xG2, xT4)
+  )
+
+colnames(clinsig.table) <- xcolnames
+
+knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of patients that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Followup-time-points respectively. For missing values (i.e. caused by drop-outs), the last collected value was moved forward the next time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rccccc", escape = F) %>%
+  kable_styling(full_width = F, font_size = 9) %>%
+  pack_rows(measurementnames[1], 1, 5, bold = F) %>%
+  pack_rows(measurementnames[2], 6, 10, bold = F) %>%
+  pack_rows(measurementnames[3], 11, 15, bold = F) %>%
+  pack_rows(measurementnames[4], 16, 20, bold = F) %>%
+  pack_rows(measurementnames[5], 21, 25, bold = F) %>%
+  pack_rows(measurementnames[6], 26, 30, bold = F) %>%
+  row_spec(c(5,10,15,20,25), extra_latex_after = "\\midrule") %>%
+  column_spec(c(1), width = "7em") %>%
+  column_spec(c(2:6), width = "8em") %>%
+  footnote(
+    general = c(
+      "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale."
+      ),
+    general_title = "Notes.",
+    footnote_as_chunk = F,
+    threeparttable = T
+  )
+# xG3 = "Waitlist"
+# xG1 = "Self-help"
+# xG2 = "Support"
+
+#kruskal.test(x ~ y)
+
+```
+
+# Discussion
+
+Lösrykta tankar/stycken att utveckla och sammanfoga till en helhet:
+
+- Samla upp viktigaste punkterna från uppsatsen.
+
+- Problematisering av otydlig defintion av assertivenss. R2? Adaptiv, aggressiv? Passiv? Passiv-aggressiv? Icke-undvikande/icke-flykt? Det enda som är säkert är att definitionen nog endast bör rymma overta beteenden?
+
+- Man kan ha olika uppfattning om vad som är aggressiv vs adaptiv självhävdelse, finns behov av att mäta dessa antaganden på något adekvat sätt. Att följa upp?
+
+- Skalorna är inte validerade på svenska.
+
+- Problem med ITT -- fångar inte ev försämring ...
+
+- Problematisering väntelista som kontroll, hantering av problem. It is noteworthy that the PHQ-9 mean of the non-active Waitlist control group increases as the participants wait in line to begin treatment; this might be due to the nocebo or ”reverse placebo” effect [@Furukawa2014;@Cuijpers2016], where participants’ expectations contribute to their mood actually worsening, which in turn risks inflating between group effect sizes. The other scales do not exhibit this possible problem. To mitigate any possible nocebo effect, the most conservative estimated marginal mean from either the Pre, During, Post time points was used for all within group pairwise comparisons for each scale.
+
+- Jag vill säga något spekulativt om rimligheten och önskvärdheten att använda positivt formulerat, transdiagnostiskt beteendemål i behandling istf syndromal symptomreduktion. Relatera till utfallsmåtten PHQ9, GAD7, LSAS. Det är väntat att beteendemåtten (AAAS-ad/ag, RAS) sticker iväg snabbare än symtomreduktionsmåtten. Beteendeförändring borde föregå förändring i upplevelse (känslor, tankar). Validerar mao beteendeterapeutiska angreppssättet?
+
+- För en replikering vore det intressant att använda andra transdiagnostiska skalor kopplade till värderat handlande, typ VLQ, och även SAAQ.
+
+- ...
+
+- ...
+
+## References {.allowframebreaks}
+
+```{r references, echo = F, eval = T}
+
+knitr::write_bib(packages, "packages.bib")
+
+```
+
+\small
