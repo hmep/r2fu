@@ -617,8 +617,8 @@ rout <- function(lmerobj) {
   x.emmpairs.by.group <- pairs(x.emm.by.group, adjust="bonferroni")
   x.emmpairs.by.time <- pairs(x.emm.by.time, adjust="bonferroni")
   x.sd <- sqrt(as.data.frame(VarCorr(lmerobj))[1,4] + as.data.frame(VarCorr(lmerobj))[2,4])
-  x.eff.by.group <- as.data.frame(eff_size(x.emm.by.group[effsel.group], sigma = x.sd, edf = df.residual(lmerobj)))
-  x.eff.by.time <- as.data.frame(eff_size(x.emm.by.time[effsel.time], sigma = x.sd, edf = df.residual(lmerobj)))
+  x.eff.by.group <- eff_size(x.emm.by.group[effsel.group], sigma = x.sd, edf = df.residual(lmerobj))
+  x.eff.by.time <- eff_size(x.emm.by.time[effsel.time], sigma = x.sd, edf = df.residual(lmerobj))
   return(
     list(
       emm.by.group = as.data.frame(x.emm.by.group),
