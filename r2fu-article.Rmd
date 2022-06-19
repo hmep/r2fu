@@ -10,13 +10,13 @@ author:
 - Per Carlbring^[University of Nowhere]
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
-  pdf_document:
-    latex_engine: xelatex
-    keep_tex: yes
+  word_document: default
   html_document:
     toc: yes
     df_print: paged
-  word_document: default
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: yes
 tags:
 - nothing
 - nothingness
@@ -949,18 +949,18 @@ it2 <- grepl(xT2, r2fu.itt.data$time)
 it3 <- grepl(xT3, r2fu.itt.data$time)
 it4 <- grepl(xT4, r2fu.itt.data$time)
 
-# Copy values over, starting with it2 and working upwards
+# Copy values over, starting with it2 and moving forward
 for (xmeasure in measurementshortnames) {
   copyvalues <-
     which(is.na(r2fu.itt.data[it2, xmeasure])) # Pre --> During
   r2fu.itt.data[it2, xmeasure][copyvalues] <-
     r2fu.itt.data[it1, xmeasure][copyvalues]
   copyvalues <-
-    which(is.na(r2fu.itt.data[it3, xmeasure])) # Pre --> Post
+    which(is.na(r2fu.itt.data[it3, xmeasure])) # During --> Post
   r2fu.itt.data[it3, xmeasure][copyvalues] <-
     r2fu.itt.data[it2, xmeasure][copyvalues]
   copyvalues <-
-    which(is.na(r2fu.itt.data[it4, xmeasure])) # Pre --> Follow-up
+    which(is.na(r2fu.itt.data[it4, xmeasure])) # Post --> Follow-up
   r2fu.itt.data[it4, xmeasure][copyvalues] <-
     r2fu.itt.data[it3, xmeasure][copyvalues]
 }
@@ -1075,7 +1075,7 @@ xcolnames <-
 
 colnames(clinsig.table) <- xcolnames
 
-knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of patients that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Followup-time-points respectively. For missing values (i.e. caused by drop-outs), the last collected value was moved forward the next time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rccccc", escape = F) %>%
+knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of patients that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Followup-time-points respectively. For missing values (i.e. caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rccccc", escape = F) %>%
   kable_styling(full_width = F, font_size = 9) %>%
   pack_rows(measurementnames[1], 1, 5, bold = F) %>%
   pack_rows(measurementnames[2], 6, 10, bold = F) %>%
