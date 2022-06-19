@@ -41,41 +41,20 @@ editor_options:
 
 ```{r setup, include=F}
 
-# - \usepackage{setspace}
-# - \setstretch{1.2}
-
-# https://yihui.org/knitr/options/
-# https://www.lcampanelli.org/mixed-effects-modeling-lme4/
-# https://fukamilab.github.io/BIO202/04-A-mixed-models.html
-# https://jtools.jacob-long.com/index.html
-# https://arxiv.org/abs/1308.5499
-# https://easystats.github.io/performance/
-# http://glmm.wikidot.com/pkg-comparison
-# http://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#should-i-treat-factor-xxx-as-fixed-or-random
-
-#performance::model_performance(m3)
-#performance::compare_performance(m1, m2, m3, m4, rank = TRUE)
-#performance::plot(compare_performance(m1, m2, m4, rank = TRUE))
-
 packages <-
   c(
     "pwr",
     "lmerTest",
-    "broom.mixed",
     "readxl",
     "writexl",
     "ggplot2",
     "tidyr",
     "jtools",
-    "interactions",
-    "lattice",
     "modelr",
     "ggeffects",
     "emmeans",
     "patchwork",
-    "outliers",
     "performance",
-    "gridExtra",
     "sjPlot",
     "kableExtra",
     "clinicalsignificance"
