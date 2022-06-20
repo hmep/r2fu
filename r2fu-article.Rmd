@@ -125,13 +125,13 @@ xpercent <- function(x,d){paste("$",formatC(x * 100,digits=d,decimal.mark=".",dr
 
 xpr <- function(x) {
   paste("$p$",
-        ifelse(x < 0.001, "< 0,001", ifelse(x < 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=".")), ifelse(x > 0.05, "DO NOT REPORT", "= 0.05")))
+        ifelse(x < 0.001, "< $0.00$", ifelse(x < 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=".")), ifelse(x > 0.05, "DO NOT REPORT", "= $0.05$")))
   )
 }
 
 xpr_special <- function(x) {
   paste("$p$",
-        ifelse(x < 0.001, "< 0,001", ifelse(x < 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=",")), ifelse(x > 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=".")), "= 0.05")))
+        ifelse(x < 0.001, "< 0,00", ifelse(x < 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=",")), ifelse(x > 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=".")), "= 0.05")))
   )
 }
 
@@ -152,6 +152,20 @@ xpsshack <- function(x) {
 
 enkable = function(...) {
   knitr::kable(..., format.args = list(decimal.mark = '.', big.mark = ','), linesep='', format="latex")
+}
+
+report.anova <- function(anovaobj, row) {
+  paste0(
+    "\textit{F}($",
+    round(anovaobj$NumDF[row], 2),
+    "$, $",
+    round(anovaobj$DenDF[row], 2),
+    "$",
+    ") = $",
+    round(anovaobj$`F value`[row], 2),
+    "$, \textit{p} =",
+    xpr(anovaobj$`Pr(>F)`[row])
+  )
 }
 
 ```
@@ -432,8 +446,8 @@ aaas_ad.lmer <-
     na.action = na.omit,
     REML = T
   )
-anova(aaas_ad.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 # performance::check_model(aaas_ad.lmer) # Checked, found to be OK!
+aaas_ad.anova <- anova(aaas_ad.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 aaas_ad.emm.plot <-
   plot(
     ggemmeans(aaas_ad.lmer, terms = c("time", "group")),
@@ -454,8 +468,8 @@ aaas_ag.lmer <-
     na.action = na.omit,
     REML = T
   )
-anova(aaas_ag.lmer,type=3) # No significant interaction
 # performance::check_model(aaas_ag.lmer) # Checked, found to be OK!
+aaas_ag.anova <- anova(aaas_ag.lmer,type=3) # No significant interaction
 aaas_ag.emm.plot <-
   plot(
     ggemmeans(aaas_ag.lmer, terms = c("time", "group")),
@@ -476,8 +490,8 @@ rathus.lmer <-
     na.action = na.omit,
     REML = T
   )
-anova(rathus.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 # performance::check_model(rathus.lmer) # Checked, found to be OK!
+rathus.anova <- anova(rathus.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 rathus.emm.plot <-
   plot(
     ggemmeans(rathus.lmer, terms = c("time", "group")),
@@ -500,8 +514,8 @@ lsas_sum.lmer <-
     na.action = na.omit,
     REML = T
   )
-anova(lsas_sum.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 # performance::check_model(lsas_sum.lmer) # Checked, found to be OK!
+lsas_sum.anova <- anova(lsas_sum.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 lsas_sum.emm.plot <-
   plot(
     ggemmeans(lsas_sum.lmer, terms = c("time", "group")),
@@ -523,8 +537,8 @@ phq_sum.lmer <-
     na.action = na.omit,
     REML = T
   )
-anova(phq_sum.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 # performance::check_model(phq_sum.lmer) # Checked, found to be OK!
+phq_sum.anova <- anova(phq_sum.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 phq_sum.emm.plot <-
   plot(
     ggemmeans(phq_sum.lmer, terms = c("time", "group")),
@@ -546,8 +560,8 @@ gad_sum.lmer <-
     na.action = na.omit,
     REML = T
   )
-anova(gad_sum.lmer,type=3) # No significant interaction
 # performance::check_model(gad_sum.lmer) # Checked, found to be OK!
+gad_sum.anova <- anova(gad_sum.lmer,type=3) # No significant interaction
 gad_sum.emm.plot <-
   plot(
     ggemmeans(gad_sum.lmer, terms = c("time", "group")),
@@ -569,8 +583,8 @@ well.lmer <-
     na.action = na.omit,
     REML = T
   )
-anova(well.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 # performance::check_model(well.lmer) # Checked, found to be OK!
+well.anova <- anova(well.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 well.emm.plot <-
   plot(
     ggemmeans(well.lmer, terms = c("time", "group")),
@@ -923,20 +937,33 @@ saveRDS(effectsize.table,file="effectsize.table.RDS")
 
 effectsize.table <- readRDS("effectsize.table.RDS")
 
-knitr::kable(effectsize.table, caption="Within group effect sizes [95\\% CI] comparing estimated marginal means between Pre- and Post-treatment, as well as between Pre-treatment and 1-year Follow-up, and between group effect sizes [95\\% CI] at Post-treatment and 1-year Follow-up.", align="rcccccc", escape=F, booktabs = T, format = "latex") %>%
+knitr::kable(
+  effectsize.table,
+  caption = "Within group effect sizes [95\\% CI] comparing estimated marginal means between Pre- and Post-treatment, as well as between Pre-treatment and 1-year Follow-up, and between group effect sizes [95\\% CI] at Post-treatment and 1-year Follow-up.",
+  align = "rcccccc",
+  escape = F,
+  booktabs = T,
+  format = "latex"
+) %>%
   kable_styling(full_width = F, font_size = 7) %>%
   pack_rows("Within-group effect sizes", 1, 5, bold = F) %>%
   pack_rows("Between-group effect sizes", 6, 11, bold = F) %>%
-  row_spec(c(2,4,5,8,11), extra_latex_after = "\\midrule") %>%
+  row_spec(c(2, 4, 5, 8, 11), extra_latex_after = "\\midrule") %>%
   column_spec(c(1), width = "27em") %>%
   column_spec(c(2:7), width = "11em") %>%
-  add_header_above(c(" ", "Primary transdiagnostic measures of skillful behaviors" = 3, "Secondary measures of syndromal symptoms" = 3)) %>%
+  add_header_above(
+    c(
+      " ",
+      "Primary transdiagnostic measures of skillful behaviors" = 3,
+      "Secondary measures of syndromal symptoms" = 3
+    )
+  ) %>%
   footnote(
     general = c(
       "CI = confidence interval",
       "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale.",
       "Pre = pre-treatment measurement at 0 weeks; During = measurement during week 4; Post = measurement after completion of treatment at week 8; Follow-up = measurement at 1 year after completion.",
-      "\\\\dag = the most conservative measurement for the Waitlist control condition, in order to suppress any  nocebo effects; see dotted lines in graphs in Figure 3 for identification of time point.",
+      "\\\\dag = the most conservative measurement for the Waitlist control condition, in order to suppress any nocebo effects; see dotted lines in graphs in Figure 3 for identification of time point.",
       "\\\\textsuperscript{*} = \\\\textit{p} < .05, \\\\textsuperscript{**} = \\\\textit{p} < .01, \\\\textsuperscript{***} = \\\\textit{p} < .00; \\\\textit{p}-values are Bonferroni adjusted."
     ),
     escape = F,
@@ -1238,7 +1265,7 @@ Lösrykta tankar/stycken att utveckla och sammanfoga till en helhet:
 
 - Skalorna är inte validerade på svenska.
 
-- Problem med ITT -- fångar inte ev försämring ...
+- Problem med ITT -- fångar inte ev försämring ... men vi får anta att regression to the mean gäller även här.
 
 - Problematisering väntelista som kontroll, hantering av problem. It is noteworthy that the PHQ-9 mean of the non-active Waitlist control group increases as the participants wait in line to begin treatment; this might be due to the nocebo or ”reverse placebo” effect [@Furukawa2014;@Cuijpers2016], where participants’ expectations contribute to their mood actually worsening, which in turn risks inflating between group effect sizes. The other scales do not exhibit this possible problem. To mitigate any possible nocebo effect, the most conservative estimated marginal mean from either the Pre, During, Post time points was used for all within group pairwise comparisons for each scale.
 
