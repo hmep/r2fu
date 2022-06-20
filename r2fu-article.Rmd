@@ -950,7 +950,7 @@ it2 <- grepl(xT2, r2fu.itt.data$time)
 it3 <- grepl(xT3, r2fu.itt.data$time)
 it4 <- grepl(xT4, r2fu.itt.data$time)
 
-# Copy values over, starting with it2 and moving forward
+# Copy values over to empty future time points, starting with Pre --> During and moving forward
 for (xmeasure in measurementshortnames) {
   copyvalues <-
     which(is.na(r2fu.itt.data[it2, xmeasure])) # Pre --> During
