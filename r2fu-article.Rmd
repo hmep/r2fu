@@ -356,7 +356,7 @@ Both therapists supporting participants in the guided condition were final-year 
 
 Five participants were excluded from the analyses due to wrongful inclusion as they were receiving concurrent psychological treatment.
 
-```{bash, include = F, eval = T, dpi = 300}
+```{bash, include = F, eval = F, dpi = 300}
 
 filename="flowchart"
 
@@ -754,7 +754,7 @@ norms <- rbind(
 ```
 
 
-```{r buildeffsizetab, echo = F, cache = F, eval = F}
+```{r buildeffsizetab, echo = F, cache = F, eval = T}
 
 comparison <- linebreak(c(
   "Self-help, Pre vs. Post",
