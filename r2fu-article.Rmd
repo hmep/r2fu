@@ -44,9 +44,10 @@ editor_options:
 packages <-
   c(
     "pwr",
-    "lmerTest",
     "readxl",
     "writexl",
+    "lmerTest",
+    "dunn.test",
     "ggplot2",
     "tidyr",
     "jtools",
@@ -933,7 +934,7 @@ knitr::kable(effectsize.table, caption="Within group effect sizes [95\\% CI] com
 
 ```
 
-```{r clinsigtab, echo = F, eval = T}
+```{r clinsig, echo = F, eval = T}
 
 # Intention-to-treat data frame
 r2fu.itt.data <- r2fu.long.data
@@ -967,8 +968,9 @@ for (xmeasure in measurementshortnames) {
 
 # Clinical significant change data.frame output
 clinsigraw <- function(measure, direction, first, last, group) {
+  groupkey <- grepl(group, r2fu.itt.data$group)
   clinsig <- clinical_significance(
-    data = r2fu.itt.data[group, ],
+    data = r2fu.itt.data[groupkey,],
     better_is = direction,
     id = subject,
     time = time,
@@ -980,16 +982,92 @@ clinsigraw <- function(measure, direction, first, last, group) {
     sd_functional = norms[which(measurementshortnames == measure), 3],
     type = "c"
   )
-  return(cbind(
-    "recovered" = clinsig$categories$recovered#,
-    #"improved" = clinsig$categories$improved
-    ))
+  output <- clinsig$categories$recovered
+  return(as.numeric(output))
 }
 
+# Test statistical significance of clinical significant change Pre -> Post
+aaas_ad.pre.post.kw <- dunn.test(list(
+  clinsigraw("aaas_ad", "higher", "Pre", "Post", xG3),
+  clinsigraw("aaas_ad", "higher", "Pre", "Post", xG1),
+  clinsigraw("aaas_ad", "higher", "Pre", "Post", xG2)
+), method="bonferroni")
+
+aaas_ag.pre.post.kw <- dunn.test(list(
+  clinsigraw("aaas_ag", "higher", "Pre", "Post", xG3),
+  clinsigraw("aaas_ag", "higher", "Pre", "Post", xG1),
+  clinsigraw("aaas_ag", "higher", "Pre", "Post", xG2)
+), method="bonferroni")
+
+rathus.pre.post.kw <- dunn.test(list(
+  clinsigraw("rathus", "higher", "Pre", "Post", xG3),
+  clinsigraw("rathus", "higher", "Pre", "Post", xG1),
+  clinsigraw("rathus", "higher", "Pre", "Post", xG2)
+), method="bonferroni")
+
+phq_sum.pre.post.kw <- dunn.test(list(
+  clinsigraw("phq_sum", "lower", "Pre", "Post", xG3),
+  clinsigraw("phq_sum", "lower", "Pre", "Post", xG1),
+  clinsigraw("phq_sum", "lower", "Pre", "Post", xG2)
+), method="bonferroni")
+
+gad_sum.pre.post.kw <- dunn.test(list(
+  clinsigraw("gad_sum", "lower", "Pre", "Post", xG3),
+  clinsigraw("gad_sum", "lower", "Pre", "Post", xG1),
+  clinsigraw("gad_sum", "lower", "Pre", "Post", xG2)
+), method="bonferroni")
+
+lsas_sum.pre.post.kw <- dunn.test(list(
+  clinsigraw("lsas_sum", "lower", "Pre", "Post", xG3),
+  clinsigraw("lsas_sum", "lower", "Pre", "Post", xG1),
+  clinsigraw("lsas_sum", "lower", "Pre", "Post", xG2)
+), method="bonferroni")
+
+# Test statistical significance of clinical significant change Pre -> Follow-up
+aaas_ad.pre.fu.kw <- dunn.test(list(
+  clinsigraw("aaas_ad", "higher", "Pre", "Follow-up", xG3),
+  clinsigraw("aaas_ad", "higher", "Pre", "Follow-up", xG1),
+  clinsigraw("aaas_ad", "higher", "Pre", "Follow-up", xG2)
+), method="bonferroni")
+
+aaas_ag.pre.fu.kw <- dunn.test(list(
+  clinsigraw("aaas_ag", "higher", "Pre", "Follow-up", xG3),
+  clinsigraw("aaas_ag", "higher", "Pre", "Follow-up", xG1),
+  clinsigraw("aaas_ag", "higher", "Pre", "Follow-up", xG2)
+), method="bonferroni")
+
+rathus.pre.fu.kw <- dunn.test(list(
+  clinsigraw("rathus", "higher", "Pre", "Follow-up", xG3),
+  clinsigraw("rathus", "higher", "Pre", "Follow-up", xG1),
+  clinsigraw("rathus", "higher", "Pre", "Follow-up", xG2)
+), method="bonferroni")
+
+phq_sum.pre.fu.kw <- dunn.test(list(
+  clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG3),
+  clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG1),
+  clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG2)
+), method="bonferroni")
+
+gad_sum.pre.fu.kw <- dunn.test(list(
+  clinsigraw("gad_sum", "lower", "Pre", "Follow-up", xG3),
+  clinsigraw("gad_sum", "lower", "Pre", "Follow-up", xG1),
+  clinsigraw("gad_sum", "lower", "Pre", "Follow-up", xG2)
+), method="bonferroni")
+
+lsas_sum.pre.fu.kw <- dunn.test(list(
+  clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG3),
+  clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG1),
+  clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG2)
+), method="bonferroni")
+
+```
+
+```{r clinsigtab, echo = F, eval = T}
+
 # Clinical significant change table output
-clinsig <- function(measure, direction, first, last, group) {
+clinsig <- function(measure, direction, first, last, groupkey) {
   clinsig <- clinical_significance(
-    data = r2fu.itt.data[group, ],
+    data = r2fu.itt.data[groupkey, ],
     better_is = direction,
     id = subject,
     time = time,
@@ -1075,7 +1153,7 @@ xcolnames <-
 
 colnames(clinsig.table) <- xcolnames
 
-knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of participants that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Followup-time-points respectively. For missing values (i.e. caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rccccc", escape = F) %>%
+knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of participants that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Followup-time-points respectively (rows named ”Recovered”). For missing values (i.e. caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rccccc", escape = F) %>%
   kable_styling(full_width = F, font_size = 9) %>%
   pack_rows(measurementnames[1], 1, 5, bold = F) %>%
   pack_rows(measurementnames[2], 6, 10, bold = F) %>%
