@@ -1137,10 +1137,6 @@ clinsig.table <- rbind(
   )
 )
 
-# xG3 = "Waitlist"
-# xG1 = "Self-help"
-# xG2 = "Support"
-
 xcolnames <-
   c(
     " ",
@@ -1172,11 +1168,6 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
     footnote_as_chunk = F,
     threeparttable = T
   )
-# xG3 = "Waitlist"
-# xG1 = "Self-help"
-# xG2 = "Support"
-
-#kruskal.test(x ~ y)
 
 ```
 
