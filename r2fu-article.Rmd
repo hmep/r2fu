@@ -125,13 +125,13 @@ xpercent <- function(x,d){paste("$",formatC(x * 100,digits=d,decimal.mark=".",dr
 
 xpr <- function(x) {
   paste("$p$",
-        ifelse(x < 0.001, "< $0.00$", ifelse(x < 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=".")), ifelse(x > 0.05, "DO NOT REPORT", "= $0.05$")))
+        ifelse(x < 0.001, "< $0.001$", ifelse(x < 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=".")), ifelse(x > 0.05, "DO NOT REPORT", "= $0.05$")))
   )
 }
 
-xpr_special <- function(x) {
+xprnot <- function(x) {
   paste("$p$",
-        ifelse(x < 0.001, "< 0,00", ifelse(x < 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=",")), ifelse(x > 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=".")), "= 0.05")))
+        ifelse(x < 0.001, "< $0.001$", ifelse(x < 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=".")), ifelse(x > 0.05, paste("=",prettyNum(x,digits=1,decimal.mark=".")), "= $0.05$")))
   )
 }
 
@@ -163,8 +163,19 @@ report.anova <- function(anovaobj, row) {
     "$",
     ") = $",
     round(anovaobj$`F value`[row], 2),
-    "$, \textit{p} =",
-    xpr(anovaobj$`Pr(>F)`[row])
+    "$, \textit{p} = ",
+    xprnot(anovaobj$`Pr(>F)`[row])
+  )
+}
+
+report.kw <- function(kwobj, df) {
+  paste0(
+    "\textit{$\\chi^2$}($",
+    df,
+    "$) = $",
+    round(kwobj$chi2, 2),
+    "$, \textit{p} = ",
+    xprnot(pchisq(kwobj$chi2, df, lower.tail = F)) #2do: double check, lower tail or not?
   )
 }
 
