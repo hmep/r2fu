@@ -764,10 +764,10 @@ comparison <- linebreak(c(
   "Waitlist, Pre vs. Post",
   "Self-help at Post vs. Waitlist at Post",
   "Self-help at 1-year Follow-up vs. Waitlist at Post",
-  "Self-help at 1-year Follow-up vs. Waitlist at *",
+  "Self-help at 1-year Follow-up vs. Waitlist at \\dag",
   "Guided self-help at Post vs. Waitlist at Post",
   "Guided self-help at 1-year Follow-up vs. Waitlist at Post",
-  "Guided self-help at 1-year Follow-up vs. Waitlist at *",
+  "Guided self-help at 1-year Follow-up vs. Waitlist at \\dag",
   "Guided self-help at Post vs. Self-help at Post",
   "Guided self-help at 1-year Follow-up vs. Self-help at Follow-up"
   ), align = "r")
@@ -929,8 +929,10 @@ knitr::kable(effectsize.table, caption="Within group effect sizes [95\\% CI] com
       "CI = confidence interval",
       "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale.",
       "Pre = pre-treatment measurement at 0 weeks; During = measurement during week 4; Post = measurement after completion of treatment at week 8; Follow-up = measurement at 1 year after completion.",
-      "* = the most conservative measurement for the Waitlist control condition, in order to suppress any  nocebo effects; see dotted lines in graphs in Figure 3 for identification of time point."
+      "\\\\dag = the most conservative measurement for the Waitlist control condition, in order to suppress any  nocebo effects; see dotted lines in graphs in Figure 3 for identification of time point.",
+      "\\\\textsuperscript{*} = \\\\textit{p} < .05, \\\\textsuperscript{**} = \\\\textit{p} < .01, \\\\textsuperscript{***} = \\\\textit{p} < .00; \\\\textit{p}-values are Bonferroni adjusted."
     ),
+    escape = F,
     general_title = "Notes.",
     footnote_as_chunk = F,
     threeparttable = T
