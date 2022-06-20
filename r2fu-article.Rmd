@@ -10,13 +10,13 @@ author:
 - Per Carlbring^[University of Nowhere]
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
-  word_document: default
-  html_document:
-    toc: yes
-    df_print: paged
   pdf_document:
     latex_engine: xelatex
     keep_tex: yes
+  html_document:
+    toc: yes
+    df_print: paged
+  word_document: default
 tags:
 - nothing
 - nothingness
@@ -142,6 +142,11 @@ xps <- function(x) {
 
 xpss <- function(x) {
   paste(ifelse(x < 0.001, "\\hbox to 0bp{\\textsuperscript{***}}", ifelse(x < 0.01, "\\hbox to 0bp{\\textsuperscript{**}}", ifelse(x > 0.05, "", "\\hbox to 0bp{\\textsuperscript{*}}")))
+  )
+}
+
+xpsshack <- function(x) {
+  paste(ifelse(x < 0.001, "\\\\hbox to 0bp{\\\\textsuperscript{***}}", ifelse(x < 0.01, "\\\\hbox to 0bp{\\\\textsuperscript{**}}", ifelse(x > 0.05, "", "\\\\hbox to 0bp{\\\\textsuperscript{*}}")))
   )
 }
 
@@ -934,7 +939,7 @@ knitr::kable(effectsize.table, caption="Within group effect sizes [95\\% CI] com
 
 ```
 
-```{r clinsig, echo = F, eval = T}
+```{r clinsig, echo = F, eval = T, results='hide'}
 
 # Intention-to-treat data frame
 r2fu.itt.data <- r2fu.long.data
@@ -986,7 +991,7 @@ clinsigraw <- function(measure, direction, first, last, group) {
   return(as.numeric(output))
 }
 
-# Test statistical significance of clinical significant change Pre -> Post
+# Test statistical significance of clinical significant change Pre --> Post
 aaas_ad.pre.post.kw <- dunn.test(list(
   clinsigraw("aaas_ad", "higher", "Pre", "Post", xG3),
   clinsigraw("aaas_ad", "higher", "Pre", "Post", xG1),
@@ -1023,7 +1028,7 @@ lsas_sum.pre.post.kw <- dunn.test(list(
   clinsigraw("lsas_sum", "lower", "Pre", "Post", xG2)
 ), method="bonferroni")
 
-# Test statistical significance of clinical significant change Pre -> Follow-up
+# Test statistical significance of clinical significant change Pre --> Follow-up
 aaas_ad.pre.fu.kw <- dunn.test(list(
   clinsigraw("aaas_ad", "higher", "Pre", "Follow-up", xG3),
   clinsigraw("aaas_ad", "higher", "Pre", "Follow-up", xG1),
@@ -1065,7 +1070,14 @@ lsas_sum.pre.fu.kw <- dunn.test(list(
 ```{r clinsigtab, echo = F, eval = T}
 
 # Clinical significant change table output
-clinsig <- function(measure, direction, first, last, groupkey) {
+clinsig <- function(measure, direction, first, last, group, kwobj) {
+  groupkey <- grepl(group, r2fu.itt.data$group)
+  kwstars <-
+    if (group == xG1) {
+      xpss(kwobj$P.adjusted[1])
+    } else if (group == xG2) {
+      xpss(kwobj$P.adjusted[2])
+    } else { NULL }
   clinsig <- clinical_significance(
     data = r2fu.itt.data[groupkey, ],
     better_is = direction,
@@ -1081,59 +1093,60 @@ clinsig <- function(measure, direction, first, last, groupkey) {
   )
   output <- as.matrix(clinsig$summary[c(2:3)])
   output <- cbind(paste0("$",output[, 1],"$ ($",round(output[, 2] * 100),"$\\%)"))
+  output <- c(paste0(output[1],kwstars), output[c(2:5)])
   return(output)
 }
 
 xclinsigcategories <- c("Recovered", "Improved", "Unchanged", "Deteriorated", "Harmed")
 
 clinsig.table <- rbind(
-  cbind(
+  cbind( # Kruskal-Wallis chi-squared = 7.9198, df = 2, p-value = 0.02
     xclinsigcategories,
-    clinsig("aaas_ad", "higher", "Pre", "Post", ig3),
-    clinsig("aaas_ad", "higher", "Pre", "Post", ig1),
-    clinsig("aaas_ad", "higher", "Pre", "Follow-up", ig1),
-    clinsig("aaas_ad", "higher", "Pre", "Post", ig2),
-    clinsig("aaas_ad", "higher", "Pre", "Follow-up", ig2)
+    clinsig("aaas_ad", "higher", "Pre", "Post", xG3, aaas_ad.pre.post.kw),
+    clinsig("aaas_ad", "higher", "Pre", "Post", xG1, aaas_ad.pre.post.kw),
+    clinsig("aaas_ad", "higher", "Pre", "Follow-up", xG1, aaas_ad.pre.fu.kw),
+    clinsig("aaas_ad", "higher", "Pre", "Post", xG2, aaas_ad.pre.post.kw),
+    clinsig("aaas_ad", "higher", "Pre", "Follow-up", xG2, aaas_ad.pre.fu.kw)
   ),
-  cbind(
+  cbind( # Kruskal-Wallis chi-squared = 0.1847, df = 2, p-value = 0.91
     xclinsigcategories,
-    clinsig("aaas_ag", "higher", "Pre", "Post", ig3),
-    clinsig("aaas_ag", "higher", "Pre", "Post", ig1),
-    clinsig("aaas_ag", "higher", "Pre", "Follow-up", ig1),
-    clinsig("aaas_ag", "higher", "Pre", "Post", ig2),
-    clinsig("aaas_ag", "higher", "Pre", "Follow-up", ig2)
+    clinsig("aaas_ag", "higher", "Pre", "Post", xG3, NULL),
+    clinsig("aaas_ag", "higher", "Pre", "Post", xG1, NULL),
+    clinsig("aaas_ag", "higher", "Pre", "Follow-up", xG1, NULL),
+    clinsig("aaas_ag", "higher", "Pre", "Post", xG2, NULL),
+    clinsig("aaas_ag", "higher", "Pre", "Follow-up", xG2, NULL)
   ),
-  cbind(
+  cbind( # Kruskal-Wallis chi-squared = 21.5053, df = 2, p-value = 0
     xclinsigcategories,
-    clinsig("rathus", "higher", "Pre", "Post", ig3),
-    clinsig("rathus", "higher", "Pre", "Post", ig1),
-    clinsig("rathus", "higher", "Pre", "Follow-up", ig1),
-    clinsig("rathus", "higher", "Pre", "Post", ig2),
-    clinsig("rathus", "higher", "Pre", "Follow-up", ig2)
+    clinsig("rathus", "higher", "Pre", "Post", xG3, rathus.pre.post.kw),
+    clinsig("rathus", "higher", "Pre", "Post", xG1, rathus.pre.post.kw),
+    clinsig("rathus", "higher", "Pre", "Follow-up", xG1, rathus.pre.fu.kw),
+    clinsig("rathus", "higher", "Pre", "Post", xG2, rathus.pre.post.kw),
+    clinsig("rathus", "higher", "Pre", "Follow-up", xG2, rathus.pre.fu.kw)
   ),
-  cbind(
+  cbind( # Kruskal-Wallis chi-squared = 11.8735, df = 2, p-value = 0
     xclinsigcategories,
-    clinsig("phq_sum", "lower", "Pre", "Post", ig3),
-    clinsig("phq_sum", "lower", "Pre", "Post", ig1),
-    clinsig("phq_sum", "lower", "Pre", "Follow-up", ig1),
-    clinsig("phq_sum", "lower", "Pre", "Post", ig2),
-    clinsig("phq_sum", "lower", "Pre", "Follow-up", ig2)
+    clinsig("phq_sum", "lower", "Pre", "Post", xG3, phq_sum.pre.post.kw),
+    clinsig("phq_sum", "lower", "Pre", "Post", xG1, phq_sum.pre.post.kw),
+    clinsig("phq_sum", "lower", "Pre", "Follow-up", xG1, phq_sum.pre.fu.kw),
+    clinsig("phq_sum", "lower", "Pre", "Post", xG2, phq_sum.pre.post.kw),
+    clinsig("phq_sum", "lower", "Pre", "Follow-up", xG2, phq_sum.pre.fu.kw)
   ),
-  cbind(
+  cbind( # Kruskal-Wallis chi-squared = 5.123, df = 2, p-value = 0.08
     xclinsigcategories,
-    clinsig("gad_sum", "lower", "Pre", "Post", ig3),
-    clinsig("gad_sum", "lower", "Pre", "Post", ig1),
-    clinsig("gad_sum", "lower", "Pre", "Follow-up", ig1),
-    clinsig("gad_sum", "lower", "Pre", "Post", ig2),
-    clinsig("gad_sum", "lower", "Pre", "Follow-up", ig2)
+    clinsig("gad_sum", "lower", "Pre", "Post", xG3, NULL),
+    clinsig("gad_sum", "lower", "Pre", "Post", xG1, NULL),
+    clinsig("gad_sum", "lower", "Pre", "Follow-up", xG1, NULL),
+    clinsig("gad_sum", "lower", "Pre", "Post", xG2, NULL),
+    clinsig("gad_sum", "lower", "Pre", "Follow-up", xG2, NULL)
   ),
-  cbind(
+  cbind( # Kruskal-Wallis chi-squared = 14.1971, df = 2, p-value = 0
     xclinsigcategories,
-    clinsig("lsas_sum", "lower", "Pre", "Post", ig3),
-    clinsig("lsas_sum", "lower", "Pre", "Post", ig1),
-    clinsig("lsas_sum", "lower", "Pre", "Follow-up", ig1),
-    clinsig("lsas_sum", "lower", "Pre", "Post", ig2),
-    clinsig("lsas_sum", "lower", "Pre", "Follow-up", ig2)
+    clinsig("lsas_sum", "lower", "Pre", "Post", xG3, lsas_sum.pre.post.kw),
+    clinsig("lsas_sum", "lower", "Pre", "Post", xG1, lsas_sum.pre.post.kw),
+    clinsig("lsas_sum", "lower", "Pre", "Follow-up", xG1, lsas_sum.pre.fu.kw),
+    clinsig("lsas_sum", "lower", "Pre", "Post", xG2, lsas_sum.pre.post.kw),
+    clinsig("lsas_sum", "lower", "Pre", "Follow-up", xG2, lsas_sum.pre.fu.kw)
   )
 )
 
@@ -1151,19 +1164,21 @@ colnames(clinsig.table) <- xcolnames
 
 knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of participants that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Followup-time-points respectively (rows named ”Recovered”). For missing values (i.e. caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rccccc", escape = F) %>%
   kable_styling(full_width = F, font_size = 9) %>%
-  pack_rows(measurementnames[1], 1, 5, bold = F) %>%
-  pack_rows(measurementnames[2], 6, 10, bold = F) %>%
-  pack_rows(measurementnames[3], 11, 15, bold = F) %>%
-  pack_rows(measurementnames[4], 16, 20, bold = F) %>%
-  pack_rows(measurementnames[5], 21, 25, bold = F) %>%
-  pack_rows(measurementnames[6], 26, 30, bold = F) %>%
+  pack_rows(paste0(measurementnames[1],xpsshack(0.02)), 1, 5, bold = F, escape = F) %>%
+  pack_rows(paste0(measurementnames[2],xpsshack(0.91)), 6, 10, bold = F, escape = F) %>%
+  pack_rows(paste0(measurementnames[3],xpsshack(0)), 11, 15, bold = F, escape = F) %>%
+  pack_rows(paste0(measurementnames[4],xpsshack(0)), 16, 20, bold = F, escape = F) %>%
+  pack_rows(paste0(measurementnames[5],xpsshack(0.08)), 21, 25, bold = F, escape = F) %>%
+  pack_rows(paste0(measurementnames[6],xpsshack(0)), 26, 30, bold = F, escape = F) %>%
   row_spec(c(5,10,15,20,25), extra_latex_after = "\\midrule") %>%
   column_spec(c(1), width = "7em") %>%
   column_spec(c(2:6), width = "8em") %>%
   footnote(
     general = c(
-      "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale."
+      "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale.",
+      "\\\\textsuperscript{*} = \\\\textit{p} < .05, \\\\textsuperscript{**} = \\\\textit{p} < .01, \\\\textsuperscript{***} = \\\\textit{p} < .00; \\\\textit{p}-values are Bonferroni adjusted."
       ),
+    escape = F,
     general_title = "Notes.",
     footnote_as_chunk = F,
     threeparttable = T
