@@ -421,7 +421,7 @@ knitr::include_graphics("flowchart.png", auto_pdf = T)
 
 All data were organized in one dataset and analyzed using `r R.Version()$language` `r paste(R.Version()[c("major", "minor")], collapse = ".")`, using lmerTest [@R-lmerTest], emmeans [@R-emmeans], ggeffects [@R-ggeffects], performance [@R-performance], and clinicalsignificance [@R-clinicalsignificance] packages. All syntax is available at https://github.com/hmep/r2fu/, together with anonymized data. A mixed-effects model was used to estimate fixed and random effects of group, time, and group-time interaction. Post-hoc comparisons were performed using T-tests with Bonferroni-corrected p-values. The proportions of participants showing reliable change and reaching clinical significance were determined in accordance with  @Jacobson1991, using the 'c' definition to select the cutoff value. (Eller 'a' för att vara maximalt konservativ?)
 
-```{r mixedmodels, results="asis", fig.width = 13, fig.asp = 0.75, eval = T, cache = F}
+```{r mixedmodels, fig.width = 13, fig.asp = 0.75, echo = F, eval = T, results='hide'}
 
 ### Primary measures
 
@@ -432,6 +432,7 @@ aaas_ad.lmer <-
     na.action = na.omit,
     REML = T
   )
+anova(aaas_ad.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 # performance::check_model(aaas_ad.lmer) # Checked, found to be OK!
 aaas_ad.emm.plot <-
   plot(
@@ -453,6 +454,7 @@ aaas_ag.lmer <-
     na.action = na.omit,
     REML = T
   )
+anova(aaas_ag.lmer,type=3) # No significant interaction
 # performance::check_model(aaas_ag.lmer) # Checked, found to be OK!
 aaas_ag.emm.plot <-
   plot(
@@ -474,6 +476,7 @@ rathus.lmer <-
     na.action = na.omit,
     REML = T
   )
+anova(rathus.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 # performance::check_model(rathus.lmer) # Checked, found to be OK!
 rathus.emm.plot <-
   plot(
@@ -497,6 +500,7 @@ lsas_sum.lmer <-
     na.action = na.omit,
     REML = T
   )
+anova(lsas_sum.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 # performance::check_model(lsas_sum.lmer) # Checked, found to be OK!
 lsas_sum.emm.plot <-
   plot(
@@ -519,6 +523,7 @@ phq_sum.lmer <-
     na.action = na.omit,
     REML = T
   )
+anova(phq_sum.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 # performance::check_model(phq_sum.lmer) # Checked, found to be OK!
 phq_sum.emm.plot <-
   plot(
@@ -541,6 +546,7 @@ gad_sum.lmer <-
     na.action = na.omit,
     REML = T
   )
+anova(gad_sum.lmer,type=3) # No significant interaction
 # performance::check_model(gad_sum.lmer) # Checked, found to be OK!
 gad_sum.emm.plot <-
   plot(
@@ -563,6 +569,7 @@ well.lmer <-
     na.action = na.omit,
     REML = T
   )
+anova(well.lmer,type=3) # Significant interaction, calls for post-hoc analysis
 # performance::check_model(well.lmer) # Checked, found to be OK!
 well.emm.plot <-
   plot(
@@ -754,7 +761,7 @@ norms <- rbind(
 ```
 
 
-```{r buildeffsizetab, echo = F, cache = F, eval = T}
+```{r buildeffsizetab, echo = F, cache = F, eval = F}
 
 comparison <- linebreak(c(
   "Self-help, Pre vs. Post",
@@ -993,79 +1000,93 @@ clinsigraw <- function(measure, direction, first, last, group) {
   return(as.numeric(output))
 }
 
-# Test statistical significance of clinical significant change Pre --> Post
+## Test statistical significance of clinical significant change Pre --> Post
+
 aaas_ad.pre.post.kw <- dunn.test(list(
   clinsigraw("aaas_ad", "higher", "Pre", "Post", xG3),
   clinsigraw("aaas_ad", "higher", "Pre", "Post", xG1),
   clinsigraw("aaas_ad", "higher", "Pre", "Post", xG2)
 ), method="bonferroni")
+# Kruskal-Wallis chi-squared = 7.9198, df = 2, p-value = 0.02, calls for post-hoc analysis
 
 aaas_ag.pre.post.kw <- dunn.test(list(
   clinsigraw("aaas_ag", "higher", "Pre", "Post", xG3),
   clinsigraw("aaas_ag", "higher", "Pre", "Post", xG1),
   clinsigraw("aaas_ag", "higher", "Pre", "Post", xG2)
 ), method="bonferroni")
+# Kruskal-Wallis chi-squared = 0.1847, df = 2, p-value = 0.91
 
 rathus.pre.post.kw <- dunn.test(list(
   clinsigraw("rathus", "higher", "Pre", "Post", xG3),
   clinsigraw("rathus", "higher", "Pre", "Post", xG1),
   clinsigraw("rathus", "higher", "Pre", "Post", xG2)
 ), method="bonferroni")
+# Kruskal-Wallis chi-squared = 14.9234, df = 2, p-value = 0, calls for post-hoc analysis
 
 phq_sum.pre.post.kw <- dunn.test(list(
   clinsigraw("phq_sum", "lower", "Pre", "Post", xG3),
   clinsigraw("phq_sum", "lower", "Pre", "Post", xG1),
   clinsigraw("phq_sum", "lower", "Pre", "Post", xG2)
-), method="bonferroni")
+), method="bonferroni") 
+# Kruskal-Wallis chi-squared = 9.6651, df = 2, p-value = 0.01, calls for post-hoc analysis
 
 gad_sum.pre.post.kw <- dunn.test(list(
   clinsigraw("gad_sum", "lower", "Pre", "Post", xG3),
   clinsigraw("gad_sum", "lower", "Pre", "Post", xG1),
   clinsigraw("gad_sum", "lower", "Pre", "Post", xG2)
-), method="bonferroni")
+), method="bonferroni") 
+# Kruskal-Wallis chi-squared = 2.0239, df = 2, p-value = 0.36
 
 lsas_sum.pre.post.kw <- dunn.test(list(
   clinsigraw("lsas_sum", "lower", "Pre", "Post", xG3),
   clinsigraw("lsas_sum", "lower", "Pre", "Post", xG1),
   clinsigraw("lsas_sum", "lower", "Pre", "Post", xG2)
-), method="bonferroni")
+), method="bonferroni") 
+# Kruskal-Wallis chi-squared = 7.5439, df = 2, p-value = 0.02, calls for post-hoc analysis
 
-# Test statistical significance of clinical significant change Pre --> Follow-up
+## Test statistical significance of clinical significant change Pre --> Follow-up
+
 aaas_ad.pre.fu.kw <- dunn.test(list(
   clinsigraw("aaas_ad", "higher", "Pre", "Follow-up", xG3),
   clinsigraw("aaas_ad", "higher", "Pre", "Follow-up", xG1),
   clinsigraw("aaas_ad", "higher", "Pre", "Follow-up", xG2)
 ), method="bonferroni")
+# Kruskal-Wallis chi-squared = 12.3534, df = 2, p-value = 0, calls for post-hoc analysis
 
 aaas_ag.pre.fu.kw <- dunn.test(list(
   clinsigraw("aaas_ag", "higher", "Pre", "Follow-up", xG3),
   clinsigraw("aaas_ag", "higher", "Pre", "Follow-up", xG1),
   clinsigraw("aaas_ag", "higher", "Pre", "Follow-up", xG2)
 ), method="bonferroni")
+# Kruskal-Wallis chi-squared = 1.7287, df = 2, p-value = 0.42
 
 rathus.pre.fu.kw <- dunn.test(list(
   clinsigraw("rathus", "higher", "Pre", "Follow-up", xG3),
   clinsigraw("rathus", "higher", "Pre", "Follow-up", xG1),
   clinsigraw("rathus", "higher", "Pre", "Follow-up", xG2)
 ), method="bonferroni")
+# Kruskal-Wallis chi-squared = 21.5053, df = 2, p-value = 0, calls for post-hoc analysis
 
 phq_sum.pre.fu.kw <- dunn.test(list(
   clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG3),
   clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG1),
   clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG2)
 ), method="bonferroni")
+# Kruskal-Wallis chi-squared = 11.8735, df = 2, p-value = 0, calls for post-hoc analysis
 
 gad_sum.pre.fu.kw <- dunn.test(list(
   clinsigraw("gad_sum", "lower", "Pre", "Follow-up", xG3),
   clinsigraw("gad_sum", "lower", "Pre", "Follow-up", xG1),
   clinsigraw("gad_sum", "lower", "Pre", "Follow-up", xG2)
 ), method="bonferroni")
+# Kruskal-Wallis chi-squared = 5.123, df = 2, p-value = 0.08
 
 lsas_sum.pre.fu.kw <- dunn.test(list(
   clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG3),
   clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG1),
   clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG2)
 ), method="bonferroni")
+# Kruskal-Wallis chi-squared = 14.1971, df = 2, p-value = 0, calls for post-hoc analysis
 
 ```
 
@@ -1102,7 +1123,7 @@ clinsig <- function(measure, direction, first, last, group, kwobj) {
 xclinsigcategories <- c("Recovered", "Improved", "Unchanged", "Deteriorated", "Harmed")
 
 clinsig.table <- rbind(
-  cbind( # Kruskal-Wallis chi-squared = 7.9198, df = 2, p-value = 0.02
+  cbind(
     xclinsigcategories,
     clinsig("aaas_ad", "higher", "Pre", "Post", xG3, aaas_ad.pre.post.kw),
     clinsig("aaas_ad", "higher", "Pre", "Post", xG1, aaas_ad.pre.post.kw),
@@ -1110,7 +1131,7 @@ clinsig.table <- rbind(
     clinsig("aaas_ad", "higher", "Pre", "Post", xG2, aaas_ad.pre.post.kw),
     clinsig("aaas_ad", "higher", "Pre", "Follow-up", xG2, aaas_ad.pre.fu.kw)
   ),
-  cbind( # Kruskal-Wallis chi-squared = 0.1847, df = 2, p-value = 0.91
+  cbind(
     xclinsigcategories,
     clinsig("aaas_ag", "higher", "Pre", "Post", xG3, NULL),
     clinsig("aaas_ag", "higher", "Pre", "Post", xG1, NULL),
@@ -1118,7 +1139,7 @@ clinsig.table <- rbind(
     clinsig("aaas_ag", "higher", "Pre", "Post", xG2, NULL),
     clinsig("aaas_ag", "higher", "Pre", "Follow-up", xG2, NULL)
   ),
-  cbind( # Kruskal-Wallis chi-squared = 21.5053, df = 2, p-value = 0
+  cbind(
     xclinsigcategories,
     clinsig("rathus", "higher", "Pre", "Post", xG3, rathus.pre.post.kw),
     clinsig("rathus", "higher", "Pre", "Post", xG1, rathus.pre.post.kw),
@@ -1126,7 +1147,7 @@ clinsig.table <- rbind(
     clinsig("rathus", "higher", "Pre", "Post", xG2, rathus.pre.post.kw),
     clinsig("rathus", "higher", "Pre", "Follow-up", xG2, rathus.pre.fu.kw)
   ),
-  cbind( # Kruskal-Wallis chi-squared = 11.8735, df = 2, p-value = 0
+  cbind(
     xclinsigcategories,
     clinsig("phq_sum", "lower", "Pre", "Post", xG3, phq_sum.pre.post.kw),
     clinsig("phq_sum", "lower", "Pre", "Post", xG1, phq_sum.pre.post.kw),
@@ -1134,7 +1155,7 @@ clinsig.table <- rbind(
     clinsig("phq_sum", "lower", "Pre", "Post", xG2, phq_sum.pre.post.kw),
     clinsig("phq_sum", "lower", "Pre", "Follow-up", xG2, phq_sum.pre.fu.kw)
   ),
-  cbind( # Kruskal-Wallis chi-squared = 5.123, df = 2, p-value = 0.08
+  cbind(
     xclinsigcategories,
     clinsig("gad_sum", "lower", "Pre", "Post", xG3, NULL),
     clinsig("gad_sum", "lower", "Pre", "Post", xG1, NULL),
@@ -1142,7 +1163,7 @@ clinsig.table <- rbind(
     clinsig("gad_sum", "lower", "Pre", "Post", xG2, NULL),
     clinsig("gad_sum", "lower", "Pre", "Follow-up", xG2, NULL)
   ),
-  cbind( # Kruskal-Wallis chi-squared = 14.1971, df = 2, p-value = 0
+  cbind(
     xclinsigcategories,
     clinsig("lsas_sum", "lower", "Pre", "Post", xG3, lsas_sum.pre.post.kw),
     clinsig("lsas_sum", "lower", "Pre", "Post", xG1, lsas_sum.pre.post.kw),
@@ -1152,29 +1173,46 @@ clinsig.table <- rbind(
   )
 )
 
+# xcolnames <-
+#   c(
+#     " ",
+#     paste(xG3, xT3),
+#     paste(xG1, xT3),
+#     paste(xG1, xT4),
+#     paste(xG2, xT3),
+#     paste(xG2, xT4)
+#   )
+
 xcolnames <-
   c(
     " ",
-    paste(xG3, xT3),
-    paste(xG1, xT3),
-    paste(xG1, xT4),
-    paste(xG2, xT3),
-    paste(xG2, xT4)
+    paste0(xT1,"--",xT3),
+    paste0(xT1,"--",xT3),
+    paste0(xT1,"--",xT4),
+    paste0(xT1,"--",xT3),
+    paste0(xT1,"--",xT4)
   )
 
 colnames(clinsig.table) <- xcolnames
 
 knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of participants that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Followup-time-points respectively (rows named ”Recovered”). For missing values (i.e. caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rccccc", escape = F) %>%
   kable_styling(full_width = F, font_size = 9) %>%
-  pack_rows(paste0(measurementnames[1],xpsshack(0.02)), 1, 5, bold = F, escape = F) %>%
-  pack_rows(paste0(measurementnames[2],xpsshack(0.91)), 6, 10, bold = F, escape = F) %>%
-  pack_rows(paste0(measurementnames[3],xpsshack(0)), 11, 15, bold = F, escape = F) %>%
-  pack_rows(paste0(measurementnames[4],xpsshack(0)), 16, 20, bold = F, escape = F) %>%
-  pack_rows(paste0(measurementnames[5],xpsshack(0.08)), 21, 25, bold = F, escape = F) %>%
-  pack_rows(paste0(measurementnames[6],xpsshack(0)), 26, 30, bold = F, escape = F) %>%
+  # pack_rows(paste0(measurementnames[1],xpsshack(0.02)), 1, 5, bold = F, escape = F) %>%
+  # pack_rows(paste0(measurementnames[2],xpsshack(0.91)), 6, 10, bold = F, escape = F) %>%
+  # pack_rows(paste0(measurementnames[3],xpsshack(0)), 11, 15, bold = F, escape = F) %>%
+  # pack_rows(paste0(measurementnames[4],xpsshack(0)), 16, 20, bold = F, escape = F) %>%
+  # pack_rows(paste0(measurementnames[5],xpsshack(0.08)), 21, 25, bold = F, escape = F) %>%
+  # pack_rows(paste0(measurementnames[6],xpsshack(0)), 26, 30, bold = F, escape = F) %>%
+  pack_rows(paste0(measurementnames[1]), 1, 5, bold = F, escape = F) %>%
+  pack_rows(paste0(measurementnames[2]), 6, 10, bold = F, escape = F) %>%
+  pack_rows(paste0(measurementnames[3]), 11, 15, bold = F, escape = F) %>%
+  pack_rows(paste0(measurementnames[4]), 16, 20, bold = F, escape = F) %>%
+  pack_rows(paste0(measurementnames[5]), 21, 25, bold = F, escape = F) %>%
+  pack_rows(paste0(measurementnames[6]), 26, 30, bold = F, escape = F) %>%
   row_spec(c(5,10,15,20,25), extra_latex_after = "\\midrule") %>%
   column_spec(c(1), width = "7em") %>%
   column_spec(c(2:6), width = "8em") %>%
+  add_header_above(c(" ", "Waitlist" = 1, "Self-help" = 2, "Guided" = 2)) %>%
   footnote(
     general = c(
       "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale.",
