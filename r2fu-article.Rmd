@@ -463,7 +463,9 @@ knitr::include_graphics("flowchart.png", auto_pdf = T)
 
 ## Analysis
 
-All data were organized in one dataset and analyzed using `r R.Version()$language` `r paste(R.Version()[c("major", "minor")], collapse = ".")`, using lmerTest [@R-lmerTest], emmeans [@R-emmeans], ggeffects [@R-ggeffects], performance [@R-performance], and clinicalsignificance [@R-clinicalsignificance] packages. All syntax is available at https://github.com/hmep/r2fu/, together with anonymized data. A linear mixed-effects model was fitted to estimate fixed and random effects of group, time, and group-time interaction, using an unstructured covariance pattern. Post-hoc comparisons were performed using T-tests with Bonferroni-corrected p-values. The proportions of participants showing reliable change and reaching clinical significance were determined in accordance with  @Jacobson1991, using the 'c' definition to select the cutoff value. (Eller 'a' för att vara maximalt konservativ?)
+All data were organized in one dataset and analyzed using `r R.Version()$language` `r paste(R.Version()[c("major", "minor")], collapse = ".")`, using lmerTest [@R-lmerTest], emmeans [@R-emmeans], ggeffects [@R-ggeffects], performance [@R-performance], and clinicalsignificance [@R-clinicalsignificance] packages. All syntax is available at https://github.com/hmep/r2fu/, together with anonymized data. 
+
+A linear mixed-effects model was fitted to estimate fixed and random effects of group, time, and group-time interaction, using an unstructured covariance pattern, and the Kenward-Roger approximation to estimate denominator degrees of freedom. Post-hoc comparisons were performed using T-tests with Bonferroni-corrected p-values. The proportions of participants showing reliable change and reaching clinical significance were determined in accordance with  @Jacobson1991, using the 'c' definition to select the cutoff value. (Eller 'a' för att vara maximalt konservativ?)
 
 ```{r mixedmodels, fig.width = 13, fig.asp = 0.75, echo = F, eval = T, results='hide'}
 
