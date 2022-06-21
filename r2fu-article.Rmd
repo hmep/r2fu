@@ -479,7 +479,7 @@ aaas_ad.lmer <-
     REML = T
   )
 # performance::check_model(aaas_ad.lmer) # Checked, found to be OK!
-aaas_ad.anova <- anova(aaas_ad.lmer, type=3, ddf="Kenward-Roger")) # Significant interaction, calls for post-hoc analysis
+aaas_ad.anova <- anova(aaas_ad.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for post-hoc analysis
 aaas_ad.emm.plot <-
   plot(
     ggemmeans(aaas_ad.lmer, terms = c("time", "group")),
@@ -1444,7 +1444,7 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
 
 ```
 
-Mixed models for two of three primary measures revealed time \texttimes{} group interaction effects: The Adaptive subscale of AAA-S, `r report.anova(aaas_ad.anova)[3]`, and the RAS, `r report.anova(rathus.anova)[3]`. The model for Aggressive subscale of AAA-S, `r report.anova(aaas_ag.anova)[3]` did not. Taken together, this suggests that constructive behavioral correlates of assertiveness increased during the course of the intervention, and maladaptive correlates did not. Post hoc pairwise comparisons showed that ...
+Mixed models for two of three primary measures revealed time \texttimes{} group interaction effects: The Adaptive subscale of AAA-S, `r report.anova(aaas_ad.anova)[3]`, and the RAS, `r report.anova(rathus.anova)[3]`. The model for Aggressive subscale of AAA-S, `r report.anova(aaas_ag.anova)[3]` did not. Taken together, this suggests that constructive behavioral correlates of assertiveness increased during the course of the intervention, while maladaptive correlates did not. Post hoc pairwise comparisons showed that ...
 
 # Discussion
 
