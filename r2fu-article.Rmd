@@ -834,27 +834,41 @@ within.effsize <- function(lmerobj,effrow,direction,emmpairsrow=NULL) {
     stars <-  if(is.null(emmpairsrow)) {} else {
       xpss(rout(lmerobj)$emmpairs$p.value[emmpairsrow])
     }
+    if (direction == -1) {
+      lower = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
+      upper = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
+    } else {
+      lower = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
+      upper = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
+    }
     linebreak(paste0(
       xresult(rout(lmerobj)$eff.by.group$effect.size[effrow] * direction, 2),
       " [",
-      xresult(rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction, 2),
+      xresult(lower, 2),
       ", ",
-      xresult(rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction, 2),
+      xresult(upper, 2),
       "]",
       stars
     ), align = "c")
 }
 
-between.effsize <- function(lmerobj, row, direction, emmpairsrow=NULL) {
+between.effsize <- function(lmerobj, effrow, direction = 1, emmpairsrow=NULL) {
     stars <-  if(is.null(emmpairsrow)) {} else {
       xpss(rout(lmerobj)$emmpairs$p.value[emmpairsrow])
     }
+    if (direction == -1) {
+      lower = rout(lmerobj)$eff.by.time$upper.CL[effrow] * direction
+      upper = rout(lmerobj)$eff.by.time$lower.CL[effrow] * direction
+    } else {
+      lower = rout(lmerobj)$eff.by.time$lower.CL[effrow] * direction
+      upper = rout(lmerobj)$eff.by.time$upper.CL[effrow] * direction
+    }
   linebreak(paste0(
-    xresult(rout(lmerobj)$eff.by.time$effect.size[row] * direction, 2),
+    xresult(rout(lmerobj)$eff.by.time$effect.size[effrow] * direction, 2),
     " [",
-    xresult(rout(lmerobj)$eff.by.time$upper.CL[row] * direction, 2),
+    xresult(lower, 2),
     ", ",
-    xresult(rout(lmerobj)$eff.by.time$lower.CL[row] * direction, 2),
+    xresult(upper, 2),
     "]",
     stars
   ),
