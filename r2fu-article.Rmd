@@ -162,14 +162,14 @@ enkable = function(...) {
 
 report.anova <- function(anovaobj, row) {
   paste0(
-    "\textit{F}($",
+    "\\textit{F}($",
     round(anovaobj$NumDF[row], 2),
     "$, $",
     round(anovaobj$DenDF[row], 2),
     "$",
     ") = $",
     round(anovaobj$`F value`[row], 2),
-    "$, \textit{p} = ",
+    "$, ",
     xprnot(anovaobj$`Pr(>F)`[row])
   )
 }
@@ -210,7 +210,7 @@ Assertiveness training in general, however, goes back to the very first behavior
 
 (Säga något här om ev för- och nackdelar med transdiagnostiska behandlingsmål jämfört med syndromal symptomreduktion som mål, relatera till ex ACT och Rozentals prokrastineringsmål? Kolla upp vad forskningen säger här.)
 
-Building on the definition from @alberti2017your, assertiveness can be operationalized as acting with respect to both personal rights and rights of others. Assertion, when made in a constructive way, thus takes into account not only the expected result of the interaction (e.g. having said no to someone else’s demand, or having made a request) but also negotiates the strength of the interaction with regards to both the importance of the relationship (“Having stated my refusal/request, what do I want the other person to think of me?”) and what @linehan1993skills refers to as ‘self-respect’ (“Having stated my refusal/request, what do I want to think of myself?”). Assertive behavior, thus, is the product of respect of rights of others, and respect of rights of self – in the service of getting the outcome that the interlocutor wants. This definition might be offensive to someone who believes relationships to transcend function and self-interest. However, beyond taking into account the importance of the relationship with the counterpart in the transaction, it is not normative, and offers plenty  of opportunities for idiographic and contextual descriptions of assertion in therapy, i.e. when designing in vivo behavioral experiments, regardless of cultural influences on what is considered to be acceptable behavior (within a family, community, society, et.c.).
+Building on the definition from @alberti2017your, assertiveness can be operationalized as acting with respect to both personal rights and rights of others. Assertion, when made in a constructive way, thus takes into account not only the expected result of the interaction (e.g. having said no to someone else’s demand, or having made a request) but also negotiates the strength of the interaction with regards to both the importance of the relationship (e.g. “Having stated my refusal/request, what do I want the other person to think of me?”) and what @linehan1993skills refers to as ‘self-respect’ (“Having stated my refusal/request, what do I want to think of myself?”). Assertive behavior is the product of respect of rights of others, and respect of rights of self. This definition is not normative, and offers plenty of opportunities for idiographic and contextual descriptions of assertion in therapy, i.e. when designing in vivo behavioral experiments, regardless of cultural influences on what is considered to be acceptable behavior (within a family, community, society, et.c.).
 
 @Speed2018a conclude that while assertiveness training remains part of DBT, as well as acceptance and commitment therapy (ACT), general assertiveness training has otherwise fallen into oblivion in favor of interventions designed for specific psychiatric disorders. Very little research on assertiveness training has been published since the early 1980s. Recent exceptions include @Baker2015, showing a negative relationship between social anxiety and assertiveness, and @Vagos2019 showing a negative relationship between mental distress in general and assertiveness. @Speed2018a further conclude that there is potential for assertiveness training as an intervention for individuals suffering from anxiety and depression, and as a means to increase relationship satisfaction. The lack of contemporary evidence for the assertiveness construct and assertiveness training as a transdiagnostic intervention calls for new research on the subject.
 
@@ -463,7 +463,7 @@ knitr::include_graphics("flowchart.png", auto_pdf = T)
 
 ## Analysis
 
-All data were organized in one dataset and analyzed using `r R.Version()$language` `r paste(R.Version()[c("major", "minor")], collapse = ".")`, using lmerTest [@R-lmerTest], emmeans [@R-emmeans], ggeffects [@R-ggeffects], performance [@R-performance], and clinicalsignificance [@R-clinicalsignificance] packages. All syntax is available at https://github.com/hmep/r2fu/, together with anonymized data. A mixed-effects model was used to estimate fixed and random effects of group, time, and group-time interaction. Post-hoc comparisons were performed using T-tests with Bonferroni-corrected p-values. The proportions of participants showing reliable change and reaching clinical significance were determined in accordance with  @Jacobson1991, using the 'c' definition to select the cutoff value. (Eller 'a' för att vara maximalt konservativ?)
+All data were organized in one dataset and analyzed using `r R.Version()$language` `r paste(R.Version()[c("major", "minor")], collapse = ".")`, using lmerTest [@R-lmerTest], emmeans [@R-emmeans], ggeffects [@R-ggeffects], performance [@R-performance], and clinicalsignificance [@R-clinicalsignificance] packages. All syntax is available at https://github.com/hmep/r2fu/, together with anonymized data. A linear mixed-effects model was fitted to estimate fixed and random effects of group, time, and group-time interaction, using an unstructured covariance pattern. Post-hoc comparisons were performed using T-tests with Bonferroni-corrected p-values. The proportions of participants showing reliable change and reaching clinical significance were determined in accordance with  @Jacobson1991, using the 'c' definition to select the cutoff value. (Eller 'a' för att vara maximalt konservativ?)
 
 ```{r mixedmodels, fig.width = 13, fig.asp = 0.75, echo = F, eval = T, results='hide'}
 
@@ -477,7 +477,7 @@ aaas_ad.lmer <-
     REML = T
   )
 # performance::check_model(aaas_ad.lmer) # Checked, found to be OK!
-aaas_ad.anova <- anova(aaas_ad.lmer,type=3) # Significant interaction, calls for post-hoc analysis
+aaas_ad.anova <- anova(aaas_ad.lmer, type=3, ddf="Kenward-Roger")) # Significant interaction, calls for post-hoc analysis
 aaas_ad.emm.plot <-
   plot(
     ggemmeans(aaas_ad.lmer, terms = c("time", "group")),
@@ -499,7 +499,7 @@ aaas_ag.lmer <-
     REML = T
   )
 # performance::check_model(aaas_ag.lmer) # Checked, found to be OK!
-aaas_ag.anova <- anova(aaas_ag.lmer,type=3) # No significant interaction
+aaas_ag.anova <- anova(aaas_ag.lmer, type=3, ddf="Kenward-Roger") # No significant interaction
 aaas_ag.emm.plot <-
   plot(
     ggemmeans(aaas_ag.lmer, terms = c("time", "group")),
@@ -521,7 +521,7 @@ rathus.lmer <-
     REML = T
   )
 # performance::check_model(rathus.lmer) # Checked, found to be OK!
-rathus.anova <- anova(rathus.lmer,type=3) # Significant interaction, calls for post-hoc analysis
+rathus.anova <- anova(rathus.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for post-hoc analysis
 rathus.emm.plot <-
   plot(
     ggemmeans(rathus.lmer, terms = c("time", "group")),
@@ -545,7 +545,7 @@ lsas_sum.lmer <-
     REML = T
   )
 # performance::check_model(lsas_sum.lmer) # Checked, found to be OK!
-lsas_sum.anova <- anova(lsas_sum.lmer,type=3) # Significant interaction, calls for post-hoc analysis
+lsas_sum.anova <- anova(lsas_sum.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for post-hoc analysis
 lsas_sum.emm.plot <-
   plot(
     ggemmeans(lsas_sum.lmer, terms = c("time", "group")),
@@ -568,7 +568,7 @@ phq_sum.lmer <-
     REML = T
   )
 # performance::check_model(phq_sum.lmer) # Checked, found to be OK!
-phq_sum.anova <- anova(phq_sum.lmer,type=3) # Significant interaction, calls for post-hoc analysis
+phq_sum.anova <- anova(phq_sum.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for post-hoc analysis
 phq_sum.emm.plot <-
   plot(
     ggemmeans(phq_sum.lmer, terms = c("time", "group")),
@@ -591,7 +591,7 @@ gad_sum.lmer <-
     REML = T
   )
 # performance::check_model(gad_sum.lmer) # Checked, found to be OK!
-gad_sum.anova <- anova(gad_sum.lmer,type=3) # No significant interaction
+gad_sum.anova <- anova(gad_sum.lmer, type=3, ddf="Kenward-Roger") # No significant interaction
 gad_sum.emm.plot <-
   plot(
     ggemmeans(gad_sum.lmer, terms = c("time", "group")),
@@ -614,7 +614,7 @@ well.lmer <-
     REML = T
   )
 # performance::check_model(well.lmer) # Checked, found to be OK!
-well.anova <- anova(well.lmer,type=3) # Significant interaction, calls for post-hoc analysis
+well.anova <- anova(well.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for post-hoc analysis
 well.emm.plot <-
   plot(
     ggemmeans(well.lmer, terms = c("time", "group")),
@@ -810,7 +810,6 @@ norms <- rbind(
 )
 
 ```
-
 
 ```{r buildeffsizetab, echo = F, cache = F, eval = F}
 
@@ -1420,12 +1419,6 @@ colnames(clinsig.table) <- xcolnames
 
 knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of participants that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Followup-time-points respectively (rows named ”Recovered”). For missing values (i.e. caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rccccc", escape = F) %>%
   kable_styling(full_width = F, font_size = 9) %>%
-  # pack_rows(paste0(measurementnames[1],xpsshack(0.02)), 1, 5, bold = F, escape = F) %>%
-  # pack_rows(paste0(measurementnames[2],xpsshack(0.91)), 6, 10, bold = F, escape = F) %>%
-  # pack_rows(paste0(measurementnames[3],xpsshack(0)), 11, 15, bold = F, escape = F) %>%
-  # pack_rows(paste0(measurementnames[4],xpsshack(0)), 16, 20, bold = F, escape = F) %>%
-  # pack_rows(paste0(measurementnames[5],xpsshack(0.08)), 21, 25, bold = F, escape = F) %>%
-  # pack_rows(paste0(measurementnames[6],xpsshack(0)), 26, 30, bold = F, escape = F) %>%
   pack_rows(paste0(measurementnames[1]), 1, 5, bold = F, escape = F) %>%
   pack_rows(paste0(measurementnames[2]), 6, 10, bold = F, escape = F) %>%
   pack_rows(paste0(measurementnames[3]), 11, 15, bold = F, escape = F) %>%
@@ -1448,6 +1441,8 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
   )
 
 ```
+
+Mixed models for two of three primary measures revealed time \texttimes{} group interaction effects: The Adaptive subscale of AAA-S, `r report.anova(aaas_ad.anova)[3]`, and the RAS, `r report.anova(rathus.anova)[3]`. The model for Aggressive subscale of AAA-S, `r report.anova(aaas_ag.anova)[3]` did not. Taken together, this suggests that constructive behavioral correlates of assertiveness increased during the course of the intervention, and maladaptive correlates did not. Post hoc pairwise comparisons showed that ...
 
 # Discussion
 
