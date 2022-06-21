@@ -1033,70 +1033,70 @@ rathus.effsizes <-
 
 phq_sum.effsizes <-
   c(
-    within.effsize(phq_sum.lmer,29,-1,40),  # (Pre Self-help) - (Post Self-help)
-    within.effsize(phq_sum.lmer,30,-1,41),  # (Pre Self-help) - (Follow-up Self-help)
-    within.effsize(phq_sum.lmer,51,-1,62),  # Pre Support - Post Support
-    within.effsize(phq_sum.lmer,52,-1,63),  # Pre Support - (Follow-up Support) 
-    within.effsize(phq_sum.lmer,2,-1,2),    # Pre Waitlist - Post Waitlist
-    between.effsize(phq_sum.lmer,46,-1,25), # Post Waitlist - (Post Self-help)
-    between.effsize(phq_sum.lmer,48,-1,26), # Post Waitlist - (Follow-up Self-help)
-    between.effsize(phq_sum.lmer,48,-1,7), # Pre Waitlist - (Follow-up Self-help); levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(phq_sum.lmer,47,-1,29), # Post Waitlist - Post Support 
-    between.effsize(phq_sum.lmer,49,-1,30), # Post Waitlist - (Follow-up Support)
-    between.effsize(phq_sum.lmer,48,-1,11), # Pre Waitlist - (Follow-up Support); levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(phq_sum.lmer,50,-1,55), # (Post Self-help) - Post Support
-    between.effsize(phq_sum.lmer,55,-1,60)  # (Follow-up Self-help) - (Follow-up Support)
+    within.effsize(phq_sum.lmer,29,1,40),  # (Pre Self-help) - (Post Self-help)
+    within.effsize(phq_sum.lmer,30,1,41),  # (Pre Self-help) - (Follow-up Self-help)
+    within.effsize(phq_sum.lmer,51,1,62),  # Pre Support - Post Support
+    within.effsize(phq_sum.lmer,52,1,63),  # Pre Support - (Follow-up Support) 
+    within.effsize(phq_sum.lmer,2,1,2),    # Pre Waitlist - Post Waitlist
+    between.effsize(phq_sum.lmer,46,1,25), # Post Waitlist - (Post Self-help)
+    between.effsize(phq_sum.lmer,48,1,26), # Post Waitlist - (Follow-up Self-help)
+    between.effsize(phq_sum.lmer,9,1,7), # Pre Waitlist - (Follow-up Self-help); levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(phq_sum.lmer,47,1,29), # Post Waitlist - Post Support 
+    between.effsize(phq_sum.lmer,49,1,30), # Post Waitlist - (Follow-up Support)
+    between.effsize(phq_sum.lmer,10,1,11), # Pre Waitlist - (Follow-up Support); levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(phq_sum.lmer,50,1,55), # (Post Self-help) - Post Support
+    between.effsize(phq_sum.lmer,55,1,60)  # (Follow-up Self-help) - (Follow-up Support)
   )
 
 gad_sum.effsizes.OFF <-
   c(
-    within.effsize(gad_sum.lmer,29,-1,40),  # (Pre Self-help) - (Post Self-help)
-    within.effsize(gad_sum.lmer,30,-1,41),  # (Pre Self-help) - (Follow-up Self-help)
-    within.effsize(gad_sum.lmer,51,-1,62),  # Pre Support - Post Support
-    within.effsize(gad_sum.lmer,52,-1,63),  # Pre Support - (Follow-up Support) 
-    within.effsize(gad_sum.lmer,2,-1,2),    # Pre Waitlist - Post Waitlist
-    between.effsize(gad_sum.lmer,46,-1,25), # Post Waitlist - (Post Self-help)
-    between.effsize(gad_sum.lmer,48,-1,26), # Post Waitlist - (Follow-up Self-help)
-    between.effsize(gad_sum.lmer,48,-1,17), # During Waitlist - (Follow-up Self-help) ; levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(gad_sum.lmer,47,-1,29), # Post Waitlist - Post Support 
-    between.effsize(gad_sum.lmer,49,-1,30), # Post Waitlist - (Follow-up Support)
-    between.effsize(gad_sum.lmer,48,-1,21), # During Waitlist - (Follow-up Support); levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(gad_sum.lmer,50,-1,55), # (Post Self-help) - Post Support
-    between.effsize(gad_sum.lmer,55,-1,60)  # (Follow-up Self-help) - (Follow-up Support)
+    within.effsize(gad_sum.lmer,29,1,40),  # (Pre Self-help) - (Post Self-help)
+    within.effsize(gad_sum.lmer,30,1,41),  # (Pre Self-help) - (Follow-up Self-help)
+    within.effsize(gad_sum.lmer,51,1,62),  # Pre Support - Post Support
+    within.effsize(gad_sum.lmer,52,1,63),  # Pre Support - (Follow-up Support) 
+    within.effsize(gad_sum.lmer,2,1,2),    # Pre Waitlist - Post Waitlist
+    between.effsize(gad_sum.lmer,46,1,25), # Post Waitlist - (Post Self-help)
+    between.effsize(gad_sum.lmer,48,1,26), # Post Waitlist - (Follow-up Self-help)
+    between.effsize(gad_sum.lmer,48,1,17), # During Waitlist - (Follow-up Self-help) ; levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(gad_sum.lmer,47,1,29), # Post Waitlist - Post Support 
+    between.effsize(gad_sum.lmer,49,1,30), # Post Waitlist - (Follow-up Support)
+    between.effsize(gad_sum.lmer,48,1,21), # During Waitlist - (Follow-up Support); levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(gad_sum.lmer,50,1,55), # (Post Self-help) - Post Support
+    between.effsize(gad_sum.lmer,55,1,60)  # (Follow-up Self-help) - (Follow-up Support)
   )
 
 gad_sum.effsizes <-
   c(
-    within.effsize(gad_sum.lmer,29,-1,NULL),  # (Pre Self-help) - (Post Self-help)
-    within.effsize(gad_sum.lmer,30,-1,NULL),  # (Pre Self-help) - (Follow-up Self-help)
-    within.effsize(gad_sum.lmer,51,-1,NULL),  # Pre Support - Post Support
-    within.effsize(gad_sum.lmer,52,-1,NULL),  # Pre Support - (Follow-up Support) 
-    within.effsize(gad_sum.lmer,2,-1,NULL),    # Pre Waitlist - Post Waitlist
-    between.effsize(gad_sum.lmer,46,-1,NULL), # Post Waitlist - (Post Self-help)
-    between.effsize(gad_sum.lmer,48,-1,NULL), # Post Waitlist - (Follow-up Self-help)
-    between.effsize(gad_sum.lmer,48,-1,NULL), # During Waitlist - (Follow-up Self-help) ; levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(gad_sum.lmer,47,-1,NULL), # Post Waitlist - Post Support 
-    between.effsize(gad_sum.lmer,49,-1,NULL), # Post Waitlist - (Follow-up Support)
-    between.effsize(gad_sum.lmer,48,-1,NULL), # During Waitlist - (Follow-up Support); levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(gad_sum.lmer,50,-1,NULL), # (Post Self-help) - Post Support
-    between.effsize(gad_sum.lmer,55,-1,NULL)  # (Follow-up Self-help) - (Follow-up Support)
+    within.effsize(gad_sum.lmer,29,1,NULL),  # (Pre Self-help) - (Post Self-help)
+    within.effsize(gad_sum.lmer,30,1,NULL),  # (Pre Self-help) - (Follow-up Self-help)
+    within.effsize(gad_sum.lmer,51,1,NULL),  # Pre Support - Post Support
+    within.effsize(gad_sum.lmer,52,1,NULL),  # Pre Support - (Follow-up Support) 
+    within.effsize(gad_sum.lmer,2,1,NULL),    # Pre Waitlist - Post Waitlist
+    between.effsize(gad_sum.lmer,46,1,NULL), # Post Waitlist - (Post Self-help)
+    between.effsize(gad_sum.lmer,48,1,NULL), # Post Waitlist - (Follow-up Self-help)
+    between.effsize(gad_sum.lmer,33,1,NULL), # During Waitlist - (Follow-up Self-help) ; levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(gad_sum.lmer,47,1,NULL), # Post Waitlist - Post Support 
+    between.effsize(gad_sum.lmer,49,1,NULL), # Post Waitlist - (Follow-up Support)
+    between.effsize(gad_sum.lmer,34,1,NULL), # During Waitlist - (Follow-up Support); levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(gad_sum.lmer,50,1,NULL), # (Post Self-help) - Post Support
+    between.effsize(gad_sum.lmer,55,1,NULL)  # (Follow-up Self-help) - (Follow-up Support)
   )
 
 lsas_sum.effsizes <-
   c(
-    within.effsize(lsas_sum.lmer,29,-1,40),  # (Pre Self-help) - (Post Self-help)
-    within.effsize(lsas_sum.lmer,30,-1,41),  # (Pre Self-help) - (Follow-up Self-help)
-    within.effsize(lsas_sum.lmer,51,-1,62),  # Pre Support - Post Support
-    within.effsize(lsas_sum.lmer,52,-1,63),  # Pre Support - (Follow-up Support) 
-    within.effsize(lsas_sum.lmer,2,-1,2),    # Pre Waitlist - Post Waitlist
-    between.effsize(lsas_sum.lmer,46,-1,25), # Post Waitlist - (Post Self-help)
-    between.effsize(lsas_sum.lmer,48,-1,26), # Post Waitlist - (Follow-up Self-help)
-    between.effsize(lsas_sum.lmer,48,-1,17), # During Waitlist - (Follow-up Self-help) ; levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(lsas_sum.lmer,47,-1,29), # Post Waitlist - Post Support 
-    between.effsize(lsas_sum.lmer,49,-1,30), # Post Waitlist - (Follow-up Support)
-    between.effsize(lsas_sum.lmer,48,-1,21), # During Waitlist - (Follow-up Support); levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(lsas_sum.lmer,50,-1,55), # (Post Self-help) - Post Support
-    between.effsize(lsas_sum.lmer,55,-1,60)  # (Follow-up Self-help) - (Follow-up Support)
+    within.effsize(lsas_sum.lmer,29,1,40),  # (Pre Self-help) - (Post Self-help)
+    within.effsize(lsas_sum.lmer,30,1,41),  # (Pre Self-help) - (Follow-up Self-help)
+    within.effsize(lsas_sum.lmer,51,1,62),  # Pre Support - Post Support
+    within.effsize(lsas_sum.lmer,52,1,63),  # Pre Support - (Follow-up Support) 
+    within.effsize(lsas_sum.lmer,2,1,2),    # Pre Waitlist - Post Waitlist
+    between.effsize(lsas_sum.lmer,46,1,25), # Post Waitlist - (Post Self-help)
+    between.effsize(lsas_sum.lmer,48,1,26), # Post Waitlist - (Follow-up Self-help)
+    between.effsize(lsas_sum.lmer,33,1,17), # During Waitlist - (Follow-up Self-help) ; levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(lsas_sum.lmer,47,1,29), # Post Waitlist - Post Support 
+    between.effsize(lsas_sum.lmer,49,1,30), # Post Waitlist - (Follow-up Support)
+    between.effsize(lsas_sum.lmer,34,1,21), # During Waitlist - (Follow-up Support); levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(lsas_sum.lmer,50,1,55), # (Post Self-help) - Post Support
+    between.effsize(lsas_sum.lmer,55,1,60)  # (Follow-up Self-help) - (Follow-up Support)
   )
 
 effectsize.table <- cbind.data.frame(
@@ -1455,7 +1455,7 @@ Lösrykta tankar/stycken att utveckla och sammanfoga till en helhet:
 
 - För en replikering vore det intressant att använda andra transdiagnostiska skalor kopplade till värderat handlande, typ VLQ, och även SAAQ.
 
-- En fördel med självständigt arbete (som när man går i ett självhjälpsprogram) är sannolikt att man tillskriver förbättringar till sig själv och egna förändrade beteenden än till kontakten med terapeuten -- skulle spekulativt kunna utgöra en del av förklaringen till att självshjälpsgruppen gjort så stora framsteg på egen hand när effekten mäts med positivt formulerade självhävdelsebeteendemål.
+- En fördel med självständigt arbete (som när man går i ett självhjälpsprogram) är sannolikt att man tillskriver förbättringar till sig själv och egna förändrade beteenden än till kontakten med terapeuten -- skulle spekulativt kunna utgöra en del av förklaringen till att självshjälpsgruppen gjort så stora framsteg på egen hand när effekten mäts med positivt formulerade självhävdelsebeteendemål. Med andra ord synliggörs faktiska beteendeförändringar möjligen bättre.
 
 - ...
 
