@@ -1403,6 +1403,8 @@ Lösrykta tankar/stycken att utveckla och sammanfoga till en helhet:
 
 - För en replikering vore det intressant att använda andra transdiagnostiska skalor kopplade till värderat handlande, typ VLQ, och även SAAQ.
 
+- En fördel med självständigt arbete (som när man går i ett självhjälpsprogram) är sannolikt att man tillskriver förbättringar till sig själv och egna förändrade beteenden än till kontakten med terapeuten -- skulle spekulativt kunna utgöra en del av förklaringen till att självshjälpsgruppen gjort så stora framsteg på egen hand när effekten mäts med positivt formulerade självhävdelsebeteendemål.
+
 - ...
 
 - ...
