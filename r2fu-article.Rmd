@@ -168,7 +168,8 @@ report.anova <- function(anovaobj, row) {
   )
 }
 
-report.kw <- function(kwobj, df) {
+report.kw <- function(kwobj) {
+  df <- length(kwobj$Z) -1
   paste0(
     "\textit{$\\chi^2$}($",
     df,
@@ -652,6 +653,12 @@ effsel.time <- -10
 rout <- function(lmerobj) {
   x.emm.by.group <- emmeans(lmerobj, ~ time | group)
   x.emm.by.time <- emmeans(lmerobj, ~ group | time)
+  # Better build custom contrasts with less comparisons?
+  # https://aosmith.rbind.io/2019/04/15/custom-contrasts-emmeans/#reasons-for-custom-comparisons
+  # contrast {emmeans}
+  x.emmpairs <- pairs(x.emm.by.group, adjust="bonferroni",simple=c("group","time"),combine=T)
+  # x.emmpairs.by.group <- pairs(x.emm.by.group, adjust="bonferroni",simple="each",combine=T)
+  # x.emmpairs.by.time <- pairs(x.emm.by.time, adjust="bonferroni",simple="each",combine=T)
   x.emmpairs.by.group <- pairs(x.emm.by.group, adjust="bonferroni")
   x.emmpairs.by.time <- pairs(x.emm.by.time, adjust="bonferroni")
   x.sd <- sqrt(as.data.frame(VarCorr(lmerobj))[1,4] + as.data.frame(VarCorr(lmerobj))[2,4])
@@ -661,6 +668,7 @@ rout <- function(lmerobj) {
     list(
       emm.by.group = as.data.frame(x.emm.by.group),
       emm.by.time = as.data.frame(x.emm.by.time),
+      emmpairs = as.data.frame(x.emmpairs),
       emmpairs.by.group = as.data.frame(x.emmpairs.by.group),
       emmpairs.by.time = as.data.frame(x.emmpairs.by.time),
       sd = x.sd,
@@ -689,7 +697,7 @@ rout <- function(lmerobj) {
 
 <!-- For the estimated marginal mean of the Adaptive subscale of AAA-S (capturing presumably healthy assertiveness behaviors that lower the odds for both desirable short- and long-term consequences with regards to the goal of the exchange, the relationship and the person’s self-respect) the change [$\Delta M$] between Pre and Post time points was `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$estimate[8] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ad.lmer)$emmpairs.by.group$df[8],0)`}\) = `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$t.ratio[8],1)`; `r xpr(rout(aaas_ad.lmer)$emmpairs.by.group$p.value[8])`; $ES$ = `r xresult(rout(aaas_ad.lmer)$eff.by.group$effect.size[29] * -1,1)`, 95% CI [`r xresult(rout(aaas_ad.lmer)$eff.by.group$upper.CL[29] * -1,1)`, `r xresult(rout(aaas_ad.lmer)$eff.by.group$lower.CL[29] * -1,1)`]. The estimated $\Delta M$ between Pre and Follow-up time points was `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$estimate[9] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ad.lmer)$emmpairs.by.group$df[9],0)`}\) = `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$t.ratio[9],1)`; `r xpr(rout(aaas_ad.lmer)$emmpairs.by.group$p.value[9])`; $ES$ = `r xresult(rout(aaas_ad.lmer)$eff.by.group$effect.size[30] * -1,1)`, 95% CI [`r xresult(rout(aaas_ad.lmer)$eff.by.group$upper.CL[30] * -1,1)`, `r xresult(rout(aaas_ad.lmer)$eff.by.group$lower.CL[30] * -1,1)`]. -->
 
-<!-- (Although the difference between Post and Follow-up time points was not significant, the upward trend was sustained 1 year after completion of the treatment: The estimated marginal mean increase [$\Delta M$] was `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$estimate[12] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ad.lmer)$emmpairs.by.group$df[12],0)`}\) = `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$t.ratio[12],1)`; `r xpr_special(rout(aaas_ad.lmer)$emmpairs.by.group$p.value[12])`; $ES$ = `r xresult(rout(aaas_ad.lmer)$eff.by.group$effect.size[41] * -1,1)`.) -->
+<!-- (Although the difference between Post and Follow-up time points was not significant, the upward trend was sustained 1 year after completion of the treatment: The estimated marginal mean increase [$\Delta M$] was `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$estimate[12] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ad.lmer)$emmpairs.by.group$df[12],0)`}\) = `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$t.ratio[12],1)`; `r xprnot(rout(aaas_ad.lmer)$emmpairs.by.group$p.value[12])`; $ES$ = `r xresult(rout(aaas_ad.lmer)$eff.by.group$effect.size[41] * -1,1)`.) -->
 
 <!-- We observed a similar but less pronounced trend for the estimated $\Delta M$ of the Aggressive subscale of AAA-S (capturing behaviors that the person deems assertive but possibly too much so, putting the relationship and/or the person’s self-respect at risk): the change between Pre and Post time points was `r xresult(rout(aaas_ag.lmer)$emmpairs.by.group$estimate[8] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ag.lmer)$emmpairs.by.group$df[8],0)`}\) = `r xresult(rout(aaas_ag.lmer)$emmpairs.by.group$t.ratio[8],1)`; `r xpr(rout(aaas_ag.lmer)$emmpairs.by.group$p.value[8])`; $ES$ = `r xresult(rout(aaas_ag.lmer)$eff.by.group$effect.size[29] * -1,1)`, 95% CI [`r xresult(rout(aaas_ag.lmer)$eff.by.group$upper.CL[29] * -1,1)`, `r xresult(rout(aaas_ag.lmer)$eff.by.group$lower.CL[29] * -1,1)`]. The estimated marginal mean increase $\Delta M$ between Pre and Follow-up time points was `r xresult(rout(aaas_ag.lmer)$emmpairs.by.group$estimate[9] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ag.lmer)$emmpairs.by.group$df[9],0)`}\) = `r xresult(rout(aaas_ag.lmer)$emmpairs.by.group$t.ratio[9],1)`; `r xpr(rout(aaas_ag.lmer)$emmpairs.by.group$p.value[9])`; $ES$ = `r xresult(rout(aaas_ag.lmer)$eff.by.group$effect.size[30] * -1,1)`, 95% CI [`r xresult(rout(aaas_ag.lmer)$eff.by.group$upper.CL[30] * -1,1)`, `r xresult(rout(aaas_ag.lmer)$eff.by.group$lower.CL[30] * -1,1)`]. -->
 
@@ -790,142 +798,253 @@ norms <- rbind(
 
 comparison <- linebreak(c(
   "Self-help, Pre vs. Post",
-  "Self-help, Pre vs. 1-year Follow-up",
+  "Self-help, Pre vs. Follow-up",
   "Guided self-help, Pre vs. Post",
-  "Guided self-help, Pre vs. 1-year Follow-up",
+  "Guided self-help, Pre vs. Follow-up",
   "Waitlist, Pre vs. Post",
   "Self-help at Post vs. Waitlist at Post",
-  "Self-help at 1-year Follow-up vs. Waitlist at Post",
-  "Self-help at 1-year Follow-up vs. Waitlist at \\dag",
+  "Self-help at Follow-up vs. Waitlist at Post",
+  "Self-help at Follow-up vs. Waitlist at \\dag",
   "Guided self-help at Post vs. Waitlist at Post",
-  "Guided self-help at 1-year Follow-up vs. Waitlist at Post",
-  "Guided self-help at 1-year Follow-up vs. Waitlist at \\dag",
+  "Guided self-help at Follow-up vs. Waitlist at Post",
+  "Guided self-help at Follow-up vs. Waitlist at \\dag",
   "Guided self-help at Post vs. Self-help at Post",
-  "Guided self-help at 1-year Follow-up vs. Self-help at Follow-up"
+  "Guided self-help at Follow-up vs. Self-help at Follow-up"
   ), align = "r")
 
-within.effsize <- function(lmerobj,row,direction) {
+within.effsize <- function(lmerobj,effrow,direction,emmpairsrow=NULL) {
+    stars <-  if(is.null(emmpairsrow)) {} else {
+      xpss(rout(lmerobj)$emmpairs$p.value[emmpairsrow])
+    }
     linebreak(paste0(
-      xresult(rout(lmerobj)$eff.by.group$effect.size[row] * direction, 1),
+      xresult(rout(lmerobj)$eff.by.group$effect.size[effrow] * direction, 2),
       " [",
-      xresult(rout(lmerobj)$eff.by.group$upper.CL[row] * direction, 1),
+      xresult(rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction, 2),
       ", ",
-      xresult(rout(lmerobj)$eff.by.group$lower.CL[row] * direction, 1),
-      "]"
+      xresult(rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction, 2),
+      "]",
+      stars
     ), align = "c")
 }
 
-between.effsize <- function(lmerobj,row,direction) {
-    linebreak(paste0(
-      xresult(rout(lmerobj)$eff.by.time$effect.size[row] * direction, 1),
-      " [",
-      xresult(rout(lmerobj)$eff.by.time$upper.CL[row] * direction, 1),
-      ", ",
-      xresult(rout(lmerobj)$eff.by.time$lower.CL[row] * direction, 1),
-      "]"
-    ), align = "c")
+between.effsize <- function(lmerobj, row, direction, emmpairsrow=NULL) {
+    stars <-  if(is.null(emmpairsrow)) {} else {
+      xpss(rout(lmerobj)$emmpairs$p.value[emmpairsrow])
+    }
+  linebreak(paste0(
+    xresult(rout(lmerobj)$eff.by.time$effect.size[row] * direction, 2),
+    " [",
+    xresult(rout(lmerobj)$eff.by.time$upper.CL[row] * direction, 2),
+    ", ",
+    xresult(rout(lmerobj)$eff.by.time$lower.CL[row] * direction, 2),
+    "]",
+    stars
+  ),
+  align = "c")
 }
+
+# aaas_ad.effsizes <-
+#   c(
+#     within.effsize(aaas_ad.lmer,29,-1,8),   #Pre Self-help - Post Self-help
+#     within.effsize(aaas_ad.lmer,30,-1,9),   #Pre Self-help - Follow-up Self-help
+#     within.effsize(aaas_ad.lmer,51,-1,14),  #Pre Support - Post Support
+#     within.effsize(aaas_ad.lmer,52,-1,15),  #Pre Support - Follow-up Support
+#     within.effsize(aaas_ad.lmer,2,-1,2),    #Pre Waitlist - Post Waitlist
+#     between.effsize(aaas_ad.lmer,46,-1,7),  #Waitlist Post - Self-help Post
+#     between.effsize(aaas_ad.lmer,48,-1,NULL), #Waitlist Post - Self-help Follow-up
+#     "(idem)",
+#     between.effsize(aaas_ad.lmer,47,-1,8),  #Waitlist Post - Support Post
+#     between.effsize(aaas_ad.lmer,49,-1,NULL), #Waitlist Post - Support Follow-up
+#     "(idem)",
+#     between.effsize(aaas_ad.lmer,50,-1,9),  #Self-help Post - Support Post
+#     between.effsize(aaas_ad.lmer,55,-1,12)  #Self-help Follow-up - Support Follow-up
+#   )
+# 
+# aaas_ag.effsizes <-
+#   c(
+#     within.effsize(aaas_ag.lmer,29,-1),  #Pre Self-help - Post Self-help
+#     within.effsize(aaas_ag.lmer,30,-1),  #Pre Self-help - Follow-up Self-help
+#     within.effsize(aaas_ag.lmer,51,-1),  #Pre Support - Post Support
+#     within.effsize(aaas_ag.lmer,52,-1),  #Pre Support - Follow-up Support
+#     within.effsize(aaas_ag.lmer,2,-1),   #Pre Waitlist - Post Waitlist
+#     between.effsize(aaas_ag.lmer,46,-1), #Waitlist Post - Self-help Post
+#     between.effsize(aaas_ag.lmer,48,-1), #Waitlist Post - Self-help Follow-up
+#     "(idem)",
+#     between.effsize(aaas_ag.lmer,47,-1), #Waitlist Post - Support Post
+#     between.effsize(aaas_ag.lmer,49,-1), #Waitlist Post - Support Follow-up
+#     "(idem)",
+#     between.effsize(aaas_ag.lmer,50,-1), #Self-help Post - Support Post
+#     between.effsize(aaas_ag.lmer,55,-1)  #Self-help Follow-up - Support Follow-up
+#   )
+# 
+# rathus.effsizes <-
+#   c(
+#     within.effsize(rathus.lmer,29,-1),  #Pre Self-help - Post Self-help
+#     within.effsize(rathus.lmer,30,-1),  #Pre Self-help - Follow-up Self-help
+#     within.effsize(rathus.lmer,51,-1),  #Pre Support - Post Support
+#     within.effsize(rathus.lmer,52,-1),  #Pre Support - Follow-up Support
+#     within.effsize(rathus.lmer,2,-1),   #Pre Waitlist - Post Waitlist
+#     between.effsize(rathus.lmer,46,-1), #Waitlist Post - Self-help Post
+#     between.effsize(rathus.lmer,48,-1), #Waitlist Post - Self-help Follow-up
+#     "(idem)",
+#     between.effsize(rathus.lmer,47,-1), #Waitlist Post - Support Post
+#     between.effsize(rathus.lmer,49,-1), #Waitlist Post - Support Follow-up
+#     "(idem)",
+#     between.effsize(rathus.lmer,50,-1), #Self-help Post - Support Post
+#     between.effsize(rathus.lmer,55,-1)  #Self-help Follow-up - Support Follow-up
+#   )
+# 
+# phq_sum.effsizes <-
+#   c(
+#     within.effsize(phq_sum.lmer,29,1),  #Pre Self-help - Post Self-help
+#     within.effsize(phq_sum.lmer,30,1),  #Pre Self-help - Follow-up Self-help
+#     within.effsize(phq_sum.lmer,51,1),  #Pre Support - Post Support
+#     within.effsize(phq_sum.lmer,52,1),  #Pre Support - Follow-up Support
+#     within.effsize(phq_sum.lmer,2,1),   #Pre Waitlist - Post Waitlist
+#     between.effsize(phq_sum.lmer,46,1), #Waitlist Post - Self-help Post
+#     between.effsize(phq_sum.lmer,48,1), #Waitlist Post - Self-help Follow-up
+#     between.effsize(phq_sum.lmer,9,1),  #Waitlist Pre - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
+#     between.effsize(phq_sum.lmer,47,1), #Waitlist Post - Support Post
+#     between.effsize(phq_sum.lmer,49,1), #Waitlist Post - Support Follow-up
+#     between.effsize(phq_sum.lmer,10,1), #Waitlist Pre - Support Follow-up; levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
+#     between.effsize(phq_sum.lmer,50,1), #Self-help Post - Support Post
+#     between.effsize(phq_sum.lmer,55,1)  #Self-help Follow-up - Support Follow-up
+#   )
+# 
+# gad_sum.effsizes <-
+#   c(
+#     within.effsize(gad_sum.lmer,29,1),  #Pre Self-help - Post Self-help
+#     within.effsize(gad_sum.lmer,30,1),  #Pre Self-help - Follow-up Self-help
+#     within.effsize(gad_sum.lmer,51,1),  #Pre Support - Post Support
+#     within.effsize(gad_sum.lmer,52,1),  #Pre Support - Follow-up Support
+#     within.effsize(gad_sum.lmer,2,1),   #Pre Waitlist - Post Waitlist
+#     between.effsize(gad_sum.lmer,46,1), #Waitlist Post - Self-help Post
+#     between.effsize(gad_sum.lmer,48,1), #Waitlist Post - Self-help Follow-up
+#     between.effsize(gad_sum.lmer,33,1), #Waitlist During - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
+#     between.effsize(gad_sum.lmer,47,1), #Waitlist Post - Support Post
+#     between.effsize(gad_sum.lmer,49,1), #Waitlist Post - Support Follow-up
+#     between.effsize(gad_sum.lmer,34,1), #Waitlist During - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
+#     between.effsize(gad_sum.lmer,50,1), #Self-help Post - Support Post
+#     between.effsize(gad_sum.lmer,55,1)  #Self-help Follow-up - Support Follow-up
+#   )
+# 
+# lsas_sum.effsizes <-
+#   c(
+#     within.effsize(lsas_sum.lmer,29,1),  #Pre Self-help - Post Self-help
+#     within.effsize(lsas_sum.lmer,30,1),  #Pre Self-help - Follow-up Self-help
+#     within.effsize(lsas_sum.lmer,51,1),  #Pre Support - Post Support
+#     within.effsize(lsas_sum.lmer,52,1),  #Pre Support - Follow-up Support
+#     within.effsize(lsas_sum.lmer,2,1),   #Pre Waitlist - Post Waitlist
+#     between.effsize(lsas_sum.lmer,46,1), #Waitlist Post - Self-help Post
+#     between.effsize(lsas_sum.lmer,48,1), #Waitlist Post - Self-help Follow-up
+#     between.effsize(lsas_sum.lmer,33,1), #Waitlist During - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
+#     between.effsize(lsas_sum.lmer,47,1), #Waitlist Post - Support Post
+#     between.effsize(lsas_sum.lmer,49,1), #Waitlist Post - Support Follow-up
+#     between.effsize(lsas_sum.lmer,34,1), #Waitlist During - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
+#     between.effsize(lsas_sum.lmer,50,1), #Self-help Post - Support Post
+#     between.effsize(lsas_sum.lmer,55,1)  #Self-help Follow-up - Support Follow-up
+#   )
 
 aaas_ad.effsizes <-
   c(
-    within.effsize(aaas_ad.lmer,29,-1),  #Pre Self-help - Post Self-help
-    within.effsize(aaas_ad.lmer,30,-1),  #Pre Self-help - Follow-up Self-help
-    within.effsize(aaas_ad.lmer,51,-1),  #Pre Support - Post Support
-    within.effsize(aaas_ad.lmer,52,-1),  #Pre Support - Follow-up Support
-    within.effsize(aaas_ad.lmer,2,-1),   #Pre Waitlist - Post Waitlist
-    between.effsize(aaas_ad.lmer,46,-1), #Waitlist Post - Self-help Post
-    between.effsize(aaas_ad.lmer,48,-1), #Waitlist Post - Self-help Follow-up
+    within.effsize(aaas_ad.lmer,29,-1,40),  # (Pre Self-help) - (Post Self-help)
+    within.effsize(aaas_ad.lmer,30,-1,41),  # (Pre Self-help) - (Follow-up Self-help)
+    within.effsize(aaas_ad.lmer,51,-1,62),  # Pre Support - Post Support
+    within.effsize(aaas_ad.lmer,52,-1,63),  # Pre Support - (Follow-up Support) 
+    within.effsize(aaas_ad.lmer,2,-1,2),    # Pre Waitlist - Post Waitlist
+    between.effsize(aaas_ad.lmer,46,-1,25), # Post Waitlist - (Post Self-help)
+    between.effsize(aaas_ad.lmer,48,-1,26), # Post Waitlist - (Follow-up Self-help)
     "(idem)",
-    between.effsize(aaas_ad.lmer,47,-1), #Waitlist Post - Support Post
-    between.effsize(aaas_ad.lmer,49,-1), #Waitlist Post - Support Follow-up
+    between.effsize(aaas_ad.lmer,47,-1,29), # Post Waitlist - Post Support 
+    between.effsize(aaas_ad.lmer,49,-1,30), # Post Waitlist - (Follow-up Support)
     "(idem)",
-    between.effsize(aaas_ad.lmer,50,-1), #Self-help Post - Support Post
-    between.effsize(aaas_ad.lmer,55,-1)  #Self-help Follow-up - Support Follow-up
+    between.effsize(aaas_ad.lmer,50,-1,55), # (Post Self-help) - Post Support
+    between.effsize(aaas_ad.lmer,55,-1,60)  # (Follow-up Self-help) - (Follow-up Support)
   )
 
 aaas_ag.effsizes <-
   c(
-    within.effsize(aaas_ag.lmer,29,-1),  #Pre Self-help - Post Self-help
-    within.effsize(aaas_ag.lmer,30,-1),  #Pre Self-help - Follow-up Self-help
-    within.effsize(aaas_ag.lmer,51,-1),  #Pre Support - Post Support
-    within.effsize(aaas_ag.lmer,52,-1),  #Pre Support - Follow-up Support
-    within.effsize(aaas_ag.lmer,2,-1),   #Pre Waitlist - Post Waitlist
-    between.effsize(aaas_ag.lmer,46,-1), #Waitlist Post - Self-help Post
-    between.effsize(aaas_ag.lmer,48,-1), #Waitlist Post - Self-help Follow-up
+    within.effsize(aaas_ag.lmer,29,-1,40),  # (Pre Self-help) - (Post Self-help)
+    within.effsize(aaas_ag.lmer,30,-1,41),  # (Pre Self-help) - (Follow-up Self-help)
+    within.effsize(aaas_ag.lmer,51,-1,62),  # Pre Support - Post Support
+    within.effsize(aaas_ag.lmer,52,-1,63),  # Pre Support - (Follow-up Support) 
+    within.effsize(aaas_ag.lmer,2,-1,2),    # Pre Waitlist - Post Waitlist
+    between.effsize(aaas_ag.lmer,46,-1,25), # Post Waitlist - (Post Self-help)
+    between.effsize(aaas_ag.lmer,48,-1,26), # Post Waitlist - (Follow-up Self-help)
     "(idem)",
-    between.effsize(aaas_ag.lmer,47,-1), #Waitlist Post - Support Post
-    between.effsize(aaas_ag.lmer,49,-1), #Waitlist Post - Support Follow-up
+    between.effsize(aaas_ag.lmer,47,-1,29), # Post Waitlist - Post Support 
+    between.effsize(aaas_ag.lmer,49,-1,30), # Post Waitlist - (Follow-up Support)
     "(idem)",
-    between.effsize(aaas_ag.lmer,50,-1), #Self-help Post - Support Post
-    between.effsize(aaas_ag.lmer,55,-1)  #Self-help Follow-up - Support Follow-up
+    between.effsize(aaas_ag.lmer,50,-1,55), # (Post Self-help) - Post Support
+    between.effsize(aaas_ag.lmer,55,-1,60)  # (Follow-up Self-help) - (Follow-up Support)
   )
 
 rathus.effsizes <-
   c(
-    within.effsize(rathus.lmer,29,-1),  #Pre Self-help - Post Self-help
-    within.effsize(rathus.lmer,30,-1),  #Pre Self-help - Follow-up Self-help
-    within.effsize(rathus.lmer,51,-1),  #Pre Support - Post Support
-    within.effsize(rathus.lmer,52,-1),  #Pre Support - Follow-up Support
-    within.effsize(rathus.lmer,2,-1),   #Pre Waitlist - Post Waitlist
-    between.effsize(rathus.lmer,46,-1), #Waitlist Post - Self-help Post
-    between.effsize(rathus.lmer,48,-1), #Waitlist Post - Self-help Follow-up
+    within.effsize(rathus.lmer,29,-1,40),  # (Pre Self-help) - (Post Self-help)
+    within.effsize(rathus.lmer,30,-1,41),  # (Pre Self-help) - (Follow-up Self-help)
+    within.effsize(rathus.lmer,51,-1,62),  # Pre Support - Post Support
+    within.effsize(rathus.lmer,52,-1,63),  # Pre Support - (Follow-up Support) 
+    within.effsize(rathus.lmer,2,-1,2),    # Pre Waitlist - Post Waitlist
+    between.effsize(rathus.lmer,46,-1,25), # Post Waitlist - (Post Self-help)
+    between.effsize(rathus.lmer,48,-1,26), # Post Waitlist - (Follow-up Self-help)
     "(idem)",
-    between.effsize(rathus.lmer,47,-1), #Waitlist Post - Support Post
-    between.effsize(rathus.lmer,49,-1), #Waitlist Post - Support Follow-up
+    between.effsize(rathus.lmer,47,-1,29), # Post Waitlist - Post Support 
+    between.effsize(rathus.lmer,49,-1,30), # Post Waitlist - (Follow-up Support)
     "(idem)",
-    between.effsize(rathus.lmer,50,-1), #Self-help Post - Support Post
-    between.effsize(rathus.lmer,55,-1)  #Self-help Follow-up - Support Follow-up
+    between.effsize(rathus.lmer,50,-1,55), # (Post Self-help) - Post Support
+    between.effsize(rathus.lmer,55,-1,60)  # (Follow-up Self-help) - (Follow-up Support)
   )
 
 phq_sum.effsizes <-
   c(
-    within.effsize(phq_sum.lmer,29,1),  #Pre Self-help - Post Self-help
-    within.effsize(phq_sum.lmer,30,1),  #Pre Self-help - Follow-up Self-help
-    within.effsize(phq_sum.lmer,51,1),  #Pre Support - Post Support
-    within.effsize(phq_sum.lmer,52,1),  #Pre Support - Follow-up Support
-    within.effsize(phq_sum.lmer,2,1),   #Pre Waitlist - Post Waitlist
-    between.effsize(phq_sum.lmer,46,1), #Waitlist Post - Self-help Post
-    between.effsize(phq_sum.lmer,48,1), #Waitlist Post - Self-help Follow-up
-    between.effsize(phq_sum.lmer,9,1),  #Waitlist Pre - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(phq_sum.lmer,47,1), #Waitlist Post - Support Post
-    between.effsize(phq_sum.lmer,49,1), #Waitlist Post - Support Follow-up
-    between.effsize(phq_sum.lmer,10,1), #Waitlist Pre - Support Follow-up; levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(phq_sum.lmer,50,1), #Self-help Post - Support Post
-    between.effsize(phq_sum.lmer,55,1)  #Self-help Follow-up - Support Follow-up
+    within.effsize(phq_sum.lmer,29,-1,40),  # (Pre Self-help) - (Post Self-help)
+    within.effsize(phq_sum.lmer,30,-1,41),  # (Pre Self-help) - (Follow-up Self-help)
+    within.effsize(phq_sum.lmer,51,-1,62),  # Pre Support - Post Support
+    within.effsize(phq_sum.lmer,52,-1,63),  # Pre Support - (Follow-up Support) 
+    within.effsize(phq_sum.lmer,2,-1,2),    # Pre Waitlist - Post Waitlist
+    between.effsize(phq_sum.lmer,46,-1,25), # Post Waitlist - (Post Self-help)
+    between.effsize(phq_sum.lmer,48,-1,26), # Post Waitlist - (Follow-up Self-help)
+    between.effsize(phq_sum.lmer,48,-1,7), # Pre Waitlist - (Follow-up Self-help); levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(phq_sum.lmer,47,-1,29), # Post Waitlist - Post Support 
+    between.effsize(phq_sum.lmer,49,-1,30), # Post Waitlist - (Follow-up Support)
+    between.effsize(phq_sum.lmer,48,-1,11), # Pre Waitlist - (Follow-up Support); levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(phq_sum.lmer,50,-1,55), # (Post Self-help) - Post Support
+    between.effsize(phq_sum.lmer,55,-1,60)  # (Follow-up Self-help) - (Follow-up Support)
   )
 
 gad_sum.effsizes <-
   c(
-    within.effsize(gad_sum.lmer,29,1),  #Pre Self-help - Post Self-help
-    within.effsize(gad_sum.lmer,30,1),  #Pre Self-help - Follow-up Self-help
-    within.effsize(gad_sum.lmer,51,1),  #Pre Support - Post Support
-    within.effsize(gad_sum.lmer,52,1),  #Pre Support - Follow-up Support
-    within.effsize(gad_sum.lmer,2,1),   #Pre Waitlist - Post Waitlist
-    between.effsize(gad_sum.lmer,46,1), #Waitlist Post - Self-help Post
-    between.effsize(gad_sum.lmer,48,1), #Waitlist Post - Self-help Follow-up
-    between.effsize(gad_sum.lmer,33,1), #Waitlist During - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(gad_sum.lmer,47,1), #Waitlist Post - Support Post
-    between.effsize(gad_sum.lmer,49,1), #Waitlist Post - Support Follow-up
-    between.effsize(gad_sum.lmer,34,1), #Waitlist During - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(gad_sum.lmer,50,1), #Self-help Post - Support Post
-    between.effsize(gad_sum.lmer,55,1)  #Self-help Follow-up - Support Follow-up
+    within.effsize(gad_sum.lmer,29,-1,40),  # (Pre Self-help) - (Post Self-help)
+    within.effsize(gad_sum.lmer,30,-1,41),  # (Pre Self-help) - (Follow-up Self-help)
+    within.effsize(gad_sum.lmer,51,-1,62),  # Pre Support - Post Support
+    within.effsize(gad_sum.lmer,52,-1,63),  # Pre Support - (Follow-up Support) 
+    within.effsize(gad_sum.lmer,2,-1,2),    # Pre Waitlist - Post Waitlist
+    between.effsize(gad_sum.lmer,46,-1,25), # Post Waitlist - (Post Self-help)
+    between.effsize(gad_sum.lmer,48,-1,26), # Post Waitlist - (Follow-up Self-help)
+    between.effsize(gad_sum.lmer,48,-1,17), # During Waitlist - (Follow-up Self-help) ; levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(gad_sum.lmer,47,-1,29), # Post Waitlist - Post Support 
+    between.effsize(gad_sum.lmer,49,-1,30), # Post Waitlist - (Follow-up Support)
+    between.effsize(gad_sum.lmer,48,-1,21), # During Waitlist - (Follow-up Support); levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(gad_sum.lmer,50,-1,55), # (Post Self-help) - Post Support
+    between.effsize(gad_sum.lmer,55,-1,60)  # (Follow-up Self-help) - (Follow-up Support)
   )
 
 lsas_sum.effsizes <-
   c(
-    within.effsize(lsas_sum.lmer,29,1),  #Pre Self-help - Post Self-help
-    within.effsize(lsas_sum.lmer,30,1),  #Pre Self-help - Follow-up Self-help
-    within.effsize(lsas_sum.lmer,51,1),  #Pre Support - Post Support
-    within.effsize(lsas_sum.lmer,52,1),  #Pre Support - Follow-up Support
-    within.effsize(lsas_sum.lmer,2,1),   #Pre Waitlist - Post Waitlist
-    between.effsize(lsas_sum.lmer,46,1), #Waitlist Post - Self-help Post
-    between.effsize(lsas_sum.lmer,48,1), #Waitlist Post - Self-help Follow-up
-    between.effsize(lsas_sum.lmer,33,1), #Waitlist During - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(lsas_sum.lmer,47,1), #Waitlist Post - Support Post
-    between.effsize(lsas_sum.lmer,49,1), #Waitlist Post - Support Follow-up
-    between.effsize(lsas_sum.lmer,34,1), #Waitlist During - Self-help Follow-up; levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(lsas_sum.lmer,50,1), #Self-help Post - Support Post
-    between.effsize(lsas_sum.lmer,55,1)  #Self-help Follow-up - Support Follow-up
+    within.effsize(lsas_sum.lmer,29,-1,40),  # (Pre Self-help) - (Post Self-help)
+    within.effsize(lsas_sum.lmer,30,-1,41),  # (Pre Self-help) - (Follow-up Self-help)
+    within.effsize(lsas_sum.lmer,51,-1,62),  # Pre Support - Post Support
+    within.effsize(lsas_sum.lmer,52,-1,63),  # Pre Support - (Follow-up Support) 
+    within.effsize(lsas_sum.lmer,2,-1,2),    # Pre Waitlist - Post Waitlist
+    between.effsize(lsas_sum.lmer,46,-1,25), # Post Waitlist - (Post Self-help)
+    between.effsize(lsas_sum.lmer,48,-1,26), # Post Waitlist - (Follow-up Self-help)
+    between.effsize(lsas_sum.lmer,48,-1,17), # During Waitlist - (Follow-up Self-help) ; levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(lsas_sum.lmer,47,-1,29), # Post Waitlist - Post Support 
+    between.effsize(lsas_sum.lmer,49,-1,30), # Post Waitlist - (Follow-up Support)
+    between.effsize(lsas_sum.lmer,48,-1,21), # During Waitlist - (Follow-up Support); levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
+    between.effsize(lsas_sum.lmer,50,-1,55), # (Post Self-help) - Post Support
+    between.effsize(lsas_sum.lmer,55,-1,60)  # (Follow-up Self-help) - (Follow-up Support)
   )
 
 effectsize.table <- cbind.data.frame(
@@ -960,8 +1079,8 @@ knitr::kable(
   pack_rows("Within-group effect sizes", 1, 5, bold = F) %>%
   pack_rows("Between-group effect sizes", 6, 11, bold = F) %>%
   row_spec(c(2, 4, 5, 8, 11), extra_latex_after = "\\midrule") %>%
-  column_spec(c(1), width = "27em") %>%
-  column_spec(c(2:7), width = "11em") %>%
+  column_spec(c(1), width = "24em") %>%
+  column_spec(c(2:7), width = "11.5em") %>%
   add_header_above(
     c(
       " ",
@@ -975,7 +1094,7 @@ knitr::kable(
       "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale.",
       "Pre = pre-treatment measurement at 0 weeks; During = measurement during week 4; Post = measurement after completion of treatment at week 8; Follow-up = measurement at 1 year after completion.",
       "\\\\dag = the most conservative measurement for the Waitlist control condition, in order to suppress any nocebo effects; see dotted lines in graphs in Figure 3 for identification of time point.",
-      "\\\\textsuperscript{*} = \\\\textit{p} < .05, \\\\textsuperscript{**} = \\\\textit{p} < .01, \\\\textsuperscript{***} = \\\\textit{p} < .00; \\\\textit{p}-values are Bonferroni adjusted."
+      "\\\\textsuperscript{*} = \\\\textit{p} < .05, \\\\textsuperscript{**} = \\\\textit{p} < .01, \\\\textsuperscript{***} = \\\\textit{p} < .00; \\\\textit{p}-values are Bonferroni adjusted, based on pairwise comparisons of all time points and conditions."
     ),
     escape = F,
     general_title = "Notes.",
