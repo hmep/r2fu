@@ -198,6 +198,112 @@ report.kw <- function(kwobj) {
   )
 }
 
+
+rout <- function(lmerobj) {
+  x.emm.by.group <- emmeans(lmerobj, ~ time | group)
+  x.emm.by.time <- emmeans(lmerobj, ~ group | time)
+  # Better build custom contrasts with less comparisons?
+  # https://aosmith.rbind.io/2019/04/15/custom-contrasts-emmeans/#reasons-for-custom-comparisons
+  # contrast {emmeans}
+  x.emmpairs <- pairs(x.emm.by.group, adjust="bonferroni",simple=c("group","time"),combine=T)
+  # x.emmpairs.by.group <- pairs(x.emm.by.group, adjust="bonferroni",simple="each",combine=T)
+  # x.emmpairs.by.time <- pairs(x.emm.by.time, adjust="bonferroni",simple="each",combine=T)
+  #x.emmpairs.by.group <- pairs(x.emm.by.group, adjust="bonferroni")
+  #x.emmpairs.by.time <- pairs(x.emm.by.time, adjust="bonferroni")
+  x.sd <- sqrt(as.data.frame(VarCorr(lmerobj))[1,4] + as.data.frame(VarCorr(lmerobj))[2,4])
+  x.eff.by.group <- eff_size(x.emm.by.group[effsel.group], sigma = x.sd, edf = df.residual(lmerobj))
+  x.eff.by.time <- eff_size(x.emm.by.time[effsel.time], sigma = x.sd, edf = df.residual(lmerobj))
+  return(
+    list(
+      emm.by.group = as.data.frame(x.emm.by.group),
+      emm.by.time = as.data.frame(x.emm.by.time),
+      emmpairs = as.data.frame(x.emmpairs),
+      #emmpairs.by.group = as.data.frame(x.emmpairs.by.group),
+      #emmpairs.by.time = as.data.frame(x.emmpairs.by.time),
+      sd = x.sd,
+      eff.by.group = as.data.frame(x.eff.by.group),
+      eff.by.time = as.data.frame(x.eff.by.time)
+    )
+  )
+}
+
+
+within.effsize <- function(lmerobj,effrow,direction,emmpairsrow=NULL) {
+    stars <-  if(is.null(emmpairsrow)) {} else {
+      xpss(rout(lmerobj)$emmpairs$p.value[emmpairsrow])
+    }
+    if (direction == -1) {
+      lower = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
+      upper = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
+    } else {
+      lower = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
+      upper = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
+    }
+    linebreak(paste0(
+      xresult(rout(lmerobj)$eff.by.group$effect.size[effrow] * direction, 2),
+      " [",
+      xresult(lower, 2),
+      ", ",
+      xresult(upper, 2),
+      "]",
+      stars
+    ), align = "c")
+}
+
+between.effsize <- function(lmerobj, effrow, direction = 1, emmpairsrow=NULL) {
+    stars <-  if(is.null(emmpairsrow)) {} else {
+      xpss(rout(lmerobj)$emmpairs$p.value[emmpairsrow])
+    }
+    if (direction == -1) {
+      lower = rout(lmerobj)$eff.by.time$upper.CL[effrow] * direction
+      upper = rout(lmerobj)$eff.by.time$lower.CL[effrow] * direction
+    } else {
+      lower = rout(lmerobj)$eff.by.time$lower.CL[effrow] * direction
+      upper = rout(lmerobj)$eff.by.time$upper.CL[effrow] * direction
+    }
+  linebreak(paste0(
+    xresult(rout(lmerobj)$eff.by.time$effect.size[effrow] * direction, 2),
+    " [",
+    xresult(lower, 2),
+    ", ",
+    xresult(upper, 2),
+    "]",
+    stars
+  ),
+  align = "c")
+}
+
+#rout(rathus.lmer)$emmpairs[-c(3,13,22,31:38),][,1] == rout(rathus.lmer)$eff.by.group[,1]
+report.text <-
+  function(lmerobj, effrow, direction = 1, emmpairsrow) {
+    if (direction == -1) {
+      lower = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
+      upper = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
+    } else {
+      lower = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
+      upper = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
+    }
+    x <- paste0(
+      "$\\Delta M$ = ",
+      xresult(rout(lmerobj)$emmpairs$estimate[emmpairsrow] * direction, 1),
+      ", $t$\\(_{",
+      xresulttext(rout(lmerobj)$emmpairs$df[emmpairsrow], 0),
+      "}\\) = ",
+      xresult(rout(lmerobj)$emmpairs$t.ratio[emmpairsrow], 2),
+      ", ",
+      xpr(rout(lmerobj)$emmpairs$p.value[emmpairsrow]),
+      ", $ES$ = ",
+      xresult(rout(lmerobj)$eff.by.group$effect.size[effrow] * direction, 2),
+      ", 95\\% CI [",
+      xresult(lower, 2),
+      ", ",
+      xresult(upper, 2),
+      "]"
+    )
+    return(x)
+  }
+
+
 ```
 
 # Introduction
@@ -670,34 +776,6 @@ colnames(r2fu.predicted.data) <-
 effsel.group <- c(1:3,5:8,9:12)
 effsel.time <- -10
 
-rout <- function(lmerobj) {
-  x.emm.by.group <- emmeans(lmerobj, ~ time | group)
-  x.emm.by.time <- emmeans(lmerobj, ~ group | time)
-  # Better build custom contrasts with less comparisons?
-  # https://aosmith.rbind.io/2019/04/15/custom-contrasts-emmeans/#reasons-for-custom-comparisons
-  # contrast {emmeans}
-  x.emmpairs <- pairs(x.emm.by.group, adjust="bonferroni",simple=c("group","time"),combine=T)
-  # x.emmpairs.by.group <- pairs(x.emm.by.group, adjust="bonferroni",simple="each",combine=T)
-  # x.emmpairs.by.time <- pairs(x.emm.by.time, adjust="bonferroni",simple="each",combine=T)
-  x.emmpairs.by.group <- pairs(x.emm.by.group, adjust="bonferroni")
-  x.emmpairs.by.time <- pairs(x.emm.by.time, adjust="bonferroni")
-  x.sd <- sqrt(as.data.frame(VarCorr(lmerobj))[1,4] + as.data.frame(VarCorr(lmerobj))[2,4])
-  x.eff.by.group <- eff_size(x.emm.by.group[effsel.group], sigma = x.sd, edf = df.residual(lmerobj))
-  x.eff.by.time <- eff_size(x.emm.by.time[effsel.time], sigma = x.sd, edf = df.residual(lmerobj))
-  return(
-    list(
-      emm.by.group = as.data.frame(x.emm.by.group),
-      emm.by.time = as.data.frame(x.emm.by.time),
-      emmpairs = as.data.frame(x.emmpairs),
-      emmpairs.by.group = as.data.frame(x.emmpairs.by.group),
-      emmpairs.by.time = as.data.frame(x.emmpairs.by.time),
-      sd = x.sd,
-      eff.by.group = as.data.frame(x.eff.by.group),
-      eff.by.time = as.data.frame(x.eff.by.time)
-    )
-  )
-}
-
 ```
 
 # Results
@@ -710,18 +788,6 @@ rout <- function(lmerobj) {
   guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2) 
 
 ```
-
-<!-- ## Within-group effects -->
-
-<!-- For all three primary measures of assertiveness, there was a significant increase in assertiveness from Pre to Post time points (with an more pronounced effect between the Pre to Follow-up time points) for the two treatment groups.  -->
-
-<!-- For the estimated marginal mean of the Adaptive subscale of AAA-S (capturing presumably healthy assertiveness behaviors that lower the odds for both desirable short- and long-term consequences with regards to the goal of the exchange, the relationship and the person’s self-respect) the change [$\Delta M$] between Pre and Post time points was `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$estimate[8] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ad.lmer)$emmpairs.by.group$df[8],0)`}\) = `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$t.ratio[8],1)`; `r xpr(rout(aaas_ad.lmer)$emmpairs.by.group$p.value[8])`; $ES$ = `r xresult(rout(aaas_ad.lmer)$eff.by.group$effect.size[29] * -1,1)`, 95% CI [`r xresult(rout(aaas_ad.lmer)$eff.by.group$upper.CL[29] * -1,1)`, `r xresult(rout(aaas_ad.lmer)$eff.by.group$lower.CL[29] * -1,1)`]. The estimated $\Delta M$ between Pre and Follow-up time points was `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$estimate[9] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ad.lmer)$emmpairs.by.group$df[9],0)`}\) = `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$t.ratio[9],1)`; `r xpr(rout(aaas_ad.lmer)$emmpairs.by.group$p.value[9])`; $ES$ = `r xresult(rout(aaas_ad.lmer)$eff.by.group$effect.size[30] * -1,1)`, 95% CI [`r xresult(rout(aaas_ad.lmer)$eff.by.group$upper.CL[30] * -1,1)`, `r xresult(rout(aaas_ad.lmer)$eff.by.group$lower.CL[30] * -1,1)`]. -->
-
-<!-- (Although the difference between Post and Follow-up time points was not significant, the upward trend was sustained 1 year after completion of the treatment: The estimated marginal mean increase [$\Delta M$] was `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$estimate[12] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ad.lmer)$emmpairs.by.group$df[12],0)`}\) = `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$t.ratio[12],1)`; `r xprnot(rout(aaas_ad.lmer)$emmpairs.by.group$p.value[12])`; $ES$ = `r xresult(rout(aaas_ad.lmer)$eff.by.group$effect.size[41] * -1,1)`.) -->
-
-<!-- We observed a similar but less pronounced trend for the estimated $\Delta M$ of the Aggressive subscale of AAA-S (capturing behaviors that the person deems assertive but possibly too much so, putting the relationship and/or the person’s self-respect at risk): the change between Pre and Post time points was `r xresult(rout(aaas_ag.lmer)$emmpairs.by.group$estimate[8] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ag.lmer)$emmpairs.by.group$df[8],0)`}\) = `r xresult(rout(aaas_ag.lmer)$emmpairs.by.group$t.ratio[8],1)`; `r xpr(rout(aaas_ag.lmer)$emmpairs.by.group$p.value[8])`; $ES$ = `r xresult(rout(aaas_ag.lmer)$eff.by.group$effect.size[29] * -1,1)`, 95% CI [`r xresult(rout(aaas_ag.lmer)$eff.by.group$upper.CL[29] * -1,1)`, `r xresult(rout(aaas_ag.lmer)$eff.by.group$lower.CL[29] * -1,1)`]. The estimated marginal mean increase $\Delta M$ between Pre and Follow-up time points was `r xresult(rout(aaas_ag.lmer)$emmpairs.by.group$estimate[9] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ag.lmer)$emmpairs.by.group$df[9],0)`}\) = `r xresult(rout(aaas_ag.lmer)$emmpairs.by.group$t.ratio[9],1)`; `r xpr(rout(aaas_ag.lmer)$emmpairs.by.group$p.value[9])`; $ES$ = `r xresult(rout(aaas_ag.lmer)$eff.by.group$effect.size[30] * -1,1)`, 95% CI [`r xresult(rout(aaas_ag.lmer)$eff.by.group$upper.CL[30] * -1,1)`, `r xresult(rout(aaas_ag.lmer)$eff.by.group$lower.CL[30] * -1,1)`]. -->
-
-<!-- The $\Delta M$ of the RAS scale (a composite measure of perceived assertivness) between Pre and Post time points was `r xresult(rout(rathus.lmer)$emmpairs.by.group$estimate[8] * -1,1)`, $t$\(_{`r xresulttext(rout(rathus.lmer)$emmpairs.by.group$df[8],0)`}\) = `r xresult(rout(rathus.lmer)$emmpairs.by.group$t.ratio[8],1)`; `r xpr(rout(rathus.lmer)$emmpairs.by.group$p.value[8])`; $ES$ = `r xresult(rout(rathus.lmer)$eff.by.group$effect.size[29] * -1,1)`, 95% CI [`r xresult(rout(rathus.lmer)$eff.by.group$upper.CL[29] * -1,1)`, `r xresult(rout(rathus.lmer)$eff.by.group$lower.CL[29] * -1,1)`]. The $\Delta M$ between Pre and Follow-up time points was `r xresult(rout(rathus.lmer)$emmpairs.by.group$estimate[9] * -1,1)`, $t$\(_{`r xresulttext(rout(rathus.lmer)$emmpairs.by.group$df[9],0)`}\) = `r xresult(rout(rathus.lmer)$emmpairs.by.group$t.ratio[9],1)`; `r xpr(rout(rathus.lmer)$emmpairs.by.group$p.value[9])`; $ES$ = `r xresult(rout(rathus.lmer)$eff.by.group$effect.size[30] * -1,1)`, 95% CI [`r xresult(rout(rathus.lmer)$eff.by.group$upper.CL[30] * -1,1)`, `r xresult(rout(rathus.lmer)$eff.by.group$lower.CL[30] * -1,1)`]. -->
 
 ```{r emm.secondary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of estimated fixed effects for the secondary syndromal outcome measures. Participation in the Support and Self-help conditions lead to signficant symptom alleviation between the Pre and Post as well as and 1-year Follow-up time points for depression, generalized anxiety and social anxiety, as captured with their respective measures. As with the transdiagnostic measures of assertive behaviors, the difference between the two treatment groups is small or statistically inappreciable at both Post and 1-year Follow-up time points. The Waitlist control group did not significantly change between time points. However, to counteract any nocebo effect for the between-group comparisons the most conservative estimate for the Waitlist control condition was used; see dotted line.'}
 
@@ -830,51 +896,6 @@ comparison <- linebreak(c(
   "Guided self-help at Post vs. Self-help at Post",
   "Guided self-help at Follow-up vs. Self-help at Follow-up"
   ), align = "r")
-
-within.effsize <- function(lmerobj,effrow,direction,emmpairsrow=NULL) {
-    stars <-  if(is.null(emmpairsrow)) {} else {
-      xpss(rout(lmerobj)$emmpairs$p.value[emmpairsrow])
-    }
-    if (direction == -1) {
-      lower = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
-      upper = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
-    } else {
-      lower = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
-      upper = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
-    }
-    linebreak(paste0(
-      xresult(rout(lmerobj)$eff.by.group$effect.size[effrow] * direction, 2),
-      " [",
-      xresult(lower, 2),
-      ", ",
-      xresult(upper, 2),
-      "]",
-      stars
-    ), align = "c")
-}
-
-between.effsize <- function(lmerobj, effrow, direction = 1, emmpairsrow=NULL) {
-    stars <-  if(is.null(emmpairsrow)) {} else {
-      xpss(rout(lmerobj)$emmpairs$p.value[emmpairsrow])
-    }
-    if (direction == -1) {
-      lower = rout(lmerobj)$eff.by.time$upper.CL[effrow] * direction
-      upper = rout(lmerobj)$eff.by.time$lower.CL[effrow] * direction
-    } else {
-      lower = rout(lmerobj)$eff.by.time$lower.CL[effrow] * direction
-      upper = rout(lmerobj)$eff.by.time$upper.CL[effrow] * direction
-    }
-  linebreak(paste0(
-    xresult(rout(lmerobj)$eff.by.time$effect.size[effrow] * direction, 2),
-    " [",
-    xresult(lower, 2),
-    ", ",
-    xresult(upper, 2),
-    "]",
-    stars
-  ),
-  align = "c")
-}
 
 # aaas_ad.effsizes <-
 #   c(
@@ -1314,7 +1335,7 @@ lsas_sum.pre.fu.kw <- dunn.test(list(
 
 ```
 
-```{r clinsigtab, echo = F, eval = T}
+```{r buildclinsigtab, echo = F, eval = T}
 
 # Clinical significant change table output
 clinsig <- function(measure, direction, first, last, group, kwobj) {
@@ -1419,6 +1440,10 @@ xcolnames <-
 
 colnames(clinsig.table) <- xcolnames
 
+```
+
+```{r clinsigtab}
+
 knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of participants that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Followup-time-points respectively (rows named ”Recovered”). For missing values (i.e. caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rccccc", escape = F) %>%
   kable_styling(full_width = F, font_size = 9) %>%
   pack_rows(paste0(measurementnames[1]), 1, 5, bold = F, escape = F) %>%
@@ -1444,19 +1469,29 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
 
 ```
 
-## Primary and secondary measures
+## Treatment effectiveness, primary and secondary measures
 
-Mixed models for two of three primary measures of assertiveness behaviors revealed time \texttimes{} group interaction effects: The Adaptive subscale of AAA-S, `r report.anova(aaas_ad.anova)[3]`, and the RAS, `r report.anova(rathus.anova)[3]`, suggesting that participation in the treatment conditions did have an effect over time on assertiveness behaviors. However, the model for Aggressive subscale of AAA-S  did not, `r report.anova(aaas_ag.anova)[3]`, indicating that the self-assessed expressed or perceived levels of aggressive assertions was not affected by participation in the intervention. Similarily, mixed models for PHQ-9 and LSAS-SR revealed time \texttimes{} group interaction effects, `r report.anova(phq_sum.anova)[3]`, and `r report.anova(lsas_sum.anova)[3]` respectively, while the model for GAD-7 did not, `r report.anova(gad_sum.anova)[3]`; estimated mean levels of depressive mood and social anxiety -- but not of generalized anxiety -- are significantly affected by participation in the intervention.
+Mixed models for two of three primary measures of assertiveness behaviors revealed time \texttimes{} group interaction effects: The Adaptive subscale of AAA-S, `r report.anova(aaas_ad.anova)[3]`, and the RAS, `r report.anova(rathus.anova)[3]`, suggesting that participation in the treatment conditions did have an effect over time on assertiveness behaviors. However, the model for Aggressive subscale of AAA-S  did not, `r report.anova(aaas_ag.anova)[3]`, indicating that the self-assessed expressed or perceived levels of aggressive assertions were not affected by participation in the intervention. Similarily, mixed models for two secondary measures of syndromal symptoms, PHQ-9 and LSAS-SR, revealed time \texttimes{} group interaction effects, `r report.anova(phq_sum.anova)[3]`, and `r report.anova(lsas_sum.anova)[3]` respectively, while the model for GAD-7 did not, `r report.anova(gad_sum.anova)[3]`; indicating that estimated mean levels of depressive mood and social anxiety symptoms -- but not those of generalized anxiety -- were significantly affected by participation in the intervention. Follow-up comparisons of estimated marginal means both within and between groups are summarized in Table 1. 
 
-Follow-up analysis through pairwise comparisons of marginal means estimated by the respective models are summarized in table \@ref(tab:effsizetab), both between groups and within groups. Notably, compared to Waitlist, both the Guided and the Self-help groups 
+<!-- Lägga till During i tabell? -->
+<!-- Förenkla/bygga om within.group och between.group -->
+<!-- Slår vi i taket för någon skala, ex RAS? Jämför med normer -->
 
-<!-- ### Between-group effects -->
+### Within-group effects
 
-<!-- ### Within-group effects -->
+For the primary transdiagnostic measures of skillful behaviors it is notable that both treatment groups Self-help and Guided self-help improved significantly during the course of the intervention, showing large within-group effects with regards to AAA-S Adaptive from Pre to Post, `r report.text(aaas_ad.lmer, 29, -1, 40)`, and `r report.text(aaas_ad.lmer, 51, -1, 62)` respectively. No effect was found for the Waitlist condition, `r xprnot(rout(aaas_ad.lmer)$emmpairs$p.value[2])`. For the RAS, significant large effects on assertiveness were also found for the Self-help group, `r report.text(rathus.lmer, 29, -1, 40)`, and the Guided self-help group, `r report.text(rathus.lmer, 51, -1, 62)`. Participants in the Waitlist condition did not change between Pre and Post with regards to the RAS, nor did any other remaining measure, all `r xprnot(rout(rathus.lmer)$emmpairs$p.value[2])`. Both treatment groups showed significant and further inflated within-group effects for on assertiveness, measured with AAA-S Adaptive and the RAS, at 1 year Follow-up when compared to the Pre-treatment measurement time point, suggesting that assertive behaviors continued to generalize well after the end of participation in the treatment groups (see Table 1 for effect sizes). 
 
-<!-- Post hoc pairwise comparisons of marginal means for the Selfhelp group showed that the for the Adaptive subscale of AAA-S, the change [$\Delta M$] between Pre and Post time points was `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$estimate[8] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ad.lmer)$emmpairs.by.group$df[8],0)`}\) = `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$t.ratio[8],1)`, `r xpr(rout(aaas_ad.lmer)$emmpairs.by.group$p.value[8])`, $ES$ = `r xresult(rout(aaas_ad.lmer)$eff.by.group$effect.size[29] * -1,1)`, 95% CI [`r xresult(rout(aaas_ad.lmer)$eff.by.group$upper.CL[29] * -1,1)`, `r xresult(rout(aaas_ad.lmer)$eff.by.group$lower.CL[29] * -1,1)`]. The estimated $\Delta M$ between Pre and Follow-up time points was `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$estimate[9] * -1,1)`, $t$\(_{`r xresulttext(rout(aaas_ad.lmer)$emmpairs.by.group$df[9],0)`}\) = `r xresult(rout(aaas_ad.lmer)$emmpairs.by.group$t.ratio[9],1)`, `r xpr(rout(aaas_ad.lmer)$emmpairs.by.group$p.value[9])`, $ES$ = `r xresult(rout(aaas_ad.lmer)$eff.by.group$effect.size[30] * -1,1)`, 95% CI [`r xresult(rout(aaas_ad.lmer)$eff.by.group$upper.CL[30] * -1,1)`, `r xresult(rout(aaas_ad.lmer)$eff.by.group$lower.CL[30] * -1,1)`]. Similarily large effect sizes were found for RAS, $\Delta M$ between Pre and Post time points was `r xresult(rout(rathus.lmer)$emmpairs.by.group$estimate[8] * -1,1)`, $t$\(_{`r xresulttext(rout(rathus.lmer)$emmpairs.by.group$df[8],0)`}\) = `r xresult(rout(rathus.lmer)$emmpairs.by.group$t.ratio[8],1)`, `r xpr(rout(rathus.lmer)$emmpairs.by.group$p.value[8])`, $ES$ = `r xresult(rout(rathus.lmer)$eff.by.group$effect.size[29] * -1,1)`, 95% CI [`r xresult(rout(rathus.lmer)$eff.by.group$upper.CL[29] * -1,1)`, `r xresult(rout(rathus.lmer)$eff.by.group$lower.CL[29] * -1,1)`]. The estimated $\Delta M$ between Pre and Follow-up time points was also pronounced, `r xresult(rout(rathus.lmer)$emmpairs.by.group$estimate[9] * -1,1)`, $t$\(_{`r xresulttext(rout(rathus.lmer)$emmpairs.by.group$df[9],0)`}\) = `r xresult(rout(rathus.lmer)$emmpairs.by.group$t.ratio[9],1)`, `r xpr(rout(rathus.lmer)$emmpairs.by.group$p.value[9])`, $ES$ = `r xresult(rout(rathus.lmer)$eff.by.group$effect.size[30] * -1,1)`, 95% CI [`r xresult(rout(rathus.lmer)$eff.by.group$upper.CL[30] * -1,1)`, `r xresult(rout(rathus.lmer)$eff.by.group$lower.CL[30] * -1,1)`]. -->
+Among the secondary measures of syndromal symptoms ... (lyft viss effekt för depression mätt med PHQ-9 at Follow-up, lyft stor effekt på symtom för social ångest)
 
-<!-- Add Guided. -->
+Adding to the picture that adaptive assertivness behaviors increased and depressive and social phobic symptoms decreased as a consequence of participation in the intervention, a significant number of participants moved across the cutoff for reliable and clinically significant for several measures ... (chi2-test, post-hoc-test)
+
+<!-- AAA-S Adaptive from Pre to Post and from Pre to Follow-up, `r report.kw(aaas_ad.pre.post.kw)` and `r report.kw(aaas_ad.pre.fu.kw)` respectively. , RAS, and LSAS-SR;  -->
+
+<!-- in the Self-help group X (n, %), Y, and Z at Post treatment, and X2, Y2, and Z2 at 1 year Follow-up; in the Guided self-help group X3, Y3, and Z3 at Post treatment, and X4, Y4, and Z4 at 1 year Follow-up. For the PHQ-9 measure,  -->
+
+### Between-group effects
+
+Compared to the Waitlist condition, both the Self-help and the Guided self-help conditions showed significant and large effects at the Post timepoint, ... (utveckla mera)
 
 # Discussion
 
