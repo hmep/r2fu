@@ -189,11 +189,11 @@ report.anova.plain <- function(anovaobj, row) {
 report.kw <- function(kwobj) {
   df <- length(kwobj$Z) -1
   paste0(
-    "\textit{$\\chi^2$}($",
+    "\\textit{$\\chi^2$}($",
     df,
     "$) = $",
     round(kwobj$chi2, 2),
-    "$, \textit{p} = ",
+    "$, ",
     xprnot(pchisq(kwobj$chi2, df, lower.tail = F)) #2do: double check, lower tail or not?
   )
 }
@@ -1474,16 +1474,27 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
 Mixed models for two of three primary measures of assertiveness behaviors revealed time \texttimes{} group interaction effects: The Adaptive subscale of AAA-S, `r report.anova(aaas_ad.anova)[3]`, and the RAS, `r report.anova(rathus.anova)[3]`, suggesting that participation in the treatment conditions did have an effect over time on assertiveness behaviors. However, the model for Aggressive subscale of AAA-S  did not, `r report.anova(aaas_ag.anova)[3]`, indicating that the self-assessed expressed or perceived levels of aggressive assertions were not affected by participation in the intervention. Similarily, mixed models for two secondary measures of syndromal symptoms, PHQ-9 and LSAS-SR, revealed time \texttimes{} group interaction effects, `r report.anova(phq_sum.anova)[3]`, and `r report.anova(lsas_sum.anova)[3]` respectively, while the model for GAD-7 did not, `r report.anova(gad_sum.anova)[3]`, indicating that estimated mean levels of depressive mood and social anxiety symptoms -- but not those of generalized anxiety -- were significantly affected by participation in the intervention. 
 
 <!-- Lägga till During i tabell? -->
+<!-- Lägga till Post to Fu i tabell? -->
 <!-- Förenkla/bygga om within.group och between.group -->
 <!-- Slår vi i taket för någon skala, ex RAS? Jämför med normer -->
 
 ### Within-group effects
 
-For the primary transdiagnostic measures of skillful behaviors it is notable that both treatment groups Self-help and Guided self-help improved significantly during the course of the intervention, showing large within-group effects with regards to AAA-S Adaptive from Pre to Post, `r report.text(aaas_ad.lmer, 29, -1, 40)`, and `r report.text(aaas_ad.lmer, 51, -1, 62)` respectively. No effect was found for the Waitlist condition, `r xprnot(rout(aaas_ad.lmer)$emmpairs$p.value[2])`. For the RAS, significant large effects on assertiveness were also found for the Self-help group, `r report.text(rathus.lmer, 29, -1, 40)`, and the Guided self-help group, `r report.text(rathus.lmer, 51, -1, 62)`. Participants in the Waitlist condition did not change between Pre and Post with regards to the RAS, nor did any other remaining measure, all `r xprnot(rout(rathus.lmer)$emmpairs$p.value[2])`. Both treatment groups showed significant and further inflated within-group effects for on assertiveness at 1 year Follow-up when compared to the Pre-treatment measurement time point, measured with AAA-S Adaptive and the RAS, suggesting that assertive behaviors continued to generalize well after the end of participation in the treatment groups (see Table 1 for a summary of effect sizes and significance tests of estimated marginal mean differences). 
+For the primary transdiagnostic measures of skillful behaviors it is notable that both treatment groups Self-help and Guided self-help improved significantly during the course of the intervention, showing large within-group effects with regards to AAA-S Adaptive from Pre to Post, `r report.text(aaas_ad.lmer, 29, -1, 40)`, and `r report.text(aaas_ad.lmer, 51, -1, 62)` respectively. No Pre to Post effect was found for the Waitlist condition, `r xprnot(rout(aaas_ad.lmer)$emmpairs$p.value[2])`. For the RAS, significant large effects on assertiveness were also found for the Self-help group, `r report.text(rathus.lmer, 29, -1, 40)`, and the Guided self-help group, `r report.text(rathus.lmer, 51, -1, 62)`. As with AAA-S Adaptive, means in the Waitlist condition did not change between Pre and Post with regards to the RAS, nor with any other remaining measure, all `r xprnot(rout(rathus.lmer)$emmpairs$p.value[2])`. Both treatment groups showed further inflated within-group effects for on assertiveness at 1 year Follow-up when compared to the Pre-treatment measurement time point, measured with AAA-S Adaptive and the RAS, suggesting that assertive behaviors continued to generalize well after the end of participation in the treatment groups. However, only for X was the Post to Follow-up comparison significant. (See Table 1 for a summary of effect sizes and significance tests of estimated marginal mean differences). 
 
 Among the secondary measures of syndromal symptoms ... (lyft viss effekt för depression mätt med PHQ-9 at Follow-up, lyft stor effekt på symtom för social ångest) (see Table 1 for a summary of effect sizes). 
 
 Adding to the picture that adaptive assertivness behaviors increased and depressive and social phobic symptoms decreased as a consequence of participation in the intervention, a significant number of participants moved across the cutoff for reliable and clinically significant for several measures ... (chi2-test, post-hoc-test) (see Table 2 for a summary of clinical recovery rates and their significance tests). 
+
+AAA-S Adaptive, pre--post: `r report.kw(aaas_ad.pre.post.kw)`
+RAS, pre--post: `r report.kw(rathus.pre.post.kw)`
+PHQ-9, pre--post: `r report.kw(phq_sum.pre.post.kw)`
+GAD-7, pre--post: `r report.kw(gad_sum.pre.post.kw)`
+
+AAA-S Adaptive, pre--fu: `r report.kw(aaas_ad.pre.fu.kw)`
+RAS, pre--fu: `r report.kw(rathus.pre.fu.kw)`
+PHQ-9, pre--fu: `r report.kw(phq_sum.pre.fu.kw)`
+GAD-7, pre--fu: `r report.kw(gad_sum.pre.fu.kw)`
 
 <!-- AAA-S Adaptive from Pre to Post and from Pre to Follow-up, `r report.kw(aaas_ad.pre.post.kw)` and `r report.kw(aaas_ad.pre.fu.kw)` respectively. , RAS, and LSAS-SR;  -->
 
