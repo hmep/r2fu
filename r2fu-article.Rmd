@@ -465,7 +465,7 @@ knitr::include_graphics("flowchart.png", auto_pdf = T)
 
 All data were organized in one dataset and analyzed using `r R.Version()$language` `r paste(R.Version()[c("major", "minor")], collapse = ".")`, using lmerTest [@R-lmerTest], emmeans [@R-emmeans], ggeffects [@R-ggeffects], performance [@R-performance], and clinicalsignificance [@R-clinicalsignificance] packages. All syntax is available at https://github.com/hmep/r2fu/, together with anonymized data. 
 
-A linear mixed-effects model was fitted using unscaled data to estimate fixed and random effects of group, time, and group-time interaction, using an unstructured covariance pattern, and the REML method of estimation. Kenward-Roger approximations were used to estimate denominator degrees of freedom. Post-hoc comparisons were performed using T-tests with Bonferroni-corrected p-values. The proportions of participants showing reliable change and reaching clinical significance were determined in accordance with  @Jacobson1991, using the 'c' definition to select the cutoff value. (Eller 'a' för att vara maximalt konservativ?)
+A linear mixed-effects model was fitted using unscaled data to estimate fixed and random effects of group, time, and group-time interaction, using an unstructured covariance pattern, and the REML method of estimation. Kenward-Roger approximations were used to estimate denominator degrees of freedom. Post-hoc pairwise comparisons of estimated marginal means were performed using T-tests with Bonferroni-corrected p-values. The proportions of participants showing reliable change and reaching clinical significance were determined in accordance with  @Jacobson1991, using the 'c' definition to select the cutoff value. (Eller 'a' för att vara maximalt konservativ?)
 
 ```{r mixedmodels, fig.width = 13, fig.asp = 0.75, echo = F, eval = T, results='hide'}
 
@@ -1444,9 +1444,11 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
 
 ```
 
-<!-- ## Primary measures of skillful behaviors -->
+## Primary and secondary measures
 
-<!-- Mixed models for two of three primary measures revealed time \texttimes{} group interaction effects: The Adaptive subscale of AAA-S, `r report.anova(aaas_ad.anova)[3]`, and the RAS, `r report.anova(rathus.anova)[3]`. The model for Aggressive subscale of AAA-S  did not, `r report.anova(aaas_ag.anova)[3]`.  -->
+Mixed models for two of three primary measures of assertiveness behaviors revealed time \texttimes{} group interaction effects: The Adaptive subscale of AAA-S, `r report.anova(aaas_ad.anova)[3]`, and the RAS, `r report.anova(rathus.anova)[3]`, suggesting that participation in the treatment conditions did have an effect over time on assertiveness behaviors. However, the model for Aggressive subscale of AAA-S  did not, `r report.anova(aaas_ag.anova)[3]`, indicating that the self-assessed expressed or perceived levels of aggressive assertions was not affected by participation in the intervention. Similarily, mixed models for PHQ-9 and LSAS-SR revealed time \texttimes{} group interaction effects, `r report.anova(phq_sum.anova)[3]`, and `r report.anova(lsas_sum.anova)[3]` respectively, while the model for GAD-7 did not, `r report.anova(gad_sum.anova)[3]`; estimated mean levels of depressive mood and social anxiety -- but not of generalized anxiety -- are significantly affected by participation in the intervention.
+
+Follow-up analysis through pairwise comparisons of marginal means estimated by the respective models are summarized in table \@ref(tab:effsizetab), both between groups and within groups. Notably, compared to Waitlist, both the Guided and the Self-help groups 
 
 <!-- ### Between-group effects -->
 
