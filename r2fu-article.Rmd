@@ -1484,7 +1484,12 @@ For the primary transdiagnostic measures of skillful behaviors it is notable tha
 
 Among the secondary measures of syndromal symptoms ... (lyft viss effekt för depression mätt med PHQ-9 at Follow-up, lyft stor effekt på symtom för social ångest) (see Table 1 for a summary of effect sizes). 
 
-Adding to the picture that adaptive assertivness behaviors increased and depressive and social phobic symptoms decreased as a consequence of participation in the intervention, a significant number of participants moved across the cutoff for reliable and clinically significant for several measures ... (chi2-test, post-hoc-test) (see Table 2 for a summary of clinical recovery rates and their significance tests). 
+Adding to the picture that assertive behaviors increased and symptoms of depression and social phobia decreased as a consequence of participation in the intervention, there was a significant difference in the number of participants that had revovered, that is moved across the cutoff for reliable and clinically significant change, at Post between the three groups: AAA-S Adaptive, `r report.kw(aaas_ad.pre.post.kw)`;
+RAS, `r report.kw(rathus.pre.post.kw)`; PHQ-9, `r report.kw(phq_sum.pre.post.kw)`; and LSAS-SR,  `r report.kw(lsas_sum.pre.post.kw)`. However, there was no difference between groups for AAA-S Aggressive, `r report.kw(aaas_ag.pre.post.kw)`, and GAD-7, `r report.kw(gad_sum.pre.post.kw)`.
+
+<!-- Add cutoff values to table 2 -->
+
+... (chi2-test, post-hoc-test) (see Table 2 for a summary of clinical recovery rates and their significance tests). 
 
 AAA-S Adaptive, pre--post: `r report.kw(aaas_ad.pre.post.kw)`
 RAS, pre--post: `r report.kw(rathus.pre.post.kw)`
