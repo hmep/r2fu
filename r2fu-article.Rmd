@@ -571,7 +571,7 @@ knitr::include_graphics("flowchart.png", auto_pdf = T)
 
 All data were organized in one dataset and analyzed using `r R.Version()$language` `r paste(R.Version()[c("major", "minor")], collapse = ".")`, using lmerTest [@R-lmerTest], emmeans [@R-emmeans], ggeffects [@R-ggeffects], performance [@R-performance], and clinicalsignificance [@R-clinicalsignificance] packages. All syntax is available at https://github.com/hmep/r2fu/, together with anonymized data. 
 
-A linear mixed-effects model was fitted using unscaled data to estimate fixed and random effects of group, time, and group-time interaction, using an unstructured covariance pattern, and the REML method of estimation. Kenward-Roger approximations were used to estimate denominator degrees of freedom. Post-hoc pairwise comparisons of estimated marginal means were performed using T-tests with Bonferroni-corrected p-values. The proportions of participants showing reliable change and reaching clinical significance were determined in accordance with  @Jacobson1991, using the 'c' definition to select the cutoff value. (Eller 'a' för att vara maximalt konservativ?)
+A linear mixed-effects model was fitted using unscaled data to estimate fixed and random effects of group, time, and group-time interaction, using an unstructured covariance pattern, and the REML method of estimation. Kenward-Roger approximations were used to estimate denominator degrees of freedom. Post-hoc pairwise comparisons of estimated marginal means were performed using T-tests with Bonferroni-corrected p-values. The proportions of participants showing reliable change and reaching clinical significance were determined in accordance with  @Jacobson1991, using the 'c' definition to select the cutoff value. To honor the intention to treat principle in the analysis of clinical significance, any missing value was replaced with the value from the previous time point.
 
 ```{r mixedmodels, fig.width = 13, fig.asp = 0.75, echo = F, eval = T, results='hide'}
 
@@ -1365,6 +1365,43 @@ clinsig <- function(measure, direction, first, last, group, kwobj) {
   return(output)
 }
 
+clinsig.text <- function(measure, direction, first, last, group, kwobj) {
+  groupkey <- grepl(group, r2fu.itt.data$group)
+  kwstars <-
+    if (group == xG1) {
+      xpss(kwobj$P.adjusted[1])
+    } else if (group == xG2) {
+      xpss(kwobj$P.adjusted[2])
+    } else { NULL }
+  clinsig <- clinical_significance(
+    data = r2fu.itt.data[groupkey, ],
+    better_is = direction,
+    id = subject,
+    time = time,
+    outcome = measure,
+    pre = first,
+    post = last,
+    reliability = norms[which(measurementshortnames == measure), 1],
+    m_functional = norms[which(measurementshortnames == measure), 2],
+    sd_functional = norms[which(measurementshortnames == measure), 3],
+    type = "c"
+  )
+  output <- as.matrix(clinsig$summary[c(2:3)])
+  output <-
+    cbind(paste0(
+      "$n$ = ",
+      "$",
+      output[, 1],
+      "$ ($",
+      round(output[, 2] * 100),
+      "$\\%), ",
+      xpr(kwobj$Z[1]),
+      xpr(kwobj$P.adjusted[1])
+    ))
+  #output <- c(paste0(output[1],kwstars), output[c(2:5)])
+  return(output)
+}
+
 xclinsigcategories <- c("Recovered", "Improved", "Unchanged", "Deteriorated", "Harmed")
 
 clinsig.table <- rbind(
@@ -1480,26 +1517,19 @@ Mixed models for two of three primary measures of assertiveness behaviors reveal
 
 ### Within-group effects
 
-For the primary transdiagnostic measures of skillful behaviors it is notable that both treatment groups Self-help and Guided self-help improved significantly during the course of the intervention, showing large within-group effects with regards to AAA-S Adaptive from Pre to Post, `r report.text(aaas_ad.lmer, 29, -1, 40)`, and `r report.text(aaas_ad.lmer, 51, -1, 62)` respectively. No Pre to Post effect was found for the Waitlist condition, `r xprnot(rout(aaas_ad.lmer)$emmpairs$p.value[2])`. For the RAS, significant large effects on assertiveness were also found for the Self-help group, `r report.text(rathus.lmer, 29, -1, 40)`, and the Guided self-help group, `r report.text(rathus.lmer, 51, -1, 62)`. As with AAA-S Adaptive, means in the Waitlist condition did not change between Pre and Post with regards to the RAS, nor with any other remaining measure, all `r xprnot(rout(rathus.lmer)$emmpairs$p.value[2])`. Both treatment groups showed further inflated within-group effects for on assertiveness at 1 year Follow-up when compared to the Pre-treatment measurement time point, measured with AAA-S Adaptive and the RAS, suggesting that assertive behaviors continued to generalize well after the end of participation in the treatment groups. However, only for X was the Post to Follow-up comparison significant. (See Table 1 for a summary of effect sizes and significance tests of estimated marginal mean differences). 
+For the primary transdiagnostic measures of skillful behaviors it is notable that both treatment groups Self-help and Guided self-help improved significantly during the course of the intervention, showing large within-group effects with regards to AAA-S Adaptive from Pre to Post, `r report.text(aaas_ad.lmer, 29, -1, 40)`, and `r report.text(aaas_ad.lmer, 51, -1, 62)` respectively. No Pre to Post effect was found for the Waitlist condition, `r xprnot(rout(aaas_ad.lmer)$emmpairs$p.value[2])`. For the RAS, significant large effects on assertiveness were also found for the Self-help group, `r report.text(rathus.lmer, 29, -1, 40)`, and the Guided self-help group, `r report.text(rathus.lmer, 51, -1, 62)`. As with AAA-S Adaptive, means in the Waitlist condition did not change between Pre and Post with regards to the RAS, nor with any other remaining measure, all `r xprnot(rout(rathus.lmer)$emmpairs$p.value[2])`. Both treatment groups showed sustained within-group effects for on assertiveness at 1 year Follow-up when compared to the Pre-treatment measurement time point, measured with AAA-S Adaptive and the RAS, suggesting that assertive behaviors still were manifest well after the end of participation in the treatment groups. However, only for X was the Post to Follow-up comparison in itself significant, indicating that there is generally no change between Post and Follow-up ...(utveckla). (See Table 1 for a summary of effect sizes and significance tests of estimated marginal mean differences). 
 
 Among the secondary measures of syndromal symptoms ... (lyft viss effekt för depression mätt med PHQ-9 at Follow-up, lyft stor effekt på symtom för social ångest) (see Table 1 for a summary of effect sizes). 
 
-Adding to the picture that assertive behaviors increased and symptoms of depression and social phobia decreased as a consequence of participation in the intervention, there was a significant difference in the number of participants that had revovered, that is moved across the cutoff for reliable and clinically significant change, at Post between the three groups: AAA-S Adaptive, `r report.kw(aaas_ad.pre.post.kw)`;
-RAS, `r report.kw(rathus.pre.post.kw)`; PHQ-9, `r report.kw(phq_sum.pre.post.kw)`; and LSAS-SR,  `r report.kw(lsas_sum.pre.post.kw)`. However, there was no difference between groups for AAA-S Aggressive, `r report.kw(aaas_ag.pre.post.kw)`, and GAD-7, `r report.kw(gad_sum.pre.post.kw)`.
+Adding to the picture that assertive behaviors increased and symptoms of depression and social phobia decreased as a consequence of participation in the intervention, there was a significant difference between the groups at Post in the number of participants that had recovered, that is had moved across the cutoff for reliable and clinically significant change: AAA-S Adaptive, `r report.kw(aaas_ad.pre.post.kw)`;
+RAS, `r report.kw(rathus.pre.post.kw)`; PHQ-9, `r report.kw(phq_sum.pre.post.kw)`; and LSAS-SR,  `r report.kw(lsas_sum.pre.post.kw)`. Recovery rates between conditions were also significant at Follow-up for AAA-S Adaptive, `r report.kw(aaas_ad.pre.fu.kw)`;
+RAS, `r report.kw(rathus.pre.fu.kw)`; PHQ-9, `r report.kw(phq_sum.pre.fu.kw)`; and LSAS-SR,  `r report.kw(lsas_sum.pre.fu.kw)`. However, there was no difference between groups for AAA-S Aggressive, `r report.kw(aaas_ag.pre.post.kw)`, and GAD-7, `r report.kw(gad_sum.pre.post.kw)` at Post, nor at Follow-up, `r report.kw(aaas_ag.pre.fu.kw)` and `r report.kw(gad_sum.pre.fu.kw)`. See Table 2 for a summary of cutoff values, clinical recovery rates and the significance of pairwise post hoc tests. The clinical significance findings are in agreement with the statistical analysis of change, confirming that adaptive expressions of assertiveness captured with AAA-S Adaptive and the RAS increased Pre to Post, and that the trends continued up to the 1-year Follow-up time point (while aggressive expressions had not changed at neither Post or Follow-up). Also, depressive symptoms captured with PHQ-9 had decreased significantly only for the Guided self-help group, and only at Follow-up. Symptoms of generalized anxiety, however, decreased significantly for all four combinations of Post and Follow-up time points, and Self-help and Guided self-help groups.
 
+`r clinsig("aaas_ad", "higher", "Pre", "Post", xG3, aaas_ad.pre.post.kw)[1]`
+
+<!-- Move chi2 tests to table? -->
 <!-- Add cutoff values to table 2 -->
 
-... (chi2-test, post-hoc-test) (see Table 2 for a summary of clinical recovery rates and their significance tests). 
-
-AAA-S Adaptive, pre--post: `r report.kw(aaas_ad.pre.post.kw)`
-RAS, pre--post: `r report.kw(rathus.pre.post.kw)`
-PHQ-9, pre--post: `r report.kw(phq_sum.pre.post.kw)`
-GAD-7, pre--post: `r report.kw(gad_sum.pre.post.kw)`
-
-AAA-S Adaptive, pre--fu: `r report.kw(aaas_ad.pre.fu.kw)`
-RAS, pre--fu: `r report.kw(rathus.pre.fu.kw)`
-PHQ-9, pre--fu: `r report.kw(phq_sum.pre.fu.kw)`
-GAD-7, pre--fu: `r report.kw(gad_sum.pre.fu.kw)`
 
 <!-- AAA-S Adaptive from Pre to Post and from Pre to Follow-up, `r report.kw(aaas_ad.pre.post.kw)` and `r report.kw(aaas_ad.pre.fu.kw)` respectively. , RAS, and LSAS-SR;  -->
 
