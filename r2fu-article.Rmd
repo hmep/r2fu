@@ -548,7 +548,7 @@ digits = -1) * 3
 
 ```
 
-The study design follows the RCT criteria proposed by @Chambless2001, with a randomized allocation of participants to three groups: (1) Guided self-help intervention, (2) Self-help intervention (unguided), and (3) a ten-week Waitlist control. A sample size of 210 (70 per group) was decided on through an a priori power calculation according to guidelines for linear models set forth in @cohen1988statistical, assuming a between-group effect size of Cohen’s d of 0.8 on the primary measure for assertiveness, power 0.9, alpha 0.05, and a 15% drop-out rate per week (8 weeks in total).
+The study design follows the RCT criteria proposed by @Chambless2001, with a randomized allocation of participants to three groups: (1) Guided self-help intervention, (2) Self-help intervention (unguided), and (3) a ten-week Waitlist control. A sample size of 210 (70 per group) was decided on through an a priori power calculation according to guidelines for linear models set forth in @cohen1988statistical, assuming a between-group effect size of Cohen’s d of 0.8 on Adaptive and Aggressive Assertiveness Scales (AAA-S; @Thompson2011), power 0.9, alpha 0.05, and a 15% drop-out rate per week, with a duration of the intervention of 8 weeks in total.
 
 ## Participants
 
@@ -864,7 +864,7 @@ effsel.time <- -10
 
 # Results
 
-```{r emm.primary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of estimated fixed effects for the primary transdiagnostic scales used to measure skillful, assertive behaviors. Participants’ estimated means for all three measures exhibit increasing levels of assertiveness during the course of treatment in the Support and Self-help groups, with negligable or only small differences between the two treatment conditions. The trends continue beyond the Post time point, showing further increased estimated mean levels of assertive behaviors at 1-year Follow-up. The Waitlist group’s estimated marginal means recover spontaneously, although not significantly, between the Pre and Post time points, for all three measures.'}
+```{r emm.primary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of estimated fixed effects for the primary transdiagnostic scales used to measure skillful, assertive behaviors. Participants’ estimated means for all three measures exhibit increasing levels of assertiveness during the course of treatment in the Support and Self-help groups, with negligable or only small differences between the two treatment conditions. The trends continue beyond the Post time point, showing further increased estimated mean levels of assertive behaviors at 1-year Follow-up. The Waitlist group’s means recovered slightly, although not significantly, between the Pre and Post time points, for all three measures.'}
 
 (aaas_ad.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
   (aaas_ag.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
@@ -873,7 +873,7 @@ effsel.time <- -10
 
 ```
 
-```{r emm.secondary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of estimated fixed effects for the secondary syndromal outcome measures. Participation in the Support and Self-help conditions lead to signficant symptom alleviation between the Pre and Post as well as and 1-year Follow-up time points for depression, generalized anxiety and social anxiety, as captured with their respective measures. As with the transdiagnostic measures of assertive behaviors, the difference between the two treatment groups is small or statistically inappreciable at both Post and 1-year Follow-up time points. The Waitlist control group did not significantly change between time points. However, to counteract any nocebo effect of Waitlist in the between-group comparisons the most conservative estimate for the Waitlist control condition was used; see dotted line.'}
+```{r emm.secondary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of estimated fixed effects for the secondary syndromal outcome measures. Participation in the Support and Self-help conditions lead to signficant symptom alleviation between the Pre and Post as well as and 1-year Follow-up time points for depression, generalized anxiety and social anxiety, as captured with their respective measures. As with the transdiagnostic measures of assertive behaviors, the difference between the two treatment groups is small or statistically inappreciable at both Post and 1-year Follow-up time points. The Waitlist control group did not significantly change between time points for either measure. However, to counteract even the slightest nocebo effect of Waitlist in the between-group comparisons the most conservative estimate for the Waitlist control condition was used; see dotted line.'}
 
 (phq_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
   (gad_sum.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
