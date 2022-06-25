@@ -10,13 +10,13 @@ author:
 - Per Carlbring^[University of Nowhere]
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
-  word_document: default
-  html_document:
-    toc: yes
-    df_print: paged
   pdf_document:
     latex_engine: xelatex
     keep_tex: yes
+  html_document:
+    toc: yes
+    df_print: paged
+  word_document: default
 tags:
 - nothing
 - nothingness
@@ -1488,7 +1488,7 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
 
 ```
 
-## Treatment effectiveness, primary and secondary measures
+## Treatment efficacy, primary and secondary measures
 
 Mixed models for two of three primary measures of assertive behaviors revealed time \texttimes{} group interaction effects: The Adaptive subscale of AAA-S, `r report.anova(aaas_ad.anova)[3]`, and the RAS, `r report.anova(rathus.anova)[3]`, suggesting that participation in the treatment conditions did have an effect over time on assertive behaviors. However, the model for Aggressive subscale of AAA-S  did not, `r report.anova(aaas_ag.anova)[3]`, indicating that the self-assessed expressed or perceived levels of aggressive assertions were not affected by participation in the intervention. Similarily, mixed models for two secondary measures of syndromal symptoms, PHQ-9 and LSAS-SR, revealed time \texttimes{} group interaction effects, `r report.anova(phq_sum.anova)[3]`, and `r report.anova(lsas_sum.anova)[3]` respectively, while the model for GAD-7 did not, `r report.anova(gad_sum.anova)[3]`, indicating that estimated mean levels of depressive mood and social anxiety symptoms -- but not those of generalized anxiety -- were significantly affected by participation in the intervention. 
 
