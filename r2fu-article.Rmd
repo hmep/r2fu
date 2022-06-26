@@ -10,13 +10,13 @@ author:
 - Per Carlbring^[University of Nowhere]
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
-  pdf_document:
-    latex_engine: xelatex
-    keep_tex: yes
+  word_document: default
   html_document:
     toc: yes
     df_print: paged
-  word_document: default
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: yes
 tags:
 - nothing
 - nothingness
