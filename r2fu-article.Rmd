@@ -200,22 +200,12 @@ report.kw <- function(kwobj) {
   )
 }
 
-
 report.kwnot <- function(kwobj) {
   df <- length(kwobj$Z) -1
   paste0(
     xprnot(pchisq(kwobj$chi2, df, lower.tail = F)) #2do: double check, lower tail or not?
   )
 }
-
-report.kw.posthoc <- function(group, kwobj) {
-  kwrow <-
-    if (group == xG1) { 1 } else if (group == xG2) { 2 } else { NULL }
-  output <- c(paste0(output[1],kwstars), output[c(2:5)])
-  return(output)
-}
-
-
 
 # Better build custom contrasts with less comparisons?
 # https://aosmith.rbind.io/2019/04/15/custom-contrasts-emmeans/#reasons-for-custom-comparisons
@@ -1313,9 +1303,9 @@ clinsig <- function(measure, direction, first, last, group, kwobj) {
   groupkey <- grepl(group, r2fu.itt.data$group)
   kwstars <-
     if (group == xG1) {
-      xpss(kwobj$P.adjusted[1])
+      xpss(kwobj$altP.adjusted[1])
     } else if (group == xG2) {
-      xpss(kwobj$P.adjusted[2])
+      xpss(kwobj$altP.adjusted[2])
     } else { NULL }
   clinsig <- clinical_significance(
     data = r2fu.itt.data[groupkey, ],
@@ -1333,61 +1323,6 @@ clinsig <- function(measure, direction, first, last, group, kwobj) {
   output <- as.matrix(clinsig$summary[c(2:3)])
   output <- cbind(paste0("$",output[, 1],"$ ($",round(output[, 2] * 100),"$\\%)"))
   output <- c(paste0(output[1],kwstars), output[c(2:5)])
-  return(output)
-}
-
-clinsigobj <- function(measure, direction, first, last, group) {
-  groupkey <- grepl(group, r2fu.itt.data$group)
-  clinsig <- clinical_significance(
-    data = r2fu.itt.data[groupkey, ],
-    better_is = direction,
-    id = subject,
-    time = time,
-    outcome = measure,
-    pre = first,
-    post = last,
-    reliability = norms[which(measurementshortnames == measure), 1],
-    m_functional = norms[which(measurementshortnames == measure), 2],
-    sd_functional = norms[which(measurementshortnames == measure), 3],
-    type = "c"
-  )
-  return(clinsig)
-}
-
-clinsig.text <- function(measure, direction, first, last, group, kwobj) {
-  groupkey <- grepl(group, r2fu.itt.data$group)
-  kwstars <-
-    if (group == xG1) {
-      xpss(kwobj$P.adjusted[1])
-    } else if (group == xG2) {
-      xpss(kwobj$P.adjusted[2])
-    } else { NULL }
-  clinsig <- clinical_significance(
-    data = r2fu.itt.data[groupkey, ],
-    better_is = direction,
-    id = subject,
-    time = time,
-    outcome = measure,
-    pre = first,
-    post = last,
-    reliability = norms[which(measurementshortnames == measure), 1],
-    m_functional = norms[which(measurementshortnames == measure), 2],
-    sd_functional = norms[which(measurementshortnames == measure), 3],
-    type = "c"
-  )
-  output <- as.matrix(clinsig$summary[c(2:3)])
-  output <-
-    cbind(paste0(
-      "$n$ = ",
-      "$",
-      output[, 1],
-      "$ ($",
-      round(output[, 2] * 100),
-      "$\\%), ",
-      xpr(kwobj$Z[1]),
-      xpr(kwobj$P.adjusted[1])
-    ))
-  #output <- c(paste0(output[1],kwstars), output[c(2:5)])
   return(output)
 }
 
@@ -1468,7 +1403,7 @@ colnames(clinsig.table) <- xcolnames
 
 ```
 
-```{r clinsigtab}
+```{r clinsigtab, echo = F, eval = T, results = 'asis'}
 
 knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of participants that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Followup-time-points respectively (rows named ”Recovered”). For missing values (i.e. caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rccccc", escape = F) %>%
   kable_styling(full_width = F, font_size = 9) %>%
@@ -1493,8 +1428,6 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
     threeparttable = T
   )
 
-# cutoff values: xresult(clinsigobj("aaas_ad", "higher", "Pre", "Post", "Self-help")$cutoff$info$value,2)
-
 ```
 
 ## Treatment efficacy, primary and secondary measures
@@ -1516,8 +1449,7 @@ Again comparing against Waitlist, there was no significant effect of the Self-he
 #### Clinical significant change
 
 Adding to the picture that assertive behaviors increased and symptoms of depression and social phobia decreased as a consequence of participation in the intervention, there was a significant difference between the groups at Post in the number of participants that had recovered clinically, that is had moved across the cutoff for reliable and clinically significant change: AAA-S Adaptive, `r report.kw(aaas_ad.pre.post.kw)`;
-RAS, `r report.kw(rathus.pre.post.kw)`; PHQ-9, `r report.kw(phq_sum.pre.post.kw)`; and LSAS-SR,  `r report.kw(lsas_sum.pre.post.kw)`. The difference in recovery rates between conditions was also significant at Follow-up for AAA-S Adaptive, `r report.kw(aaas_ad.pre.fu.kw)`;
-RAS, `r report.kw(rathus.pre.fu.kw)`; PHQ-9, `r report.kw(phq_sum.pre.fu.kw)`; and LSAS-SR,  `r report.kw(lsas_sum.pre.fu.kw)`. However, there was no difference between groups for AAA-S Aggressive, `r report.kwnot(aaas_ag.pre.post.kw)`, and GAD-7, `r report.kwnot(gad_sum.pre.post.kw)` at Post, nor at Follow-up, `r report.kwnot(aaas_ag.pre.fu.kw)` and `r report.kwnot(gad_sum.pre.fu.kw)` respectively. See Table 2 for a summary of cutoff values, clinical recovery rates and the significance of pairwise post hoc tests. Notably, post hoc-testing revealed that X of participants in the Self-help group and Y of participants in the Guided self-help group enjoyed clinical recovery with regards to adaptive assertiveness measured with AAA-S Adaptive at Post, and increasing to X and Y each at Follow-up. For assertiveness assessed with the RAS, the corresponding number and rates were X for Self-help and Y for Guided self-help at Post, increasing to X and Y respectively at Follow-up. Thus, the clinical significance findings are in agreement with the statistical analysis of change, confirming that adaptive expressions of assertiveness increased Pre to Post (in both treatment groups). Clinical recovery measured with PHQ-9 Pre to Post indicate that the intervention was effective in clinically moving participants out of the depression in the Guided self-help group, X (Y%), but not so in Self-help group, pointing to that interaction with therapists might contribute to faster recovery for depressed participants. In addition, significant frequency of participants recovered from symptoms of social anxiety as captured with LSAS-SR, X for Self-help and Y for Guided self-help at Post, increasing to X and Y respectively at Follow-up
+RAS, `r report.kw(rathus.pre.post.kw)`; and LSAS-SR, `r report.kw(lsas_sum.pre.post.kw)`.  However, there was no difference between groups at Post with regards to AAA-S Aggressive, `r report.kwnot(aaas_ag.pre.post.kw)`, PHQ-9, `r report.kwnot(phq_sum.pre.post.kw)`, or GAD-7, `r report.kwnot(gad_sum.pre.post.kw)`. At Follow-up, the difference in recovery rates between conditions was significant for AAA-S Adaptive, `r report.kw(aaas_ad.pre.fu.kw)`; RAS, `r report.kw(rathus.pre.fu.kw)`; PHQ-9, `r report.kw(phq_sum.pre.fu.kw)`; and LSAS-SR, `r report.kw(lsas_sum.pre.fu.kw)`, but not for AAA-S Aggressive, `r report.kwnot(aaas_ag.pre.fu.kw)` or GAD-7 `r report.kwnot(gad_sum.pre.fu.kw)`. See Table 2 for a summary of cutoff values, clinical recovery rates and the significance of pairwise tests against Waitlist. Notably, X participants in the Self-help group enjoyed clinical recovery with regards to adaptive assertiveness measured with AAA-S Adaptive at Post, which was significantly more than for the Waitlist group, , increasing to X each at Follow-up, . For assertiveness assessed with the RAS, the corresponding number and rates were X for Self-help and Y for Guided self-help at Post, increasing to X and Y respectively at Follow-up. Thus, the clinical significance findings are in agreement with the statistical analysis of change, confirming that adaptive expressions of assertiveness increased Pre to Post (in both treatment groups). Clinical recovery measured with PHQ-9 Pre to Post indicate that the intervention was effective in clinically moving participants out of the depression in the Guided self-help group, X (Y%), but not so in Self-help group, pointing to that interaction with therapists might contribute to faster recovery for depressed participants. In addition, significant frequency of participants recovered from symptoms of social anxiety as captured with LSAS-SR, X for Self-help and Y for Guided self-help at Post, increasing to X and Y respectively at Follow-up
 
 # Discussion
 
