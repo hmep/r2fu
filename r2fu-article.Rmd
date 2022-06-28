@@ -10,13 +10,13 @@ author:
 - Per Carlbring^[University of Nowhere]
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
-  word_document: default
-  html_document:
-    toc: yes
-    df_print: paged
   pdf_document:
     latex_engine: xelatex
     keep_tex: yes
+  html_document:
+    toc: yes
+    df_print: paged
+  word_document: default
 tags:
 - nothing
 - nothingness
@@ -197,18 +197,6 @@ xpss <- function(x) {
   ))
 }
 
-xpsshack <- function(x) {
-  paste(ifelse(
-    x < 0.001,
-    "\\\\hbox to 0bp{\\\\textsuperscript{***}}",
-    ifelse(
-      x < 0.01,
-      "\\\\hbox to 0bp{\\\\textsuperscript{**}}",
-      ifelse(x > 0.05, "", "\\\\hbox to 0bp{\\\\textsuperscript{*}}")
-    )
-  ))
-}
-
 report.anova <- function(anovaobj, row) {
   paste0(
     "$F$($",
@@ -255,7 +243,6 @@ report.kwnot <- function(kwobj) {
 
 rout <- function(lmerobj) {
   x.emm.by.group <- emmeans(lmerobj, ~ time | group)
-  x.emm.by.time <- emmeans(lmerobj, ~ group | time)
   x.emmpairs <-
     pairs(
       x.emm.by.group,
@@ -267,61 +254,32 @@ rout <- function(lmerobj) {
     sqrt(as.data.frame(VarCorr(lmerobj))[1, 4] + as.data.frame(VarCorr(lmerobj))[2, 4])
   x.eff.by.group <-
     eff_size(x.emm.by.group[effsel.group], sigma = x.sd, edf = df.residual(lmerobj))
-  x.eff.by.time <-
-    eff_size(x.emm.by.time[effsel.time], sigma = x.sd, edf = df.residual(lmerobj))
   return(
     list(
       emm.by.group = as.data.frame(x.emm.by.group),
-      emm.by.time = as.data.frame(x.emm.by.time),
       emmpairs = as.data.frame(x.emmpairs),
       sd = x.sd,
-      eff.by.group = as.data.frame(x.eff.by.group),
-      eff.by.time = as.data.frame(x.eff.by.time)
+      eff.by.group = as.data.frame(x.eff.by.group)
     )
   )
 }
 
-within.effsize <-
-  function(lmerobj, effrow, direction, emmpairsrow = NULL) {
-    stars <-  if (is.null(emmpairsrow)) {
-    } else {
-      xpss(rout(lmerobj)$emmpairs$p.value[emmpairsrow])
-    }
-    if (direction == -1) {
-      lower = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
-      upper = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
-    } else {
-      lower = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
-      upper = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
-    }
-    linebreak(paste0(
-      xresult(rout(lmerobj)$eff.by.group$effect.size[effrow] * direction, 2),
-      " [",
-      xresult(lower, 2),
-      ", ",
-      xresult(upper, 2),
-      "]",
-      stars
-    ),
-    align = "c")
+effsize.tabrow2 <- function(outobj, contrast, direction, stars = "stars") {
+  effrow <- which(outobj$eff.by.group$contrast == contrast)
+  stopifnot(all(outobj$emmpairs[-c(3, 13, 22, 31:38), ][, 1] == outobj$eff.by.group[, 1]))
+  stars <-  if( stars == "nostars" ) {} else {
+      stars <-
+    xpss(outobj$emmpairs[-c(3, 13, 22, 31:38), ]$p.value[effrow])
   }
-
-effsize.tabrow <- function(lmerobj, contrast, direction) {
-  effrow <- which(rout(lmerobj)$eff.by.group$contrast == contrast)
-  stopifnot(all(rout(lmerobj)$emmpairs[-c(3, 13, 22, 31:38), ][, 1] == rout(lmerobj)$eff.by.group[, 1]))
-  #stars <-  if(is.null(emmpairsrow)) {} else {
-  stars <-
-    xpss(rout(lmerobj)$emmpairs[-c(3, 13, 22, 31:38), ]$p.value[effrow])
-  #}
   if (direction == -1) {
-    lower = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
-    upper = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
+    lower = outobj$eff.by.group$upper.CL[effrow] * direction
+    upper = outobj$eff.by.group$lower.CL[effrow] * direction
   } else {
-    lower = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
-    upper = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
+    lower = outobj$eff.by.group$lower.CL[effrow] * direction
+    upper = outobj$eff.by.group$upper.CL[effrow] * direction
   }
   linebreak(paste0(
-    xresult(rout(lmerobj)$eff.by.group$effect.size[effrow] * direction, 2),
+    xresult(outobj$eff.by.group$effect.size[effrow] * direction, 2),
     " [",
     xresult(lower, 2),
     ", ",
@@ -332,56 +290,28 @@ effsize.tabrow <- function(lmerobj, contrast, direction) {
   align = "c")
 }
 
-between.effsize <-
-  function(lmerobj,
-           effrow,
-           direction = 1,
-           emmpairsrow = NULL) {
-    stars <-  if (is.null(emmpairsrow)) {
-    } else {
-      xpss(rout(lmerobj)$emmpairs$p.value[emmpairsrow])
-    }
-    if (direction == -1) {
-      lower = rout(lmerobj)$eff.by.time$upper.CL[effrow] * direction
-      upper = rout(lmerobj)$eff.by.time$lower.CL[effrow] * direction
-    } else {
-      lower = rout(lmerobj)$eff.by.time$lower.CL[effrow] * direction
-      upper = rout(lmerobj)$eff.by.time$upper.CL[effrow] * direction
-    }
-    linebreak(paste0(
-      xresult(rout(lmerobj)$eff.by.time$effect.size[effrow] * direction, 2),
-      " [",
-      xresult(lower, 2),
-      ", ",
-      xresult(upper, 2),
-      "]",
-      stars
-    ),
-    align = "c")
-  }
-
 report.text <-
-  function(lmerobj, effrow, direction = 1, emmpairsrow) {
+  function(outobj, effrow, direction = 1, emmpairsrow) {
     if (direction == -1) {
-      lower = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
-      upper = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
+      lower = outobj$eff.by.group$upper.CL[effrow] * direction
+      upper = outobj$eff.by.group$lower.CL[effrow] * direction
     } else {
-      lower = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
-      upper = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
+      lower = outobj$eff.by.group$lower.CL[effrow] * direction
+      upper = outobj$eff.by.group$upper.CL[effrow] * direction
     }
     x <- paste0(
       "$\\Delta M$ = ",
-      xresult(rout(lmerobj)$emmpairs$estimate[emmpairsrow] * direction, 1),
+      xresult(outobj$emmpairs$estimate[emmpairsrow] * direction, 1),
       # ", $t$\\(_{",
       ", $t$($",
-      xresulttext(rout(lmerobj)$emmpairs$df[emmpairsrow], 0),
+      xresulttext(outobj$emmpairs$df[emmpairsrow], 0),
       #"}\\) = ",
       "$) = ",
-      xresult(rout(lmerobj)$emmpairs$t.ratio[emmpairsrow], 2),
+      xresult(outobj$emmpairs$t.ratio[emmpairsrow], 2),
       ", ",
-      xpr(rout(lmerobj)$emmpairs$p.value[emmpairsrow]),
+      xpr(outobj$emmpairs$p.value[emmpairsrow]),
       ", $ES$ = ",
-      xresult(rout(lmerobj)$eff.by.group$effect.size[effrow] * direction, 2),
+      xresult(outobj$eff.by.group$effect.size[effrow] * direction, 2),
       ", 95\\% CI [",
       xresult(lower, 2),
       ", ",
@@ -427,21 +357,21 @@ report.text2 <-
     return(x)
   }
 
-effsize.tabrow <- function(lmerobj, contrast, direction) {
+effsize.tabrow <- function(outobj, contrast, direction) {
   effrow <-
     which(rout(aaas_ad.lmer)$eff.by.group$contrast == contrast)
-  stopifnot(all(rout(lmerobj)$emmpairs[-c(3, 13, 22, 31:38), ][, 1] == rout(lmerobj)$eff.by.group[, 1]))
+  stopifnot(all(outobj$emmpairs[-c(3, 13, 22, 31:38), ][, 1] == outobj$eff.by.group[, 1]))
   stars <-
-    xpss(rout(lmerobj)$emmpairs[-c(3, 13, 22, 31:38), ]$p.value[effrow])
+    xpss(outobj$emmpairs[-c(3, 13, 22, 31:38), ]$p.value[effrow])
   if (direction == -1) {
-    lower = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
-    upper = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
+    lower = outobj$eff.by.group$upper.CL[effrow] * direction
+    upper = outobj$eff.by.group$lower.CL[effrow] * direction
   } else {
-    lower = rout(lmerobj)$eff.by.group$lower.CL[effrow] * direction
-    upper = rout(lmerobj)$eff.by.group$upper.CL[effrow] * direction
+    lower = outobj$eff.by.group$lower.CL[effrow] * direction
+    upper = outobj$eff.by.group$upper.CL[effrow] * direction
   }
   linebreak(paste0(
-    xresult(rout(lmerobj)$eff.by.group$effect.size[effrow] * direction, 2),
+    xresult(outobj$eff.by.group$effect.size[effrow] * direction, 2),
     " [",
     xresult(lower, 2),
     ", ",
@@ -1040,7 +970,7 @@ lsas_sum.out <- rout(lsas_sum.lmer)
 ```
 
 
-```{r buildeffsizetab, echo = F, cache = F, eval = F}
+```{r buildeffsizetab, echo = F, cache = F, eval = T}
 
 comparison <- linebreak(c(
   "Self-help, Pre vs. Post",
@@ -1062,116 +992,116 @@ comparison <- linebreak(c(
 
 aaas_ad.effsizes <-
   c(
-    within.effsize(aaas_ad.lmer,29,-1,40),  # (Pre Self-help) - (Post Self-help)
-    within.effsize(aaas_ad.lmer,30,-1,41),  # (Pre Self-help) - (Follow-up Self-help)
-    effsize.tabrow(aaas_ad.lmer,"(Post Self-help) - (Follow-up Self-help)",-1),
-    within.effsize(aaas_ad.lmer,51,-1,62),  # Pre Support - Post Support
-    within.effsize(aaas_ad.lmer,52,-1,63),  # Pre Support - (Follow-up Support) 
-    effsize.tabrow(aaas_ad.lmer,"Post Support - (Follow-up Support)",-1),
-    within.effsize(aaas_ad.lmer,2,-1,2),    # Pre Waitlist - Post Waitlist
-    between.effsize(aaas_ad.lmer,46,-1,25), # Post Waitlist - (Post Self-help)
-    between.effsize(aaas_ad.lmer,48,-1,26), # Post Waitlist - (Follow-up Self-help)
+    effsize.tabrow2(aaas_ad.out,"(Pre Self-help) - (Post Self-help)",-1),
+    effsize.tabrow2(aaas_ad.out,"(Pre Self-help) - (Follow-up Self-help)",-1),
+    effsize.tabrow2(aaas_ad.out,"(Post Self-help) - (Follow-up Self-help)",-1),
+    effsize.tabrow2(aaas_ad.out,"Pre Support - Post Support",-1),
+    effsize.tabrow2(aaas_ad.out,"Pre Support - (Follow-up Support)",-1),
+    effsize.tabrow2(aaas_ad.out,"Post Support - (Follow-up Support)",-1),
+    effsize.tabrow2(aaas_ad.out,"Pre Waitlist - Post Waitlist",-1),
+    effsize.tabrow2(aaas_ad.out,"Post Waitlist - (Post Self-help)",-1),
+    effsize.tabrow2(aaas_ad.out,"Post Waitlist - (Follow-up Self-help)",-1),
     "(idem)",
-    between.effsize(aaas_ad.lmer,47,-1,29), # Post Waitlist - Post Support 
-    between.effsize(aaas_ad.lmer,49,-1,30), # Post Waitlist - (Follow-up Support)
+    effsize.tabrow2(aaas_ad.out,"Post Waitlist - Post Support",-1),
+    effsize.tabrow2(aaas_ad.out,"Post Waitlist - (Follow-up Support)",-1),
     "(idem)",
-    between.effsize(aaas_ad.lmer,50,-1,55), # (Post Self-help) - Post Support
-    between.effsize(aaas_ad.lmer,55,-1,60)  # (Follow-up Self-help) - (Follow-up Support)
+    effsize.tabrow2(aaas_ad.out,"(Post Self-help) - Post Support",-1),
+    effsize.tabrow2(aaas_ad.out,"(Follow-up Self-help) - (Follow-up Support)",-1)
   )
 
 aaas_ag.effsizes <-
   c(
-    within.effsize(aaas_ag.lmer,29,-1,NULL),  # (Pre Self-help) - (Post Self-help)
-    within.effsize(aaas_ag.lmer,30,-1,NULL),  # (Pre Self-help) - (Follow-up Self-help)
-    effsize.tabrow(aaas_ag.lmer,"(Post Self-help) - (Follow-up Self-help)",-1),
-    within.effsize(aaas_ag.lmer,51,-1,NULL),  # Pre Support - Post Support
-    within.effsize(aaas_ag.lmer,52,-1,NULL),  # Pre Support - (Follow-up Support)
-    effsize.tabrow(aaas_ag.lmer,"Post Support - (Follow-up Support)",-1),
-    within.effsize(aaas_ag.lmer,2,-1,NULL),    # Pre Waitlist - Post Waitlist
-    between.effsize(aaas_ag.lmer,46,-1,NULL), # Post Waitlist - (Post Self-help)
-    between.effsize(aaas_ag.lmer,48,-1,NULL), # Post Waitlist - (Follow-up Self-help)
+    effsize.tabrow2(aaas_ag.out,"(Pre Self-help) - (Post Self-help)",-1,"nostars"),
+    effsize.tabrow2(aaas_ag.out,"(Pre Self-help) - (Follow-up Self-help)",-1,"nostars"),
+    effsize.tabrow2(aaas_ag.out,"(Post Self-help) - (Follow-up Self-help)",-1,"nostars"),
+    effsize.tabrow2(aaas_ag.out,"Pre Support - Post Support",-1,"nostars"),
+    effsize.tabrow2(aaas_ag.out,"Pre Support - (Follow-up Support)",-1,"nostars"),
+    effsize.tabrow2(aaas_ag.out,"Post Support - (Follow-up Support)",-1,"nostars"),
+    effsize.tabrow2(aaas_ag.out,"Pre Waitlist - Post Waitlist",-1,"nostars"),
+    effsize.tabrow2(aaas_ag.out,"Post Waitlist - (Post Self-help)",-1,"nostars"),
+    effsize.tabrow2(aaas_ag.out,"Post Waitlist - (Follow-up Self-help)",-1,"nostars"),
     "(idem)",
-    between.effsize(aaas_ag.lmer,47,-1,NULL), # Post Waitlist - Post Support 
-    between.effsize(aaas_ag.lmer,49,-1,NULL), # Post Waitlist - (Follow-up Support)
+    effsize.tabrow2(aaas_ag.out,"Post Waitlist - Post Support",-1,"nostars"),
+    effsize.tabrow2(aaas_ag.out,"Post Waitlist - (Follow-up Support)",-1,"nostars"),
     "(idem)",
-    between.effsize(aaas_ag.lmer,50,-1,NULL), # (Post Self-help) - Post Support
-    between.effsize(aaas_ag.lmer,55,-1,NULL)  # (Follow-up Self-help) - (Follow-up Support)
+    effsize.tabrow2(aaas_ag.out,"(Post Self-help) - Post Support",-1,"nostars"),
+    effsize.tabrow2(aaas_ag.out,"(Follow-up Self-help) - (Follow-up Support)",-1,"nostars")
   )
 
 rathus.effsizes <-
   c(
-    within.effsize(rathus.lmer,29,-1,40),  # (Pre Self-help) - (Post Self-help)
-    within.effsize(rathus.lmer,30,-1,41),  # (Pre Self-help) - (Follow-up Self-help)
-    effsize.tabrow(rathus.lmer,"(Post Self-help) - (Follow-up Self-help)",-1),
-    within.effsize(rathus.lmer,51,-1,62),  # Pre Support - Post Support
-    within.effsize(rathus.lmer,52,-1,63),  # Pre Support - (Follow-up Support) 
-    effsize.tabrow(rathus.lmer,"Post Support - (Follow-up Support)",-1),
-    within.effsize(rathus.lmer,2,-1,2),    # Pre Waitlist - Post Waitlist
-    between.effsize(rathus.lmer,46,-1,25), # Post Waitlist - (Post Self-help)
-    between.effsize(rathus.lmer,48,-1,26), # Post Waitlist - (Follow-up Self-help)
+    effsize.tabrow2(rathus.out,"(Pre Self-help) - (Post Self-help)",-1),
+    effsize.tabrow2(rathus.out,"(Pre Self-help) - (Follow-up Self-help)",-1),
+    effsize.tabrow2(rathus.out,"(Post Self-help) - (Follow-up Self-help)",-1),
+    effsize.tabrow2(rathus.out,"Pre Support - Post Support",-1),
+    effsize.tabrow2(rathus.out,"Pre Support - (Follow-up Support)",-1), 
+    effsize.tabrow2(rathus.out,"Post Support - (Follow-up Support)",-1),
+    effsize.tabrow2(rathus.out,"Pre Waitlist - Post Waitlist",-1),
+    effsize.tabrow2(rathus.out,"Post Waitlist - (Post Self-help)",-1),
+    effsize.tabrow2(rathus.out,"Post Waitlist - (Follow-up Self-help)",-1),
     "(idem)",
-    between.effsize(rathus.lmer,47,-1,29), # Post Waitlist - Post Support 
-    between.effsize(rathus.lmer,49,-1,30), # Post Waitlist - (Follow-up Support)
+    effsize.tabrow2(rathus.out,"Post Waitlist - Post Support",-1),
+    effsize.tabrow2(rathus.out,"Post Waitlist - (Follow-up Support)",-1),
     "(idem)",
-    between.effsize(rathus.lmer,50,-1,55), # (Post Self-help) - Post Support
-    between.effsize(rathus.lmer,55,-1,60)  # (Follow-up Self-help) - (Follow-up Support)
+    effsize.tabrow2(rathus.out,"(Post Self-help) - Post Support",-1),
+    effsize.tabrow2(rathus.out,"(Follow-up Self-help) - (Follow-up Support)",-1)
   )
 
 phq_sum.effsizes <-
   c(
-    within.effsize(phq_sum.lmer,29,1,40),  # (Pre Self-help) - (Post Self-help)
-    within.effsize(phq_sum.lmer,30,1,41),  # (Pre Self-help) - (Follow-up Self-help)
-    effsize.tabrow(phq_sum.lmer,"(Post Self-help) - (Follow-up Self-help)",1),
-    within.effsize(phq_sum.lmer,51,1,62),  # Pre Support - Post Support
-    within.effsize(phq_sum.lmer,52,1,63),  # Pre Support - (Follow-up Support) 
-    effsize.tabrow(phq_sum.lmer,"Post Support - (Follow-up Support)",1),
-    within.effsize(phq_sum.lmer,2,1,2),    # Pre Waitlist - Post Waitlist
-    between.effsize(phq_sum.lmer,46,1,25), # Post Waitlist - (Post Self-help)
-    between.effsize(phq_sum.lmer,48,1,26), # Post Waitlist - (Follow-up Self-help)
-    between.effsize(phq_sum.lmer,9,1,7), # Pre Waitlist - (Follow-up Self-help); levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(phq_sum.lmer,47,1,29), # Post Waitlist - Post Support 
-    between.effsize(phq_sum.lmer,49,1,30), # Post Waitlist - (Follow-up Support)
-    between.effsize(phq_sum.lmer,10,1,11), # Pre Waitlist - (Follow-up Support); levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(phq_sum.lmer,50,1,55), # (Post Self-help) - Post Support
-    between.effsize(phq_sum.lmer,55,1,60)  # (Follow-up Self-help) - (Follow-up Support)
+    effsize.tabrow2(phq_sum.out,"(Pre Self-help) - (Post Self-help)",1),
+    effsize.tabrow2(phq_sum.out,"(Pre Self-help) - (Follow-up Self-help)",1),
+    effsize.tabrow2(phq_sum.out,"(Post Self-help) - (Follow-up Self-help)",1),
+    effsize.tabrow2(phq_sum.out,"Pre Support - Post Support",1),
+    effsize.tabrow2(phq_sum.out,"Pre Support - (Follow-up Support)",1),
+    effsize.tabrow2(phq_sum.out,"Post Support - (Follow-up Support)",1),
+    effsize.tabrow2(phq_sum.out,"Pre Waitlist - Post Waitlist",1),
+    effsize.tabrow2(phq_sum.out,"Post Waitlist - (Post Self-help)",1),
+    effsize.tabrow2(phq_sum.out,"Post Waitlist - (Follow-up Self-help)",1),
+    effsize.tabrow2(phq_sum.out,"Pre Waitlist - (Follow-up Self-help)",1), #levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
+    effsize.tabrow2(phq_sum.out,"Post Waitlist - Post Support",1),
+    effsize.tabrow2(phq_sum.out,"Post Waitlist - (Follow-up Support)",1),
+    effsize.tabrow2(phq_sum.out,"Pre Waitlist - (Follow-up Support)",1), #levels(r2fu.long.data$time)[which.min(phq_sum.emm.plot$data$predicted[c(1,4,7)])]
+    effsize.tabrow2(phq_sum.out,"(Post Self-help) - Post Support",1),
+    effsize.tabrow2(phq_sum.out,"(Follow-up Self-help) - (Follow-up Support)",1)
   )
 
 gad_sum.effsizes <-
   c(
-    within.effsize(gad_sum.lmer,29,1,NULL),  # (Pre Self-help) - (Post Self-help)
-    within.effsize(gad_sum.lmer,30,1,NULL),  # (Pre Self-help) - (Follow-up Self-help)
-    effsize.tabrow(gad_sum.lmer,"(Post Self-help) - (Follow-up Self-help)",1),
-    within.effsize(gad_sum.lmer,51,1,NULL),  # Pre Support - Post Support
-    within.effsize(gad_sum.lmer,52,1,NULL),  # Pre Support - (Follow-up Support) 
-    effsize.tabrow(gad_sum.lmer,"Post Support - (Follow-up Support)",1),
-    within.effsize(gad_sum.lmer,2,1,NULL),    # Pre Waitlist - Post Waitlist
-    between.effsize(gad_sum.lmer,46,1,NULL), # Post Waitlist - (Post Self-help)
-    between.effsize(gad_sum.lmer,48,1,NULL), # Post Waitlist - (Follow-up Self-help)
-    between.effsize(gad_sum.lmer,33,1,NULL), # During Waitlist - (Follow-up Self-help) ; levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(gad_sum.lmer,47,1,NULL), # Post Waitlist - Post Support 
-    between.effsize(gad_sum.lmer,49,1,NULL), # Post Waitlist - (Follow-up Support)
-    between.effsize(gad_sum.lmer,34,1,NULL), # During Waitlist - (Follow-up Support); levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(gad_sum.lmer,50,1,NULL), # (Post Self-help) - Post Support
-    between.effsize(gad_sum.lmer,55,1,NULL)  # (Follow-up Self-help) - (Follow-up Support)
+    effsize.tabrow2(gad_sum.out,"(Pre Self-help) - (Post Self-help)",1,"nostars"),
+    effsize.tabrow2(gad_sum.out,"(Pre Self-help) - (Follow-up Self-help)",1,"nostars"),
+    effsize.tabrow2(gad_sum.out,"(Post Self-help) - (Follow-up Self-help)",1,"nostars"),
+    effsize.tabrow2(gad_sum.out,"Pre Support - Post Support",1,"nostars"),
+    effsize.tabrow2(gad_sum.out,"Pre Support - (Follow-up Support)",1,"nostars"),
+    effsize.tabrow2(gad_sum.out,"Post Support - (Follow-up Support)",1,"nostars"),
+    effsize.tabrow2(gad_sum.out,"Pre Waitlist - Post Waitlist",1,"nostars"),
+    effsize.tabrow2(gad_sum.out,"Post Waitlist - (Post Self-help)",1,"nostars"),
+    effsize.tabrow2(gad_sum.out,"Post Waitlist - (Follow-up Self-help)",1,"nostars"),
+    effsize.tabrow2(gad_sum.out,"During Waitlist - (Follow-up Self-help)",1,"nostars"), #levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
+    effsize.tabrow2(gad_sum.out,"Post Waitlist - Post Support",1,"nostars"),
+    effsize.tabrow2(gad_sum.out,"Post Waitlist - (Follow-up Support)",1,"nostars"),
+    effsize.tabrow2(gad_sum.out,"During Waitlist - (Follow-up Support)",1,"nostars"), #levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
+    effsize.tabrow2(gad_sum.out,"(Post Self-help) - Post Support",1,"nostars"),
+    effsize.tabrow2(gad_sum.out,"(Follow-up Self-help) - (Follow-up Support)",1,"nostars")
   )
 
 lsas_sum.effsizes <-
   c(
-    within.effsize(lsas_sum.lmer,29,1,40),  # (Pre Self-help) - (Post Self-help)
-    within.effsize(lsas_sum.lmer,30,1,41),  # (Pre Self-help) - (Follow-up Self-help)
-    effsize.tabrow(lsas_sum.lmer,"(Post Self-help) - (Follow-up Self-help)",1),
-    within.effsize(lsas_sum.lmer,51,1,62),  # Pre Support - Post Support
-    within.effsize(lsas_sum.lmer,52,1,63),  # Pre Support - (Follow-up Support) 
-    effsize.tabrow(lsas_sum.lmer,"Post Support - (Follow-up Support)",1),
-    within.effsize(lsas_sum.lmer,2,1,2),    # Pre Waitlist - Post Waitlist
-    between.effsize(lsas_sum.lmer,46,1,25), # Post Waitlist - (Post Self-help)
-    between.effsize(lsas_sum.lmer,48,1,26), # Post Waitlist - (Follow-up Self-help)
-    between.effsize(lsas_sum.lmer,33,1,17), # During Waitlist - (Follow-up Self-help) ; levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(lsas_sum.lmer,47,1,29), # Post Waitlist - Post Support 
-    between.effsize(lsas_sum.lmer,49,1,30), # Post Waitlist - (Follow-up Support)
-    between.effsize(lsas_sum.lmer,34,1,21), # During Waitlist - (Follow-up Support); levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
-    between.effsize(lsas_sum.lmer,50,1,55), # (Post Self-help) - Post Support
-    between.effsize(lsas_sum.lmer,55,1,60)  # (Follow-up Self-help) - (Follow-up Support)
+    effsize.tabrow2(lsas_sum.out,"(Pre Self-help) - (Post Self-help)",1),
+    effsize.tabrow2(lsas_sum.out,"(Pre Self-help) - (Follow-up Self-help)",1),
+    effsize.tabrow2(lsas_sum.out,"(Post Self-help) - (Follow-up Self-help)",1),
+    effsize.tabrow2(lsas_sum.out,"Pre Support - Post Support",1),
+    effsize.tabrow2(lsas_sum.out,"Pre Support - (Follow-up Support)",1),
+    effsize.tabrow2(lsas_sum.out,"Post Support - (Follow-up Support)",1),
+    effsize.tabrow2(lsas_sum.out,"Pre Waitlist - Post Waitlist",1),
+    effsize.tabrow2(lsas_sum.out,"Post Waitlist - (Post Self-help)",1),
+    effsize.tabrow2(lsas_sum.out,"Post Waitlist - (Follow-up Self-help)",1),
+    effsize.tabrow2(lsas_sum.out,"During Waitlist - (Follow-up Self-help)",1), #levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
+    effsize.tabrow2(lsas_sum.out,"Post Waitlist - Post Support",1),
+    effsize.tabrow2(lsas_sum.out,"Post Waitlist - (Follow-up Support)",1),
+    effsize.tabrow2(lsas_sum.out,"During Waitlist - (Follow-up Support)",1), #levels(r2fu.long.data$time)[which.min(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
+    effsize.tabrow2(lsas_sum.out,"(Post Self-help) - Post Support",1),
+    effsize.tabrow2(lsas_sum.out,"(Follow-up Self-help) - (Follow-up Support)",1)
   )
 
 effectsize.table <- cbind.data.frame(
@@ -1186,13 +1116,13 @@ effectsize.table <- cbind.data.frame(
 
 colnames(effectsize.table) <- c(" ",measurementnames)
 
-saveRDS(effectsize.table,file="effectsize.table.RDS")
+#saveRDS(effectsize.table,file="effectsize.table.RDS")
 
 ```
 
 ```{r effsizetab, echo = F, eval = T}
 
-effectsize.table <- readRDS("effectsize.table.RDS")
+#effectsize.table <- readRDS("effectsize.table.RDS")
 
 knitr::kable(
   effectsize.table,
@@ -1547,16 +1477,16 @@ Mixed models for two of three primary measures of assertive behaviors revealed t
 ### Within-group effects
 
 For the primary transdiagnostic measures of skillful behaviors it is notable that both treatment groups Self-help and Guided self-help improved significantly during the course of the intervention, showing large within-group effects with regards to AAA-S Adaptive from Pre to Post, `r report.text2(aaas_ad.out, "(Pre Self-help) - (Post Self-help)", -1)`, and `r report.text2(aaas_ad.out, "Pre Support - Post Support", -1)` respectively. For the RAS, significant large effects on assertiveness were also found in the Self-help group, `r report.text2(rathus.out, "(Pre Self-help) - (Post Self-help)", -1)`, and the Guided self-help group, `r report.text2(rathus.out, "Pre Support - Post Support", -1)`. 
-<!-- Means in the Waitlist condition did not change between Pre and Post with regards to either AAA-S Adaptive or the RAS, `r xprnot(rout(aaas_ad.lmer)$emmpairs$p.value[2])` and `r xprnot(rout(rathus.lmer)$emmpairs$p.value[2])` respectively.  -->
-Both treatment groups showed sustained within-group effects on assertiveness at 1 year Follow-up when compared to the Pre-treatment measurement time point, measured with AAA-S Adaptive and the RAS, suggesting that assertive behaviors were still manifest well beyond the end of participation in the intervention. However, only in the Guided self-help group was the Post to Follow-up comparison in itself significant for AAA-S Adaptive and the RAS, `r report.text2(aaas_ad.out, "Post Support - (Follow-up Support)", -1)` and `r report.text2(rathus.out, "Post Support - (Follow-up Support)", -1)` respectively. For the other comparisons, there was no difference between Post and Follow-up time points in either group, from `r xprnot(rout(rathus.lmer)$emmpairs$p.value[52])` to `r xprnot(rout(aaas_ag.lmer)$emmpairs$p.value[66])`. This indicates, with regards to adaptive assertiveness, that therapist support provided some benefit to participants' ability to generalize behaviors beyond the duration of the intervention. Table 1 summarizes significance tests of estimated marginal mean differences and effect sizes. 
+<!-- Means in the Waitlist condition did not change between Pre and Post with regards to either AAA-S Adaptive or the RAS, `r xprnot(aaas_ad.out$emmpairs$p.value[2])` and `r xprnot(rathus.out$emmpairs$p.value[2])` respectively.  -->
+Both treatment groups showed sustained within-group effects on assertiveness at 1 year Follow-up when compared to the Pre-treatment measurement time point, measured with AAA-S Adaptive and the RAS, suggesting that assertive behaviors were still manifest well beyond the end of participation in the intervention. However, only in the Guided self-help group was the Post to Follow-up comparison in itself significant for AAA-S Adaptive and the RAS, `r report.text2(aaas_ad.out, "Post Support - (Follow-up Support)", -1)` and `r report.text2(rathus.out, "Post Support - (Follow-up Support)", -1)` respectively. For the other comparisons, there was no difference between Post and Follow-up time points in either group, from `r xprnot(rathus.out$emmpairs$p.value[52])` to `r xprnot(aaas_ag.out$emmpairs$p.value[66])`. This indicates, with regards to adaptive assertiveness, that therapist support provided some benefit to participants' ability to generalize behaviors beyond the duration of the intervention. Table 1 summarizes significance tests of estimated marginal mean differences and effect sizes. 
 
-Among the secondary measures of syndromal symptoms, depression as captured with PHQ-9 had decreased significantly from Pre only in the Guided self-help group, and only at Follow-up, `r report.text2(phq_sum.out, "Pre Support - (Follow-up Support)", 1)`, possibly indicating that therapist support benefits depressed participants on a longer rather than shorter time scale. Symptoms of social anxiety, however, decreased significantly for all four combinations of time points and groups. In the Self-help group, the effect from Pre to Post was `r report.text2(lsas_sum.out, "(Pre Self-help) - (Post Self-help)", 1)`, increasing to `r report.text2(lsas_sum.out, "(Pre Self-help) - (Follow-up Self-help)", 1)` Pre to Follow-up. In the Guided self-help group, the effect from Pre to Post was `r report.text2(lsas_sum.out, "Pre Support - Post Support", 1)`, increasing to `r report.text2(lsas_sum.out, "Pre Support - (Follow-up Support)", 1)` Pre to Follow-up. Although effect sizes for LSAS-SR was larger Pre--Follow-up than Pre--Post, there was no significant difference between Post and Follow-up in either group, `r xprnot(rout(lsas_sum.lmer)$emmpairs$p.value[52])` for Self-help and `r xprnot(rout(lsas_sum.lmer)$emmpairs$p.value[66])` for Guided self-help, suggesting that change in relief from symptoms of social phobia plateaued earlier than did change in manifest expressions of adaptive assertiveness. The within-group effects taken together indicate that the intervention was effective at addressing more contextually specific anxiety-induced avoidance and escape behaviors, replacing them with already desired assertive behaviors, to a larger extent than it was effective at helping participants struggling with generalized anxiety or depression to formulate reasons to start responding more flexibly.
+Among the secondary measures of syndromal symptoms, depression as captured with PHQ-9 had decreased significantly from Pre only in the Guided self-help group, and only at Follow-up, `r report.text2(phq_sum.out, "Pre Support - (Follow-up Support)", 1)`, possibly indicating that therapist support benefits depressed participants on a longer rather than shorter time scale. Symptoms of social anxiety, however, decreased significantly for all four combinations of time points and groups. In the Self-help group, the effect from Pre to Post was `r report.text2(lsas_sum.out, "(Pre Self-help) - (Post Self-help)", 1)`, increasing to `r report.text2(lsas_sum.out, "(Pre Self-help) - (Follow-up Self-help)", 1)` Pre to Follow-up. In the Guided self-help group, the effect from Pre to Post was `r report.text2(lsas_sum.out, "Pre Support - Post Support", 1)`, increasing to `r report.text2(lsas_sum.out, "Pre Support - (Follow-up Support)", 1)` Pre to Follow-up. Although effect sizes for LSAS-SR was larger Pre--Follow-up than Pre--Post, there was no significant difference between Post and Follow-up in either group, `r xprnot(lsas_sum.out$emmpairs$p.value[52])` for Self-help and `r xprnot(lsas_sum.out$emmpairs$p.value[66])` for Guided self-help, suggesting that change in relief from symptoms of social phobia plateaued earlier than did change in manifest expressions of adaptive assertiveness. The within-group effects taken together indicate that the intervention was effective at addressing more contextually specific anxiety-induced avoidance and escape behaviors, replacing them with already desired assertive behaviors, to a larger extent than it was effective at helping participants struggling with generalized anxiety or depression to formulate reasons to start responding more flexibly.
 
 ### Between-group effects
 
 Comparing against Waitlist, the effect of the Self-help condition on adaptive assertiveness using the AAA-S Adaptive primary measure was large at Post-treatment, `r report.text2(aaas_ad.out, "Post Waitlist - (Post Self-help)", -1)`, and even larger at 1-year Follow-up,  `r report.text2(aaas_ad.out, "Post Waitlist - (Follow-up Self-help)", -1)`. Similar effects at Post were found for the primary RAS measure `r report.text2(rathus.out, "Post Waitlist - (Post Self-help)", -1)`, and at Follow-up,  `r report.text2(rathus.out, "Post Waitlist - (Follow-up Self-help)", -1)`. These effects were not significantly different from those of the Guided self-help condition for AAA-S Adaptive, which compared against Waitlist were `r report.text2(aaas_ad.out, "Post Waitlist - Post Support", -1)` at Post, and  `r report.text2(aaas_ad.out, "Post Waitlist - (Follow-up Support)", -1)` at Follow-up, suggesting that participants working through the intervention on their own fared just as well as those who were supported by a therapist. The same phenomenon, and a large effect size, was observed on the RAS in the Guided self-help group, `r report.text2(rathus.out, "Post Waitlist - Post Support", -1)` at Post, and  `r report.text2(rathus.out, "Post Waitlist - (Follow-up Support)", -1)` at Follow-up. When it comes to assertive behaviors, excluding aggressive assertions, participants benefited from participation in the intervention, regardless of treatment condition. 
 
-Again comparing against Waitlist, there was no significant effect of the Self-help condition on reduction of social anxiety symptoms measured with LSAS-SR at Post-treatment, `r xprnot(rout(lsas_sum.lmer)$emmpairs$p.value[25])`, however, a large effect was found at Follow-up, `r report.text2(lsas_sum.out, "During Waitlist - (Follow-up Self-help)", 1)`, comparing against the lowest value collected (at During, half-way through the intervention, in order to cancel out any possible nocebo effect of the Waitlist condition; see Figure 3 for a graphic identification of time point). No effect on alleviation of depressive symptoms measured with PHQ-9 at Post was found comparing Waitlist and Self-help groups, `r  xprnot(rout(phq_sum.lmer)$emmpairs$p.value[25])`. Some evidence was found suggesting that depressive participants might benefit from therapist support, in that the Waitlist versus Guided self-help comparison for PHQ-9 revealed a medium to large sized effect at Post, `r report.text2(phq_sum.out, "Post Waitlist - Post Support", 1)`. However, this effect dissipated when the Follow-up comparison was instead made against the most conservative value collected in the Waitlist group (in this case Pre instead of Post; see Figure 3 for a graphic exploration of a possible nocebo effect, that is symptomatic worsening over time due to self-fulfilling expectations of hopelessness among participants waiting in line for treatment). Thus, the between-group effect on depression at Post should be interpreted with caution.
+Again comparing against Waitlist, there was no significant effect of the Self-help condition on reduction of social anxiety symptoms measured with LSAS-SR at Post-treatment, `r xprnot(lsas_sum.out$emmpairs$p.value[25])`, however, a large effect was found at Follow-up, `r report.text2(lsas_sum.out, "During Waitlist - (Follow-up Self-help)", 1)`, comparing against the lowest value collected (at During, half-way through the intervention, in order to cancel out any possible nocebo effect of the Waitlist condition; see Figure 3 for a graphic identification of time point). No effect on alleviation of depressive symptoms measured with PHQ-9 at Post was found comparing Waitlist and Self-help groups, `r  xprnot(phq_sum.out$emmpairs$p.value[25])`. Some evidence was found suggesting that depressive participants might benefit from therapist support, in that the Waitlist versus Guided self-help comparison for PHQ-9 revealed a medium to large sized effect at Post, `r report.text2(phq_sum.out, "Post Waitlist - Post Support", 1)`. However, this effect dissipated when the Follow-up comparison was instead made against the most conservative value collected in the Waitlist group (in this case Pre instead of Post; see Figure 3 for a graphic exploration of a possible nocebo effect, that is symptomatic worsening over time due to self-fulfilling expectations of hopelessness among participants waiting in line for treatment). Thus, the between-group effect on depression at Post should be interpreted with caution.
 
 #### Clinical significant change
 
