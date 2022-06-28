@@ -240,44 +240,42 @@ report.kwnot <- function(kwobj) {
 # https://aosmith.rbind.io/2019/04/15/custom-contrasts-emmeans/#reasons-for-custom-comparisons
 
 rout <- function(lmerobj) {
-  x.emm.by.group <- emmeans(lmerobj, ~ time | group)
+  x.emmeans <- emmeans(lmerobj, ~ c(time,group))
+  excluderows <- -c(3, 13, 22, 31:38)
   x.emmpairs <-
     pairs(
-      x.emm.by.group,
-      adjust = "bonferroni",
-      simple = c("group", "time"),
-      combine = T
-    )
+      x.emmeans,
+      adjust = "bonferroni"
+    )[excluderows]
   x.sd <-
     sqrt(as.data.frame(VarCorr(lmerobj))[1, 4] + as.data.frame(VarCorr(lmerobj))[2, 4])
-  x.eff.by.group <-
-    eff_size(x.emm.by.group[effsel.group], sigma = x.sd, edf = df.residual(lmerobj))
+  x.effectsizes <-
+    eff_size(x.emmeans[effsel.group], sigma = x.sd, edf = df.residual(lmerobj))
   return(
     list(
-      emm.by.group = as.data.frame(x.emm.by.group),
+      emmeans = as.data.frame(x.emmeans),
       emmpairs = as.data.frame(x.emmpairs),
       sd = x.sd,
-      eff.by.group = as.data.frame(x.eff.by.group)
+      effectsizes = as.data.frame(x.effectsizes)
     )
   )
 }
 
 effsize.tabrow2 <- function(outobj, contrast, direction, stars = "stars") {
-  effrow <- which(outobj$eff.by.group$contrast == contrast)
-  stopifnot(all(outobj$emmpairs[-c(3, 13, 22, 31:38), ][, 1] == outobj$eff.by.group[, 1]))
+  effrow <- which(outobj$effectsizes$contrast == contrast)
   stars <-  if( stars == "nostars" ) {} else {
       stars <-
-    xpss(outobj$emmpairs[-c(3, 13, 22, 31:38), ]$p.value[effrow])
+    xpss(outobj$emmpairs$p.value[effrow])
   }
   if (direction == -1) {
-    lower = outobj$eff.by.group$upper.CL[effrow] * direction
-    upper = outobj$eff.by.group$lower.CL[effrow] * direction
+    lower = outobj$effectsizes$upper.CL[effrow] * direction
+    upper = outobj$effectsizes$lower.CL[effrow] * direction
   } else {
-    lower = outobj$eff.by.group$lower.CL[effrow] * direction
-    upper = outobj$eff.by.group$upper.CL[effrow] * direction
+    lower = outobj$effectsizes$lower.CL[effrow] * direction
+    upper = outobj$effectsizes$upper.CL[effrow] * direction
   }
   linebreak(paste0(
-    xresult(outobj$eff.by.group$effect.size[effrow] * direction, 2),
+    xresult(outobj$effectsizes$effect.size[effrow] * direction, 2),
     " [",
     xresult(lower, 2),
     ", ",
@@ -291,11 +289,11 @@ effsize.tabrow2 <- function(outobj, contrast, direction, stars = "stars") {
 report.text <-
   function(outobj, effrow, direction = 1, emmpairsrow) {
     if (direction == -1) {
-      lower = outobj$eff.by.group$upper.CL[effrow] * direction
-      upper = outobj$eff.by.group$lower.CL[effrow] * direction
+      lower = outobj$effectsizes$upper.CL[effrow] * direction
+      upper = outobj$effectsizes$lower.CL[effrow] * direction
     } else {
-      lower = outobj$eff.by.group$lower.CL[effrow] * direction
-      upper = outobj$eff.by.group$upper.CL[effrow] * direction
+      lower = outobj$effectsizes$lower.CL[effrow] * direction
+      upper = outobj$effectsizes$upper.CL[effrow] * direction
     }
     x <- paste0(
       "$\\Delta M$ = ",
@@ -309,7 +307,7 @@ report.text <-
       ", ",
       xpr(outobj$emmpairs$p.value[emmpairsrow]),
       ", $ES$ = ",
-      xresult(outobj$eff.by.group$effect.size[effrow] * direction, 2),
+      xresult(outobj$effectsizes$effect.size[effrow] * direction, 2),
       ", 95\\% CI [",
       xresult(lower, 2),
       ", ",
@@ -320,32 +318,31 @@ report.text <-
   }
 
 #aaas_ad.out <- rout(aaas_ad.lmer)
-#aaas_ad.out$emm.by.group[aaas_ad.out$emm.by.group$group == "Support" & aaas_ad.out$emm.by.group$time == "Pre",]
+#aaas_ad.out$emmeans[aaas_ad.out$emmeans$group == "Support" & aaas_ad.out$emmeans$time == "Pre",]
 
 report.text2 <-
   function(outobj, contrast, direction = 1) {
-    excluderows <- -c(3, 13, 22, 31:38)
-    effrow <- which(outobj$eff.by.group$contrast == contrast)
+    effrow <- which(outobj$effectsizes$contrast == contrast)
     if (direction == -1) {
-      lower = outobj$eff.by.group$upper.CL[effrow] * direction
-      upper = outobj$eff.by.group$lower.CL[effrow] * direction
+      lower = outobj$effectsizes$upper.CL[effrow] * direction
+      upper = outobj$effectsizes$lower.CL[effrow] * direction
     } else {
-      lower = outobj$eff.by.group$lower.CL[effrow] * direction
-      upper = outobj$eff.by.group$upper.CL[effrow] * direction
+      lower = outobj$effectsizes$lower.CL[effrow] * direction
+      upper = outobj$effectsizes$upper.CL[effrow] * direction
     }
     x <- paste0(
       "$\\Delta M$ = ",
-      xresult(outobj$emmpairs[excluderows,]$estimate[effrow] * direction, 1),
+      xresult(outobj$emmpairs$estimate[effrow] * direction, 1),
       #", $t$\\(_{",
       ", $t$($",
-      xresulttext(outobj$emmpairs[excluderows,]$df[effrow], 0),
+      xresulttext(outobj$emmpairs$df[effrow], 0),
       #"}\\) = ",
       "$) = ",
-      xresult(outobj$emmpairs[excluderows,]$t.ratio[effrow], 2),
+      xresult(outobj$emmpairs$t.ratio[effrow], 2),
       ", ",
-      xpr(outobj$emmpairs[excluderows,]$p.value[effrow]),
+      xpr(outobj$emmpairs$p.value[effrow]),
       ", $ES$ = ",
-      xresult(outobj$eff.by.group$effect.size[effrow] * direction, 2),
+      xresult(outobj$effectsizes$effect.size[effrow] * direction, 2),
       ", 95\\% CI [",
       xresult(lower, 2),
       ", ",
@@ -357,19 +354,19 @@ report.text2 <-
 
 effsize.tabrow <- function(outobj, contrast, direction) {
   effrow <-
-    which(rout(aaas_ad.lmer)$eff.by.group$contrast == contrast)
-  stopifnot(all(outobj$emmpairs[-c(3, 13, 22, 31:38), ][, 1] == outobj$eff.by.group[, 1]))
+    which(rout(aaas_ad.lmer)$effectsizes$contrast == contrast)
+  stopifnot(all(outobj$emmpairs[-c(3, 13, 22, 31:38), ][, 1] == outobj$effectsizes[, 1]))
   stars <-
     xpss(outobj$emmpairs[-c(3, 13, 22, 31:38), ]$p.value[effrow])
   if (direction == -1) {
-    lower = outobj$eff.by.group$upper.CL[effrow] * direction
-    upper = outobj$eff.by.group$lower.CL[effrow] * direction
+    lower = outobj$effectsizes$upper.CL[effrow] * direction
+    upper = outobj$effectsizes$lower.CL[effrow] * direction
   } else {
-    lower = outobj$eff.by.group$lower.CL[effrow] * direction
-    upper = outobj$eff.by.group$upper.CL[effrow] * direction
+    lower = outobj$effectsizes$lower.CL[effrow] * direction
+    upper = outobj$effectsizes$upper.CL[effrow] * direction
   }
   linebreak(paste0(
-    xresult(outobj$eff.by.group$effect.size[effrow] * direction, 2),
+    xresult(outobj$effectsizes$effect.size[effrow] * direction, 2),
     " [",
     xresult(lower, 2),
     ", ",
