@@ -670,7 +670,7 @@ aaas_ad.emm.plot <-
     dot.size = 3
   ) + scale_shape_manual(values=c(1, 17, 15))
 aaas_ad.emm.plot <- aaas_ad.emm.plot +
-  labs(y = "AAA-S, Adaptive subscale") + theme_apa(legend.pos = "topleft", legend.font.size = 14, y.font.size = 10)
+  labs(y = "AAA-S, Adaptive subscale") + theme_apa(legend.pos = "topleft", legend.font.size = 12, y.font.size = 10)
 
 aaas_ag.lmer <-
   lmerTest::lmer(
@@ -692,7 +692,7 @@ aaas_ag.emm.plot <-
     dot.size = 3
   ) + scale_shape_manual(values=c(1, 17, 15))
 aaas_ag.emm.plot <- aaas_ag.emm.plot + 
-  labs(y = "AAA-S, Aggressive subscale") + theme_apa(legend.pos = "topleft", legend.font.size = 14, y.font.size = 10)
+  labs(y = "AAA-S, Aggressive subscale") + theme_apa(legend.pos = "topleft", legend.font.size = 12, y.font.size = 10)
 
 rathus.lmer <-
   lmerTest::lmer(
@@ -714,7 +714,7 @@ rathus.emm.plot <-
     dot.size = 3
   ) + scale_shape_manual(values=c(1, 17, 15))
 rathus.emm.plot <- rathus.emm.plot +
-  labs(y = "Rathus Assertiveness Schedule (RAS)") + theme_apa(legend.pos = "topleft", legend.font.size = 14, y.font.size = 10) 
+  labs(y = "Rathus Assertiveness Schedule (RAS)") + theme_apa(legend.pos = "topleft", legend.font.size = 12, y.font.size = 10) 
 
 ### Secondary measures
 
@@ -738,7 +738,7 @@ lsas_sum.emm.plot <-
     dot.size = 3
   ) + scale_shape_manual(values=c(1, 17, 15))
 lsas_sum.emm.plot <- lsas_sum.emm.plot +
-  labs(y = "Liebowitz Social Anxiety Scale (LSAS-SR)") + theme_apa(legend.pos = "bottomleft", legend.font.size = 14, y.font.size = 10) +
+  labs(y = "Liebowitz Social Anxiety Scale (LSAS-SR)") + theme_apa(legend.pos = "bottomleft", legend.font.size = 12, y.font.size = 10) +
   geom_hline(yintercept = lsas_sum.emm.plot$data$predicted[4], linetype="dotted")
 
 phq_sum.lmer <-
@@ -761,7 +761,7 @@ phq_sum.emm.plot <-
     dot.size = 3
   ) + scale_shape_manual(values=c(1, 17, 15))
 phq_sum.emm.plot <- phq_sum.emm.plot +
-  labs(y = "Patient Health Questionnaire, 9 items (PHQ-9)") + theme_apa(legend.pos = "bottomleft", legend.font.size = 14, y.font.size = 10) +
+  labs(y = "Patient Health Questionnaire, 9 items (PHQ-9)") + theme_apa(legend.pos = "bottomleft", legend.font.size = 12, y.font.size = 10) +
   geom_hline(yintercept = phq_sum.emm.plot$data$predicted[1], linetype="dotted")
 
 gad_sum.lmer <-
@@ -784,7 +784,7 @@ gad_sum.emm.plot <-
     dot.size = 3
   ) + scale_shape_manual(values=c(1, 17, 15))
 gad_sum.emm.plot <- gad_sum.emm.plot +
-  labs(y = "Generalised Anxiety Disorder 7-item Scale (GAD-7)") + theme_apa(legend.pos = "bottomleft", legend.font.size = 14, y.font.size = 10) +
+  labs(y = "Generalised Anxiety Disorder 7-item Scale (GAD-7)") + theme_apa(legend.pos = "bottomleft", legend.font.size = 12, y.font.size = 10) +
   geom_hline(yintercept = gad_sum.emm.plot$data$predicted[4], linetype="dotted")
 
 well.lmer <-
@@ -853,21 +853,21 @@ effsel.time <- -10
 
 # Results
 
-```{r emm.primary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of estimated fixed effects for the primary transdiagnostic scales used to measure skillful, assertive behaviors. Participants’ estimated means for all three measures exhibit increasing levels of assertiveness during the course of treatment in the Support and Self-help groups, with negligable or only small differences between the two treatment conditions. The trends continue beyond the Post time point, showing further increased estimated mean levels of assertive behaviors at 1-year Follow-up. The Waitlist group’s means recovered slightly, although not significantly, between the Pre and Post time points, for all three measures.'}
+```{r emm.primary.plots, fig.width = 10, fig.asp = 0.4, echo = F, fig.cap = 'Plots of estimated fixed effects for two of the primary transdiagnostic scales used to measure skillful, assertive behaviors. Participants’ estimated means for both measures exhibit increasing levels of assertiveness during the course of treatment in the Support and Self-help groups, with negligable differences between the two treatment conditions. The trends continue beyond the Post time point, showing further increased estimated mean levels of assertive behaviors at 1-year Follow-up. The Waitlist group’s means recovered slightly, although not significantly, between the Pre and Post time points, for both measures.'}
 
 (aaas_ad.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
-  (aaas_ag.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
-  (rathus.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) + 
-  guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2) 
+  #(aaas_ag.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
+  (rathus.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) #+ 
+  #guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2) 
 
 ```
 
-```{r emm.secondary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of estimated fixed effects for the secondary syndromal outcome measures. Participation in the Support and Self-help conditions lead to signficant symptom alleviation between the Pre and Post as well as and 1-year Follow-up time points for depression, generalized anxiety and social anxiety, as captured with their respective measures. As with the transdiagnostic measures of assertive behaviors, the difference between the two treatment groups is small or statistically inappreciable at both Post and 1-year Follow-up time points. The Waitlist control group did not significantly change between time points for either measure. However, to counteract even the slightest nocebo effect of Waitlist in the between-group comparisons the most conservative estimate for the Waitlist control condition was used; see dotted line.'}
+```{r emm.secondary.plots, fig.width = 10, fig.asp = 0.4, echo = F, fig.cap = 'Plots of estimated fixed effects for secondary syndromal outcome measures. Participation in the Support and Self-help conditions lead to signficant symptom alleviation between the Pre and Post as well as between Pre and 1-year Follow-up time points for depression and social anxiety, as captured with their respective measures. As with the transdiagnostic measures of assertive behaviors, the difference between the two time points was small or statistically inappreciable for both groups and both measures. The Waitlist control group did not significantly change between time points for either measure. However, to counteract even the slightest nocebo effect of Waitlist in the between-group comparisons the most conservative estimate for the Waitlist control condition was used; see dotted line.'}
 
 (phq_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
-  (gad_sum.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
-  (lsas_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) + 
-  guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2) 
+  #(gad_sum.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
+  (lsas_sum.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) #+ 
+  #guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2) 
 
 ```
 
