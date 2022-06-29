@@ -726,7 +726,7 @@ aaas_ad.lmer <-
     REML = T
   )
 # performance::check_model(aaas_ad.lmer) # Checked, found to be OK!
-aaas_ad.anova <- anova(aaas_ad.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for post-hoc analysis
+aaas_ad.anova <- anova(aaas_ad.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for pairwise comparisons
 aaas_ad.emm.plot <-
   plot(
     ggemmeans(aaas_ad.lmer, terms = c("time", "group")),
@@ -770,7 +770,7 @@ rathus.lmer <-
     REML = T
   )
 # performance::check_model(rathus.lmer) # Checked, found to be OK!
-rathus.anova <- anova(rathus.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for post-hoc analysis
+rathus.anova <- anova(rathus.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for pairwise comparisons
 rathus.emm.plot <-
   plot(
     ggemmeans(rathus.lmer, terms = c("time", "group")),
@@ -794,7 +794,7 @@ lsas_sum.lmer <-
     REML = T
   )
 # performance::check_model(lsas_sum.lmer) # Checked, found to be OK!
-lsas_sum.anova <- anova(lsas_sum.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for post-hoc analysis
+lsas_sum.anova <- anova(lsas_sum.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for pairwise comparisons
 lsas_sum.emm.plot <-
   plot(
     ggemmeans(lsas_sum.lmer, terms = c("time", "group")),
@@ -817,7 +817,7 @@ phq_sum.lmer <-
     REML = T
   )
 # performance::check_model(phq_sum.lmer) # Checked, found to be OK!
-phq_sum.anova <- anova(phq_sum.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for post-hoc analysis
+phq_sum.anova <- anova(phq_sum.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for pairwise comparisons
 phq_sum.emm.plot <-
   plot(
     ggemmeans(phq_sum.lmer, terms = c("time", "group")),
@@ -863,7 +863,7 @@ well.lmer <-
     REML = T
   )
 # performance::check_model(well.lmer) # Checked, found to be OK!
-well.anova <- anova(well.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for post-hoc analysis
+well.anova <- anova(well.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for pairwise comparisons
 well.emm.plot <-
   plot(
     ggemmeans(well.lmer, terms = c("time", "group")),
@@ -1294,7 +1294,16 @@ aaas_ad.pre.post.kw <- dunn.test(list(
   clinsigraw("aaas_ad", "higher", "Pre", "Post", xG1)$recovered,
   clinsigraw("aaas_ad", "higher", "Pre", "Post", xG2)$recovered
 ), method="bonferroni", altp=TRUE)
-# Kruskal-Wallis chi-squared = 7.9198, df = 2, p-value = 0.02, calls for post-hoc analysis
+# Kruskal-Wallis chi-squared = 7.9198, df = 2, p-value = 0.02, calls for pairwise comparisons
+# $altP.adjusted
+# [1] 0.03801518 0.05187877 1.00000000
+
+# aaas_ad.pre.post.kw.worsened <- dunn.test(list(
+#   clinsigraw("aaas_ad", "higher", "Pre", "Post", xG3)$worsened,
+#   clinsigraw("aaas_ad", "higher", "Pre", "Post", xG1)$worsened,
+#   clinsigraw("aaas_ad", "higher", "Pre", "Post", xG2)$worsened
+# ), method="bonferroni", altp=TRUE)
+# No worsening in any group, nothing to test!
 
 aaas_ag.pre.post.kw <- dunn.test(list(
   clinsigraw("aaas_ag", "higher", "Pre", "Post", xG3)$recovered,
@@ -1303,19 +1312,60 @@ aaas_ag.pre.post.kw <- dunn.test(list(
 ), method="bonferroni", altp=TRUE)
 # Kruskal-Wallis chi-squared = 0.1847, df = 2, p-value = 0.91
 
+aaas_ag.pre.post.kw.harmed <- dunn.test(list(
+  clinsigraw("aaas_ag", "higher", "Pre", "Post", xG3)$harmed,
+  clinsigraw("aaas_ag", "higher", "Pre", "Post", xG1)$harmed,
+  clinsigraw("aaas_ag", "higher", "Pre", "Post", xG2)$harmed
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 6.104, df = 2, p-value = 0.05, calls for pairwise comparisons
+# $altP.adjusted
+# [1] 0.09974166 0.09408707 1.00000000; no difference found
+
+aaas_ag.pre.post.kw.worsened <- dunn.test(list(
+  clinsigraw("aaas_ag", "higher", "Pre", "Post", xG3)$worsened,
+  clinsigraw("aaas_ag", "higher", "Pre", "Post", xG1)$worsened,
+  clinsigraw("aaas_ag", "higher", "Pre", "Post", xG2)$worsened
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 3.1136, df = 2, p-value = 0.21
+
 rathus.pre.post.kw <- dunn.test(list(
   clinsigraw("rathus", "higher", "Pre", "Post", xG3)$recovered,
   clinsigraw("rathus", "higher", "Pre", "Post", xG1)$recovered,
   clinsigraw("rathus", "higher", "Pre", "Post", xG2)$recovered
 ), method="bonferroni", altp=TRUE)
-# Kruskal-Wallis chi-squared = 14.9234, df = 2, p-value = 0, calls for post-hoc analysis
+# Kruskal-Wallis chi-squared = 14.9234, df = 2, p-value = 0, calls for pairwise comparisons
+# $altP.adjusted
+# [1] 0.006524832 0.001064018 1.000000000; differences found
+
+# rathus.pre.post.kw.worsened <- dunn.test(list(
+#   clinsigraw("rathus", "higher", "Pre", "Post", xG3)$worsened,
+#   clinsigraw("rathus", "higher", "Pre", "Post", xG1)$worsened,
+#   clinsigraw("rathus", "higher", "Pre", "Post", xG2)$worsened
+# ), method="bonferroni", altp=TRUE)
+# No worsening in any group, nothing to test!
 
 phq_sum.pre.post.kw <- dunn.test(list(
   clinsigraw("phq_sum", "lower", "Pre", "Post", xG3)$recovered,
   clinsigraw("phq_sum", "lower", "Pre", "Post", xG1)$recovered,
   clinsigraw("phq_sum", "lower", "Pre", "Post", xG2)$recovered
 ), method="bonferroni", altp=TRUE)
-# Kruskal-Wallis chi-squared = 9.6651, df = 2, p-value = 0.01, calls for post-hoc analysis
+# Kruskal-Wallis chi-squared = 9.6651, df = 2, p-value = 0.01, calls for pairwise comparisons
+# $altP.adjusted
+# [1] 0.241241515 0.005787945 0.552125729; differences found
+
+phq_sum.pre.post.kw.harmed <- dunn.test(list(
+  clinsigraw("phq_sum", "lower", "Pre", "Post", xG3)$harmed,
+  clinsigraw("phq_sum", "lower", "Pre", "Post", xG1)$harmed,
+  clinsigraw("phq_sum", "lower", "Pre", "Post", xG2)$harmed
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 0.9316, df = 2, p-value = 0.63
+
+phq_sum.pre.post.kw.worsened <- dunn.test(list(
+  clinsigraw("phq_sum", "lower", "Pre", "Post", xG3)$worsened,
+  clinsigraw("phq_sum", "lower", "Pre", "Post", xG1)$worsened,
+  clinsigraw("phq_sum", "lower", "Pre", "Post", xG2)$worsened
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 5.0582, df = 2, p-value = 0.08
 
 gad_sum.pre.post.kw <- dunn.test(list(
   clinsigraw("gad_sum", "lower", "Pre", "Post", xG3)$recovered,
@@ -1324,12 +1374,46 @@ gad_sum.pre.post.kw <- dunn.test(list(
 ), method="bonferroni", altp=TRUE)
 # Kruskal-Wallis chi-squared = 2.0239, df = 2, p-value = 0.36
 
+gad_sum.pre.post.kw.harmed <- dunn.test(list(
+  clinsigraw("gad_sum", "lower", "Pre", "Post", xG3)$harmed,
+  clinsigraw("gad_sum", "lower", "Pre", "Post", xG1)$harmed,
+  clinsigraw("gad_sum", "lower", "Pre", "Post", xG2)$harmed
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 2.9776, df = 2, p-value = 0.23
+
+gad_sum.pre.post.kw.worsened <- dunn.test(list(
+  clinsigraw("gad_sum", "lower", "Pre", "Post", xG3)$worsened,
+  clinsigraw("gad_sum", "lower", "Pre", "Post", xG1)$worsened,
+  clinsigraw("gad_sum", "lower", "Pre", "Post", xG2)$worsened
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 5.8257, df = 2, p-value = 0.05, calls for pairwise comparisons
+# $altP.adjusted
+# [1] 0.96895090 0.04909457 0.48795293; differences found
+
 lsas_sum.pre.post.kw <- dunn.test(list(
   clinsigraw("lsas_sum", "lower", "Pre", "Post", xG3)$recovered,
   clinsigraw("lsas_sum", "lower", "Pre", "Post", xG1)$recovered,
   clinsigraw("lsas_sum", "lower", "Pre", "Post", xG2)$recovered
 ), method="bonferroni", altp=TRUE)
-# Kruskal-Wallis chi-squared = 7.5439, df = 2, p-value = 0.02, calls for post-hoc analysis
+# Kruskal-Wallis chi-squared = 7.5439, df = 2, p-value = 0.02, calls for pairwise comparisons
+# $altP.adjusted
+# [1] 0.04540113 0.05980064 1.00000000
+
+lsas_sum.pre.post.kw.harmed <- dunn.test(list(
+  clinsigraw("lsas_sum", "lower", "Pre", "Post", xG3)$harmed,
+  clinsigraw("lsas_sum", "lower", "Pre", "Post", xG1)$harmed,
+  clinsigraw("lsas_sum", "lower", "Pre", "Post", xG2)$harmed
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 2.0597, df = 2, p-value = 0.36
+
+lsas_sum.pre.post.kw.worsened <- dunn.test(list(
+  clinsigraw("lsas_sum", "lower", "Pre", "Post", xG3)$worsened,
+  clinsigraw("lsas_sum", "lower", "Pre", "Post", xG1)$worsened,
+  clinsigraw("lsas_sum", "lower", "Pre", "Post", xG2)$worsened
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 9.1314, df = 2, p-value = 0.01, calls for pairwise comparisons
+# $altP.adjusted
+# [1] 0.11608446 0.00972895 1.00000000; differences found
 
 ## Test statistical significance of clinical significant change Pre --> Follow-up
 
@@ -1338,7 +1422,16 @@ aaas_ad.pre.fu.kw <- dunn.test(list(
   clinsigraw("aaas_ad", "higher", "Pre", "Follow-up", xG1)$recovered,
   clinsigraw("aaas_ad", "higher", "Pre", "Follow-up", xG2)$recovered
 ), method="bonferroni", altp=TRUE)
-# Kruskal-Wallis chi-squared = 12.3534, df = 2, p-value = 0, calls for post-hoc analysis
+# Kruskal-Wallis chi-squared = 12.3534, df = 2, p-value = 0, calls for pairwise comparisons
+# $altP.adjusted
+# [1] 0.01854809 0.00311267 1.00000000; differences found
+
+# aaas_ad.pre.fu.kw.worsened <- dunn.test(list(
+#   clinsigraw("aaas_ad", "higher", "Pre", "Follow-up", xG3)$worsened,
+#   clinsigraw("aaas_ad", "higher", "Pre", "Follow-up", xG1)$worsened,
+#   clinsigraw("aaas_ad", "higher", "Pre", "Follow-up", xG2)$worsened
+# ), method="bonferroni", altp=TRUE)
+# No worsening in any group, nothing to test!
 
 aaas_ag.pre.fu.kw <- dunn.test(list(
   clinsigraw("aaas_ag", "higher", "Pre", "Follow-up", xG3)$recovered,
@@ -1347,19 +1440,60 @@ aaas_ag.pre.fu.kw <- dunn.test(list(
 ), method="bonferroni", altp=TRUE)
 # Kruskal-Wallis chi-squared = 1.7287, df = 2, p-value = 0.42
 
+aaas_ag.pre.fu.kw.harmed <- dunn.test(list(
+  clinsigraw("aaas_ag", "higher", "Pre", "Follow-up", xG3)$harmed,
+  clinsigraw("aaas_ag", "higher", "Pre", "Follow-up", xG1)$harmed,
+  clinsigraw("aaas_ag", "higher", "Pre", "Follow-up", xG2)$harmed
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 3.5677, df = 2, p-value = 0.17
+
+aaas_ag.pre.fu.kw.worsened <- dunn.test(list(
+  clinsigraw("aaas_ag", "higher", "Pre", "Follow-up", xG3)$worsened,
+  clinsigraw("aaas_ag", "higher", "Pre", "Follow-up", xG1)$worsened,
+  clinsigraw("aaas_ag", "higher", "Pre", "Follow-up", xG2)$worsened
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 4.0919, df = 2, p-value = 0.13
+
 rathus.pre.fu.kw <- dunn.test(list(
   clinsigraw("rathus", "higher", "Pre", "Follow-up", xG3)$recovered,
   clinsigraw("rathus", "higher", "Pre", "Follow-up", xG1)$recovered,
   clinsigraw("rathus", "higher", "Pre", "Follow-up", xG2)$recovered
 ), method="bonferroni", altp=TRUE)
-# Kruskal-Wallis chi-squared = 21.5053, df = 2, p-value = 0, calls for post-hoc analysis
+# Kruskal-Wallis chi-squared = 21.5053, df = 2, p-value = 0, calls for pairwise comparisons
+# $altP.adjusted
+# [1] 7.582296e-04 5.122463e-05 1.000000e+00; differences found
+
+# rathus.pre.fu.kw.worsened <- dunn.test(list(
+#   clinsigraw("rathus", "higher", "Pre", "Follow-up", xG3)$worsened,
+#   clinsigraw("rathus", "higher", "Pre", "Follow-up", xG1)$worsened,
+#   clinsigraw("rathus", "higher", "Pre", "Follow-up", xG2)$worsened
+# ), method="bonferroni", altp=TRUE)
+# No worsening in any group, nothing to test!
 
 phq_sum.pre.fu.kw <- dunn.test(list(
   clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG3)$recovered,
   clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG1)$recovered,
   clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG2)$recovered
 ), method="bonferroni", altp=TRUE)
-# Kruskal-Wallis chi-squared = 11.8735, df = 2, p-value = 0, calls for post-hoc analysis
+# Kruskal-Wallis chi-squared = 11.8735, df = 2, p-value = 0, calls for pairwise comparisons
+# $altP.adjusted
+# [1] 0.16571305 0.00175382 0.40476336; differences found
+
+phq_sum.pre.fu.kw.harmed <- dunn.test(list(
+  clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG3)$harmed,
+  clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG1)$harmed,
+  clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG2)$harmed
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 1.2129, df = 2, p-value = 0.55
+
+phq_sum.pre.fu.kw.worsened <- dunn.test(list(
+  clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG3)$worsened,
+  clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG1)$worsened,
+  clinsigraw("phq_sum", "lower", "Pre", "Follow-up", xG2)$worsened
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 7.8589, df = 2, p-value = 0.02, calls for pairwise comparisons
+# $altP.adjusted
+# [1] 0.01522904 0.41861314 0.53078210; differences found
 
 gad_sum.pre.fu.kw <- dunn.test(list(
   clinsigraw("gad_sum", "lower", "Pre", "Follow-up", xG3)$recovered,
@@ -1368,12 +1502,44 @@ gad_sum.pre.fu.kw <- dunn.test(list(
 ), method="bonferroni", altp=TRUE)
 # Kruskal-Wallis chi-squared = 5.123, df = 2, p-value = 0.08
 
+gad_sum.pre.fu.kw.harmed <- dunn.test(list(
+  clinsigraw("gad_sum", "lower", "Pre", "Follow-up", xG3)$harmed,
+  clinsigraw("gad_sum", "lower", "Pre", "Follow-up", xG1)$harmed,
+  clinsigraw("gad_sum", "lower", "Pre", "Follow-up", xG2)$harmed
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 2.1993, df = 2, p-value = 0.33
+
+gad_sum.pre.fu.kw.worsened <- dunn.test(list(
+  clinsigraw("gad_sum", "lower", "Pre", "Follow-up", xG3)$worsened,
+  clinsigraw("gad_sum", "lower", "Pre", "Follow-up", xG1)$worsened,
+  clinsigraw("gad_sum", "lower", "Pre", "Follow-up", xG2)$worsened
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 2.5818, df = 2, p-value = 0.28
+
 lsas_sum.pre.fu.kw <- dunn.test(list(
   clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG3)$recovered,
   clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG1)$recovered,
   clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG2)$recovered
 ), method="bonferroni", altp=TRUE)
-# Kruskal-Wallis chi-squared = 14.1971, df = 2, p-value = 0, calls for post-hoc analysis
+# Kruskal-Wallis chi-squared = 14.1971, df = 2, p-value = 0, calls for pairwise comparisons
+# $altP.adjusted
+# [1] 0.015456411 0.001003215 1.000000000; differences found
+
+lsas_sum.pre.fu.kw.harmed <- dunn.test(list(
+  clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG3)$harmed,
+  clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG1)$harmed,
+  clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG2)$harmed
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 2.0156, df = 2, p-value = 0.37
+
+lsas_sum.pre.fu.kw.worsened <- dunn.test(list(
+  clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG3)$worsened,
+  clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG1)$worsened,
+  clinsigraw("lsas_sum", "lower", "Pre", "Follow-up", xG2)$worsened
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 8.4085, df = 2, p-value = 0.01, calls for pairwise comparisons
+# $altP.adjusted
+# [1] 0.03836684 0.03371498 1.00000000; differences found
 
 ```
 
@@ -1587,12 +1753,16 @@ Again comparing against Waitlist, there was no significant effect of the Self-he
 
 #### Clinical significant change
 
-Adding to the picture that assertive behaviors increased and symptoms of depression and social phobia decreased as a consequence of participation in the intervention, there was a significant difference between the groups at Post in the number of participants that had recovered clinically, that is had moved across the cutoff for reliable and clinically significant change, with respect to AAA-S Adaptive, `r report.kw(aaas_ad.pre.post.kw)`;
+Adding to the picture that assertive behaviors increased and symptoms of depression and social phobia decreased as a consequence of participation in the intervention, there was a significant difference between the groups at Post in the number of participants that had recovered clinically, that is had moved across the cutoff for reliable and clinically significant change, into the category 'recovered', with respect to AAA-S Adaptive, `r report.kw(aaas_ad.pre.post.kw)`;
 RAS, `r report.kw(rathus.pre.post.kw)`, and LSAS-SR, `r report.kw(lsas_sum.pre.post.kw)`.  However, there was no difference between groups at Post with regards to AAA-S Aggressive, `r report.kwnot(aaas_ag.pre.post.kw)`, PHQ-9, `r report.kwnot(phq_sum.pre.post.kw)`, or GAD-7, `r report.kwnot(gad_sum.pre.post.kw)`. At Follow-up, the difference in recovery rates between conditions was significant for both behavioral and syndromal measures: AAA-S Adaptive, `r report.kw(aaas_ad.pre.fu.kw)`; RAS, `r report.kw(rathus.pre.fu.kw)`; PHQ-9, `r report.kw(phq_sum.pre.fu.kw)`; and LSAS-SR, `r report.kw(lsas_sum.pre.fu.kw)`; but not for AAA-S Aggressive, `r report.kwnot(aaas_ag.pre.fu.kw)` or GAD-7, `r report.kwnot(gad_sum.pre.fu.kw)`. See Table 2 for a summary of clinical recovery rates and the significance of pairwise tests against Waitlist. 
 
-Notably, a number of participants, `r clinsigtext("aaas_ad", "higher", "Pre", "Post", "Self-help", aaas_ad.pre.post.kw)[1]` in the Self-help group enjoyed clinical recovery with regards to adaptive assertiveness measured with AAA-S Adaptive at Post, increasing to `r clinsigtext("aaas_ad", "higher", "Pre", "Follow-up", "Self-help", aaas_ad.pre.fu.kw)[1]` at Follow-up. In the Guided self-help group the number of recovered participants at Post was non-significantly different from that of the Waitlist, while significantly different at Followup, `r clinsigtext("aaas_ad", "higher", "Pre", "Follow-up", "Support", aaas_ad.pre.fu.kw)[1]`. For assertiveness assessed with the RAS, the corresponding numbers and rates were `r clinsigtext("rathus", "higher", "Pre", "Post", "Self-help", rathus.pre.post.kw)[1]` for Self-help and `r clinsigtext("rathus", "higher", "Pre", "Post", "Support", rathus.pre.post.kw)[1]` for Guided self-help at Post, increasing to `r clinsigtext("rathus", "higher", "Pre", "Follow-up", "Self-help", rathus.pre.fu.kw)[1]` and `r clinsigtext("rathus", "higher", "Pre", "Follow-up", "Support", rathus.pre.fu.kw)[1]` respectively at Follow-up. Thus, the clinical significance findings are in agreement with the statistical analysis of change, confirming that adaptive expressions of assertiveness increased Pre to Post in both treatment groups. Clinical recovery measured with PHQ-9 Pre to Post indicate that the intervention, compared to Waitlist, was effective in moving a number of participants out of depression in the Guided self-help group, `r clinsigtext("phq_sum", "lower", "Pre", "Post", "Support", phq_sum.pre.post.kw)[1]`, but not so in Self-help group, pointing to that interaction with therapists might contribute to faster recovery for depressed participants. In addition, a significant number of participants in the Self-help group recovered from symptoms of social anxiety as captured with LSAS-SR, `r clinsigtext("lsas_sum", "lower", "Pre", "Post", "Self-help", lsas_sum.pre.post.kw)[1]` at Post, increasing to `r clinsigtext("lsas_sum", "lower", "Pre", "Follow-up", "Self-help", lsas_sum.pre.fu.kw)[1]` at Follow-up. In the Guided self-help condition, there was no significant number of recovered participants compared to Waitlist at Post, but `r clinsigtext("lsas_sum", "lower", "Pre", "Follow-up", "Support", lsas_sum.pre.fu.kw)[1]` at Follow-up. These clinical findings seem to pick up that symptoms of social anxiety continued to subside in the year following treatment to the point that some participants had recovered clinically. Combined with the clinically relevant recovery for assertive behaviors measured with AAA-S Adaptive and RAS, this could be a sign of generalization of assertive behaviors having continued to occur after the end of treatment, facilitating extinction of those anxiety responses that were captured with LSAS-SR.
+Notably, a number of participants, `r clinsigtext("aaas_ad", "higher", "Pre", "Post", "Self-help", aaas_ad.pre.post.kw)[1]` in the Self-help group enjoyed clinical recovery with regards to adaptive assertiveness measured with AAA-S Adaptive at Post, increasing to `r clinsigtext("aaas_ad", "higher", "Pre", "Follow-up", "Self-help", aaas_ad.pre.fu.kw)[1]` at Follow-up. In the Guided self-help group the number of recovered participants at Post was non-significantly different from that of the Waitlist, while significantly different at Followup, `r clinsigtext("aaas_ad", "higher", "Pre", "Follow-up", "Support", aaas_ad.pre.fu.kw)[1]`. For assertiveness assessed with the RAS, the corresponding numbers and rates were `r clinsigtext("rathus", "higher", "Pre", "Post", "Self-help", rathus.pre.post.kw)[1]` for Self-help and `r clinsigtext("rathus", "higher", "Pre", "Post", "Support", rathus.pre.post.kw)[1]` for Guided self-help at Post, increasing to `r clinsigtext("rathus", "higher", "Pre", "Follow-up", "Self-help", rathus.pre.fu.kw)[1]` and `r clinsigtext("rathus", "higher", "Pre", "Follow-up", "Support", rathus.pre.fu.kw)[1]` respectively at Follow-up. Thus, the clinical significance findings are in agreement with the statistical analysis of change, confirming that adaptive expressions of assertiveness increased Pre to Post in both treatment groups. Clinical recovery measured with PHQ-9 Pre to Post indicate that the intervention, compared to Waitlist, was effective in moving a number of participants out of depression in the Guided self-help group, `r clinsigtext("phq_sum", "lower", "Pre", "Post", "Support", phq_sum.pre.post.kw)[1]`, but not so in Self-help group, pointing to that interaction with therapists might contribute to faster recovery for depressed participants. In addition, a significant number of participants in the Self-help group recovered from symptoms of social anxiety as captured with LSAS-SR, `r clinsigtext("lsas_sum", "lower", "Pre", "Post", "Self-help", lsas_sum.pre.post.kw)[1]` at Post, increasing to `r clinsigtext("lsas_sum", "lower", "Pre", "Follow-up", "Self-help", lsas_sum.pre.fu.kw)[1]` at Follow-up. In the Guided self-help condition, there was no significant number of recovered participants compared to Waitlist at Post, but `r clinsigtext("lsas_sum", "lower", "Pre", "Follow-up", "Support", lsas_sum.pre.fu.kw)[1]` at Follow-up. These clinical findings seem to pick up that symptoms of social anxiety continued to subside in the year following treatment, to the point that some participants had recovered. Combined with the clinically relevant recovery for assertive behaviors measured with AAA-S Adaptive and RAS, this could be a sign of generalization of assertive behaviors having continued to occur after the end of treatment, facilitating extinction of anxiety responses.
 
-Nämna något om _deteroriation_ här? Försumbar i behandlingsgrupperna enl tabell 2 men kanske värt att problematisera för väntlistegruppen?
+#### Reliable harm 
+
+Checking for any signs of reliable harm, a significant difference between groups in clinical significant change was found for the AAA-S Aggressive measure, `r report.kw(aaas_ag.pre.post.kw.harmed)`, as $n$ = $3$ participants ($4$\%) had reached below the threshold for the category 'harmed' while waiting to enter into treatment (see Table 2). However, post hoc testing did not reveal any significant pairwise differences between any of the treatment groups and the Waitlist, `r xprnot(aaas_ag.pre.post.kw.harmed$altP.adjusted[2])` and `r xprnot(aaas_ag.pre.post.kw.harmed$altP.adjusted[1])`. No other instances of suspected reliable harm were identified. 
+
+(Utöka också med reliable deterioration?)
 
 ### Summary of findings
 
