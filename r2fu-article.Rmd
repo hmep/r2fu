@@ -58,7 +58,8 @@ packages <-
     "sjPlot",
     "kableExtra",
     "clinicalsignificance",
-    "here"
+    "here",
+    "MOTE"
   )
 if (!require("install.load")) install.packages("install.load")
 library(install.load)
@@ -105,7 +106,7 @@ xT4 = "Follow-up"
 
 ```{r functions, eval = T, echo = F} 
 
-xresult <-
+xresult.off <-
   function(x, d) {
     paste("$",
           formatC(
@@ -119,7 +120,15 @@ xresult <-
           sep = "")
   }
 
-xresulttext <-
+xresult <-
+  function(x, d = 2) {
+    paste("$",
+          apa(value = x, decimals = d, leading = F),
+          "$",
+          sep = "")
+  }
+
+xresulttext.off <-
   function(x, d) {
     formatC(
       x,
@@ -130,7 +139,12 @@ xresulttext <-
     )
   }
 
-xpercent <-
+xresulttext <-
+  function(x, d = 2) {
+    apa(value = x, decimals = d, leading = F)
+  }
+
+xpercent.OFF <-
   function(x, d) {
     paste(
       "$",
@@ -147,7 +161,19 @@ xpercent <-
     )
   }
 
-xpr <- function(x) {
+xpercent <-
+  function(x, d = 2) {
+    paste(
+      "$",
+      apa(value = x, decimals = d, leading = F),
+      "$",
+      "\\xspace%",
+      sep = ""
+    )
+  }
+
+
+xpr.off <- function(x) {
   paste("$p$",
         ifelse(x < 0.001, "< $0.001$", ifelse(
           x < 0.05,
@@ -158,7 +184,16 @@ xpr <- function(x) {
         )))
 }
 
-xprnot <- function(x) {
+xpr <- function(x, d = 3) {
+  paste("$p$",
+        ifelse(x < 0.001, "< $.001$", ifelse(
+          x < 0.05,
+          paste0("= $", apa(value = x, decimals = d, leading = F), "$"),
+          ifelse(x > 0.05, "DO NOT REPORT", "= $.05$")
+        )))
+}
+
+xprnot.off <- function(x) {
   paste("$p$",
         ifelse(x < 0.001, "< $0.001$", ifelse(
           x < 0.05,
@@ -168,6 +203,17 @@ xprnot <- function(x) {
           ifelse(x > 0.05, paste0(
             " = $", prettyNum(x, digits = 2, decimal.mark = "."), "$"
           ), "= $0.05$")
+        )))
+}
+
+xprnot <- function(x, d = 3) {
+  paste("$p$",
+        ifelse(x < 0.001, "< $.001$", ifelse(
+          x < 0.05,
+          paste0(" = $", apa(value = x, decimals = d, leading = F), "$"),
+          ifelse(x > 0.05, paste0(
+            " = $", apa(value = x, decimals = d, leading = F), "$"
+          ), "= $.05$")
         )))
 }
 
@@ -418,7 +464,7 @@ The Western Australian Centre for Clinical Interventions (CCI) offers various se
 
 This study aims to evaluate the effects of an eight-week iCBT intervention for assertiveness, Respekt^2^, based on the @michel2008 modules, through a randomized controlled trial. The research questions are:
 
-- What are the effects on assertiveness of guided and unguided participation in Respect^2^, compared to a waitlist control?
+- What are the effects on assertiveness of guided and unguided participation in Respekt^2^, compared to a waitlist control?
 
 - What are the effects of guided and unguided participation on measures of anxiety and depression, compared to the control?
 
@@ -1513,13 +1559,15 @@ Notably, a number of participants, `r clinsigtext("aaas_ad", "higher", "Pre", "P
 
 ### Summary of findings
 
-To summarize, we found large between-group effects on assertiveness of Self-help and Guided self-help participation in Respect^2^, compared to Waitlist control. For AAA-S Adaptive and RAS at Post in the Self-help condition, `r report.text2(aaas_ad.out, "Post Waitlist - (Post Self-help)", -1,"effshort")` and `r report.text2(rathus.out, "Post Waitlist - (Post Self-help)", -1,"effshort")` respectively. The corresponding effect sizes in the Guided self-help group was `r report.text2(aaas_ad.out, "Post Waitlist - Post Support", -1,"effshort")` and `r report.text2(rathus.out, "Post Waitlist - Post Support", -1,"effshort")` respectively. Within-group effects from Pre to Post were also large: `r report.text2(aaas_ad.out, "(Pre Self-help) - (Post Self-help)", -1,"effshort")` for AAA-S Adaptive in the Self-group, and `r report.text2(aaas_ad.out, "Pre Support - Post Support", -1,"effshort")` in the Guided self-help group; `r report.text2(rathus.out, "(Pre Self-help) - (Post Self-help)", -1,"effshort")` for the RAS in the Self-group, and `r report.text2(rathus.out, "Pre Support - Post Support", -1,"effshort")` in the Guided self-help group. For AAA-S Adaptive in the Guided self-group, the `r report.text2(rathus.out, "(Post Self-help) - (Follow-up Self-help)", -1,"effshort")` increase at 1 year Follow-up was also significant. No effect on AAA-S Aggressive was detected in any group. Clinically speaking, $n$ = 15 (22%) of participants in the Self-help group had recovered with regards to AAA-S Adaptive at Follow-up, while $n$ = 18 (26%) of participants in the Guided self-help group had recovered at the same time point. The corresponding recovery rates for RAS were $n$ = 21 (31%) and $n$ = 25 (36%). We conclude that Respect^2^ did indeed help participants to act more assertively, although not more aggressively, and that the effects were either sustained or more pronounced 1 year after the intervention.
+To summarize, we found large between-group effects on assertiveness of Self-help and Guided self-help participation in Respekt^2^, compared to Waitlist control. For AAA-S Adaptive and RAS at Post in the Self-help condition, `r report.text2(aaas_ad.out, "Post Waitlist - (Post Self-help)", -1,"effshort")` and `r report.text2(rathus.out, "Post Waitlist - (Post Self-help)", -1,"effshort")` respectively. The corresponding effect sizes in the Guided self-help group was `r report.text2(aaas_ad.out, "Post Waitlist - Post Support", -1,"effshort")` and `r report.text2(rathus.out, "Post Waitlist - Post Support", -1,"effshort")` respectively. Within-group effects from Pre to Post were also large: `r report.text2(aaas_ad.out, "(Pre Self-help) - (Post Self-help)", -1,"effshort")` for AAA-S Adaptive in the Self-group, and `r report.text2(aaas_ad.out, "Pre Support - Post Support", -1,"effshort")` in the Guided self-help group; `r report.text2(rathus.out, "(Pre Self-help) - (Post Self-help)", -1,"effshort")` for the RAS in the Self-group, and `r report.text2(rathus.out, "Pre Support - Post Support", -1,"effshort")` in the Guided self-help group. For AAA-S Adaptive in the Guided self-group, the `r report.text2(rathus.out, "(Post Self-help) - (Follow-up Self-help)", -1,"effshort")` increase at 1 year Follow-up was also significant. No effect on AAA-S Aggressive was detected in any group. Clinically speaking, $n$ = 15 (22%) of participants in the Self-help group had recovered with regards to AAA-S Adaptive at Follow-up, while $n$ = 18 (26%) of participants in the Guided self-help group had recovered at the same time point. The corresponding recovery rates for RAS were $n$ = 21 (31%) and $n$ = 25 (36%). We conclude that Respekt^2^ did indeed help participants to act more assertively, although not more aggressively, and that the effects were either sustained or more pronounced 1 year after the intervention.
 
-Assessing the effect of the Respect^2^ intervention on symptom burden with respect to depression and common anxiety disorders, we found no significant effects at Post for PHQ-9 or LSAS-SR in the Self-help group, compared with Waitlist. At Follow-up, however, we found a large between-group effect on LSAS-SR, `r report.text2(lsas_sum.out, "During Waitlist - (Follow-up Self-help)", 1,"effshort")`. Effects were also found in the Guided self-help group, where participants were supported by therapists: Compared with waitlist, participants exhibited medium effects at Post for PHQ-9, `r report.text2(phq_sum.out, "Post Waitlist - Post Support", 1,"effshort")`, and LSAS-SR, `r report.text2(lsas_sum.out, "Post Waitlist - Post Support", 1,"effshort")` respectively, as well as a large effect only for LSAS-SR at Follow-up, `r report.text2(lsas_sum.out, "During Waitlist - (Follow-up Support)", 1,"effshort")`. Within-group comparisons revealed medium effects in the Self-help group for LSAS-SR, `r report.text2(lsas_sum.out, "(Pre Self-help) - (Post Self-help)", 1,"effshort")` Pre--Post, and large effects `r report.text2(lsas_sum.out, "(Pre Self-help) - (Follow-up Self-help)", 1,"effshort")` Pre--Follow-up. Similar effects were found in the Guided self-help group, `r report.text2(lsas_sum.out, "Pre Support - Post Support", 1,"effshort")` Pre--Post, and `r report.text2(lsas_sum.out, "Pre Support - (Follow-up Support)", 1,"effshort")` Pre--Follow-up. A medium effect was found for PHQ-9 Pre--Follow-up for the Guided self-help group, `r report.text2(phq_sum.out, "Pre Support - (Follow-up Support)", 1,"effshort")`. These findings were supplemented by the analysis of clinical significant change, where, $n$ = 14 (21%) had recovered from social anxiety at Follow-up in the Self-help group, and $n$ = 18 (26%) in the group that were guided by therapists. In addition, $n$ = 18 (26%) in the Guided self-help group had recovered from depression at Follow-up. Thus, we found that Respect^2^ clearly reduced symptoms of social anxiety across both treatment conditions, and over time somewhat reduced symptoms of depression among participants that were guided by therapists.
+Assessing the effect of the Respekt^2^ intervention on symptom burden with respect to depression and common anxiety disorders, we found no significant effects at Post for PHQ-9 or LSAS-SR in the Self-help group, compared with Waitlist. At Follow-up, however, we found a large between-group effect on LSAS-SR, `r report.text2(lsas_sum.out, "During Waitlist - (Follow-up Self-help)", 1,"effshort")`. Effects were also found in the Guided self-help group, where participants were supported by therapists: Compared with waitlist, participants exhibited medium effects at Post for PHQ-9, `r report.text2(phq_sum.out, "Post Waitlist - Post Support", 1,"effshort")`, and LSAS-SR, `r report.text2(lsas_sum.out, "Post Waitlist - Post Support", 1,"effshort")` respectively, as well as a large effect only for LSAS-SR at Follow-up, `r report.text2(lsas_sum.out, "During Waitlist - (Follow-up Support)", 1,"effshort")`. Within-group comparisons revealed medium effects in the Self-help group for LSAS-SR, `r report.text2(lsas_sum.out, "(Pre Self-help) - (Post Self-help)", 1,"effshort")` Pre--Post, and large effects `r report.text2(lsas_sum.out, "(Pre Self-help) - (Follow-up Self-help)", 1,"effshort")` Pre--Follow-up. Similar effects were found in the Guided self-help group, `r report.text2(lsas_sum.out, "Pre Support - Post Support", 1,"effshort")` Pre--Post, and `r report.text2(lsas_sum.out, "Pre Support - (Follow-up Support)", 1,"effshort")` Pre--Follow-up. A medium effect was found for PHQ-9 Pre--Follow-up for the Guided self-help group, `r report.text2(phq_sum.out, "Pre Support - (Follow-up Support)", 1,"effshort")`. These findings were supplemented by the analysis of clinical significant change, where, $n$ = 14 (21%) had recovered from social anxiety at Follow-up in the Self-help group, and $n$ = 18 (26%) in the group that were guided by therapists. In addition, $n$ = 18 (26%) in the Guided self-help group had recovered from depression at Follow-up. Thus, we found that Respekt^2^ clearly reduced symptoms of social anxiety across both treatment conditions, and over time somewhat reduced symptoms of depression among participants that were guided by therapists.
 
 # Discussion
 
-Although the effect sizes between groups and within treatment groups were substantial in the Respect^2^ intervention, it is difficult to transfer the findings to the general population. Firstly, X, secondly, Y, ... The current study also suffers from a number of limitations, among them Å (operationalization of 'assertiveness'), Ä (no validated scales) and Ö (?). However, it is intriguing that ..., and clearly merits further investigation.
+Being guided by a therapist does seem to entail benefits, especially for longer-term outcomes. In the Guided self-help group, adaptive assertiveness had increased between end of treatment and 1-year Follow-up, and depression had decreased from pre-treatment to 1-year Follow-up. These phenomena were not observed in the group where the participants were engaging with the intervention on their own. Speculatively, this might be explained by either increased _willingness_ to participate in behavioral experiments through the effects of coaching, an increased _ability to engage_ in behavioral experiments through active problem solving with the therapist, or increased _ability to generalize_ findings from such experiments, or all of them. (Följa upp på något sätt? Kolla antal inloggningar? Antal meddelanden som skickats? Något för en annan artikel? Hur som helst, kolla litteraturen, jämför med andras fynd.)
+
+Although the effect sizes between groups and within treatment groups were substantial in the Respekt^2^ intervention, it is difficult to transfer the findings to the general population. Firstly, X, secondly, Y, ... The current study also suffers from a number of limitations, among them Å (operationalization of 'assertiveness'), Ä (no validated scales) and Ö (?). However, it is intriguing that ..., and merits further investigation. Directions for future research could include ...
 
 Lösrykta tankar/stycken att utveckla och sammanfoga till en helhet:
 
