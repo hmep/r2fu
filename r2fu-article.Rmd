@@ -1770,13 +1770,21 @@ Assessing the effect of the Respekt^2^ intervention on symptom burden with respe
 
 # Discussion
 
-Contextualize the current study, @Speed2018a
+Contextualize the current study w/ regards to assertiveness, @Speed2018a (lack of up-to-date research outside of DBT), while @Day2013, @Rozental2015, @Rozental2017 all pointing to transdiagnostic interventions as potentially beneficial.
 
-Restate effects, compare to literature, @Andersson2013
+Restate effects between groups, compare to literature for iCBT, @Carlbring2018 (iCBT as effective as face-to-face treatment), @Andrews2018 (iCBT effective, acceptable, average between-group effect size g = 0.8 compared to controls; results from @Baumeister2014a concur, also pointing to guided iCBT producing somewhat larger effects than non-guided), 
 
-Being guided by a therapist does seem to entail some advantages, especially for longer-term outcomes. In the Guided self-help group, adaptive assertiveness had increased between end of treatment and 1-year Follow-up, and depression had decreased from pre-treatment to 1-year Follow-up. These phenomena were not observed in the group where the participants were engaging with the intervention on their own. Speculatively, this might be explained by either increased _willingness_ to participate in behavioral experiments through the effects of coaching, an increased _ability to engage_ in behavioral experiments through active problem solving with the therapist, or increased _ability to generalize_ findings from such experiments through better compliance to homework, or any combination of such factors. To dismantle the difference ... (Följa upp på något sätt? Kolla antal inloggningar? Antal meddelanden som skickats? Något för en annan artikel? Hur som helst, kolla litteraturen, jämför med andras fynd.)
+Relate to @Baumeister2014a: Being guided by a therapist does seem to entail some advantages, especially for longer-term outcomes. In the Guided self-help group, adaptive assertiveness had increased between end of treatment and 1-year Follow-up, and depression had decreased from pre-treatment to 1-year Follow-up. These phenomena were not observed in the group where the participants were engaging with the intervention on their own. 
 
-Although the effect sizes between groups and within treatment groups were substantial in the Respekt^2^ intervention, it is difficult to transfer the findings to the general population. Firstly, X, secondly, Y, ... The current study also suffers from a number of limitations, among them Å (operationalization of 'assertiveness'), Ä (no validated scales) and Ö (?). However, it is intriguing that ..., and merits further investigation. Directions for future research could include ...
+(Speculatively, this might be explained by either increased _willingness_ to participate in behavioral experiments through the effects of coaching, an increased _ability to engage_ in behavioral experiments through active problem solving with the therapist, or increased _ability to generalize_ findings from such experiments through better compliance to homework assignments, or any combination thereof. To dismantle the difference ... (Följa upp på något sätt? Kolla antal inloggningar? Antal meddelanden som skickats? Något för en annan artikel? Hur som helst, kolla litteraturen, jämför med andras fynd.)
+
+@Johansson2012 "In this review, the authors have found an evidence for a strong correlation between the degree of support and outcome"
+
+@Mohr2011 "We argue that human support increases adherence through accountability to a coach who is seen as trustworthy, benevolent, and having expertise")
+
+Limitations: Although the effect sizes between groups and within treatment groups were substantial in the Respekt^2^ intervention, it is difficult to transfer the findings to the general population. Firstly, X, secondly, Y, ... The current study also suffers from a number of limitations, among them Å (operationalization of 'assertiveness'), Ä (no validated scales) and Ö (waitlist as control).
+
+Future research: However, it is intriguing that ..., and merits further investigation. Directions for future research could include ...
 
 Lösrykta tankar/stycken att utveckla och sammanfoga till en helhet:
 
