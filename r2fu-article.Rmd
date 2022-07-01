@@ -701,7 +701,7 @@ Both therapists supporting participants in the guided condition were final-year 
 
 Five participants were excluded from the analyses due to wrongful inclusion as they were receiving concurrent psychological treatment.
 
-```{bash, include = F, eval = F, dpi = 300}
+```{bash, include = F, eval = F}
 
 filename="flowchart"
 
@@ -743,7 +743,7 @@ digraph G {
   itt[label=<Intention to treat<BR/><I>n</I> = 205>]
 
   subgraph cluster_selfhelp { margin=8; labelloc="t"; color=black; bgcolor=white; label=<Selfhelp<BR/><I>n</I> = 70 – 3 (excluded) = 67> ; selfhelp_dur -> selfhelp_post -> selfhelp_fu; } 
-  subgraph cluster_support { margin=8; labelloc="t"; color=black; bgcolor=white; label=<Support<BR/><I>n</I> = 70> ; support_dur -> support_post -> support_fu; } 
+  subgraph cluster_support { margin=8; labelloc="t"; color=black; bgcolor=white; label=<Guided self-help<BR/><I>n</I> = 70> ; support_dur -> support_post -> support_fu; } 
   subgraph cluster_waitlist { margin=8; labelloc="t"; color=black; bgcolor=white; label=<Waitlist<BR/><I>n</I> = 70 – 2 (excluded) = 68> ; waitlist_dur -> waitlist_post; } 
   { selfhelp_fu support_fu waitlist_post } -> itt
 
