@@ -608,6 +608,64 @@ The study design follows the RCT criteria proposed by @Chambless2001, with a ran
 
 Participants were recruited from the public through advertisements on social media and other websites. Interested individuals were referred to a purpose-built website with more information on the study, including criteria for participation. Participants were required to be Swedish citizens, at least 18 years of age, have access to the internet, and be fluent in Swedish. Information on the website also included risks associated with participation, as well as terms and conditions for participation. People were invited to submit their email addresses and those who did were sent a link to complete online screening. The online self-report screening battery included measures of anxiety, depression, and assertiveness, as well as questions regarding socio-demographics, experiences of psychological treatment, any current medication, and motivation for participation.
 
+(Add table w/ sociodemographics here.)
+
+\begin{table}
+
+\caption{\label{tab:demdata}Vid förmätningstillfället insamlad sociodemografisk data om deltagarna.}
+\centering
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{12em}>{\centering\arraybackslash}p{6em}>{\centering\arraybackslash}p{6em}>{\centering\arraybackslash}p{6em}>{\centering\arraybackslash}p{6em}}
+\toprule
+  & Väntelista (n = 68) & Självhjälp (n = 67) & Behandlarstöd (n = 70) & Sammanlagt (n = 205)\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{Ålder (år)}\\
+\hspace{1em}M (SD) & 41 (8) & 41 (9) & 44 (10) & 42 (9)\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{Kön (\%)}\\
+\hspace{1em}Kvinna & 91 & 79 & 93 & 88\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{Civilstånd (\%)}\\
+\hspace{1em}Singel & 37 & 36 & 29 & 34\\
+\hspace{1em}Sambo & 19 & 25 & 17 & 20\\
+\hspace{1em}Gift & 37 & 28 & 49 & 38\\
+\hspace{1em}Annat & 7 & 10 & 6 & 8\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{Utbildning (\%)}\\
+\hspace{1em}Annan utbildning & 3 & 1 & 1 & 2\\
+\hspace{1em}Folkskola/grundskola & 1 & 0 & 0 & 0\\
+\hspace{1em}Gymnasium & 10 & 9 & 7 & 9\\
+\hspace{1em}Yrkesutbildning & 7 & 4 & 7 & 6\\
+\hspace{1em}Pågående högre utbildning & 7 & 15 & 10 & 11\\
+\hspace{1em}Avslutad högre utbildning & 71 & 70 & 74 & 72\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{Sysselsättning (\%)}\\
+\hspace{1em}Annan sysselsättning & 9 & 6 & 7 & 7\\
+\hspace{1em}Studerande & 7 & 12 & 6 & 8\\
+\hspace{1em}Arbetande & 74 & 76 & 76 & 75\\
+\hspace{1em}Arbetslös & 4 & 4 & 0 & 3\\
+\hspace{1em}Pensionär & 0 & 0 & 4 & 1\\
+\hspace{1em}Föräldraledig & 0 & 0 & 4 & 1\\
+\hspace{1em}Sjukskriven & 6 & 1 & 3 & 3\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{Användning psykofarmaka (\%)}\\
+\hspace{1em}Nej & 76 & 70 & 67 & 71\\
+\hspace{1em}Ja, tidigare & 7 & 9 & 17 & 11\\
+\hspace{1em}Ja, pågående & 16 & 21 & 16 & 18\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{Tidigare psykologisk behandling (\%)}\\
+\hspace{1em}Nej & 38 & 40 & 39 & 39\\
+\hspace{1em}Ja & 62 & 60 & 61 & 61\\
+\bottomrule
+\end{tabular}
+\end{table}
+
 In total, 657 individuals submitted their email addresses, of which 464 completed the screening questionnaire. Among those, 126 were excluded for meeting exclusion criteria. Exclusion criteria were concurrent psychological treatment, a recent change in psychotropic medication, lack of time and/or motivation for participation, and a rating of 15 or above on the PHQ-9 measure of depression. The remaining 338 individuals were invited to participate in the study. Of those, 253 accepted the invitation.
 
 ## Procedure
@@ -1761,7 +1819,7 @@ Checking for any signs of reliable harm, the most severe form of deterioration, 
 
 # Discussion
 
-The current study advances current knowledge about a stand-alone transdiagnostic intervention targeting assertiveness, Respekt^2^, providing evidence for its effects on levels of assertive behaviors, and consequently its effects on symptoms of common psychiatric disorders of anxiety and depression. 
+The current study advances current knowledge about a stand-alone transdiagnostic intervention targeting assertiveness, Respekt^2^, providing evidence for its effects on levels of assertive behaviors, and consequently its effects on symptoms of common psychiatric disorders of anxiety and depression. Having been more or less ignored as a construct in clincical research since the 1990'ies, despite its history as a target for the very first behavioral therapies in the 1950'ies [@Speed2018a], this study brings some much-needed and up-to-date data for assertiveness as a viable transdiagnostic goal in the treatment of various clincial problems.
 
 We found large between-group effects on assertiveness of Self-help and Guided self-help participation in Respekt^2^, compared to Waitlist control. For AAA-S Adaptive and RAS at Post in the Self-help condition, `r report.text2(aaas_ad.out, "Post Waitlist - (Post Self-help)", -1,"effshort")` and `r report.text2(rathus.out, "Post Waitlist - (Post Self-help)", -1,"effshort")` respectively. The corresponding effect sizes in the Guided self-help group was `r report.text2(aaas_ad.out, "Post Waitlist - Post Support", -1,"effshort")` and `r report.text2(rathus.out, "Post Waitlist - Post Support", -1,"effshort")` respectively. Within-group effects from Pre to Post were also large: `r report.text2(aaas_ad.out, "(Pre Self-help) - (Post Self-help)", -1,"effshort")` for AAA-S Adaptive in the Self-group, and `r report.text2(aaas_ad.out, "Pre Support - Post Support", -1,"effshort")` in the Guided self-help group; `r report.text2(rathus.out, "(Pre Self-help) - (Post Self-help)", -1,"effshort")` for the RAS in the Self-group, and `r report.text2(rathus.out, "Pre Support - Post Support", -1,"effshort")` in the Guided self-help group. For AAA-S Adaptive in the Guided self-group, the `r report.text2(rathus.out, "(Post Self-help) - (Follow-up Self-help)", -1,"effshort")` increase at 1 year Follow-up was also significant. 
 <!-- No significant time \texttimes{} group interaction was found for AAA-S Aggressive.  -->
@@ -1779,15 +1837,15 @@ Within-group comparisons revealed moderate effects in the Self-help group for LS
 
 <!-- Contextualize the current study w/ regards to assertiveness, @Speed2018a (lack of up-to-date research outside of DBT), while @Day2013, @Rozental2015, @Rozental2017 pointing to transdiagnostic interventions as potentially beneficial.  -->
 
-<!-- Restate effects between groups, compare to literature for iCBT, @Carlbring2018 (iCBT as effective as face-to-face treatment), @Andrews2018 (iCBT effective, acceptable, average between-group effect size g = 0.8 compared to controls; results from @Baumeister2014a concur, also pointing to guided iCBT producing somewhat larger effects than non-guided). Also, compare w/ frequencies or reliable change, e.g. @Rozental2015. -->
-
-(Compare effect sizes and frequencies of clinical change with those found in literature here.)
+(Compare effects with literature for iCBT, @Carlbring2018 (iCBT as effective as face-to-face treatment), @Andrews2018 (iCBT effective, acceptable, average between-group effect size g = 0.8 compared to controls; results from @Baumeister2014a concur, also pointing to guided iCBT producing somewhat larger effects than non-guided). Also, compare w/ frequencies or reliable change, e.g. @Rozental2015.)
 
 In line with @Baumeister2014a, the results of the current study suggest that while effects at Post and Follow-up between groups are comparable for all measures, being guided by a therapist in iCBT could entail some advantages, especially for longer-term outcomes. In the Guided self-help group, adaptive assertiveness had increased between end of treatment and 1-year Follow-up, and both analysis within-groups and of statistical change indicated that depression had decreased from pre-treatment to 1-year Follow-up both. These phenomena were not observed in the group where the participants were engaging with the intervention on their own. Speculatively, this might be explained by either increased willingness to participate in behavioral experiments through the effects of coaching, an increased ability to engage in behavioral experiments through active problem solving with the therapist, or increased ability to generalize findings from such experiments through better compliance to homework assignments, or any combination thereof. While the mechanisms of mediation and moderation remain to unravel, the presence of human support could increase adherence to the intervention through increased levels of accountability, as suggested by @Mohr2011.
 
-Limitations: Although the effect sizes between groups and within treatment groups were substantial in the Respekt^2^ intervention, it is difficult to transfer the findings to the general population. Firstly, X, secondly, Y, ... The current study also suffers from a number of limitations, among them Z (biased recruitment), Å (unclear operationalization of 'assertiveness'), Ä (no validated scales), Ö (waitlist as control).
+(Discuss reasons for non-responding with regards to GAD-7? Relate to the sample.)
 
-Future research: However, it is intriguing that ..., and merits further investigation. Directions for future research could include ...
+Limitations: Although the effect sizes between groups and within treatment groups were substantial in the Respekt^2^ intervention, it is difficult to transfer the findings to the general population. Firstly, X, secondly, Y, ... The current study also suffers from a number of limitations, among them Z (biased recruitment), Å (unclear operationalization of 'assertiveness'), Ä (no validated scales), Ö (waitlist as control, related to reliable harm).
+
+Future research: However, it is intriguing that ..., and merits further investigation. Directions for future research could include ... (how does assertiveness relate to relationship problems and work-related stress?)
 
 Lösrykta tankar/stycken att eventuellt utveckla:
 
