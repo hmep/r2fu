@@ -144,23 +144,6 @@ xresulttext <-
     apa(value = x, decimals = d, leading = F)
   }
 
-xpercent.OFF <-
-  function(x, d) {
-    paste(
-      "$",
-      formatC(
-        x * 100,
-        digits = d,
-        decimal.mark = ".",
-        drop0trailing = F,
-        format = "f"
-      ),
-      "$",
-      "\\xspace%",
-      sep = ""
-    )
-  }
-
 xpercent <-
   function(x, d = 2) {
     paste(
@@ -172,20 +155,8 @@ xpercent <-
     )
   }
 
-
-xpr.off <- function(x) {
-  paste("$p$",
-        ifelse(x < 0.001, "< $0.001$", ifelse(
-          x < 0.05,
-          paste0("= $", prettyNum(
-            x, digits = 1, decimal.mark = "."
-          ), "$"),
-          ifelse(x > 0.05, "DO NOT REPORT", "= $0.05$")
-        )))
-}
-
-xpr <- function(x, d = 3) {
-  paste("$p_{Bonf}$",
+xpr <- function(x, d = 3, a = NULL) {
+  paste("$p_{",a,"}$",
         ifelse(x < 0.001, "< $.001$", ifelse(
           x < 0.05,
           paste0("= $", apa(value = x, decimals = d, leading = F), "$"),
@@ -193,21 +164,8 @@ xpr <- function(x, d = 3) {
         )))
 }
 
-xprnot.off <- function(x) {
-  paste("$p_{Bonf}$",
-        ifelse(x < 0.001, "< $0.001$", ifelse(
-          x < 0.05,
-          paste0(" = $", prettyNum(
-            x, digits = 1, decimal.mark = "."
-          ), "$"),
-          ifelse(x > 0.05, paste0(
-            " = $", prettyNum(x, digits = 2, decimal.mark = "."), "$"
-          ), "= $0.05$")
-        )))
-}
-
-xprnot <- function(x, d = 3) {
-  paste("$p_{Bonf}$",
+xprnot <- function(x, d = 3, a = NULL) {
+  paste("$p_{",a,"}$",
         ifelse(x < 0.001, "< $.001$", ifelse(
           x < 0.05,
           paste0(" = $", apa(value = x, decimals = d, leading = F), "$"),
@@ -273,7 +231,7 @@ report.kwtext <-
                 ") = ",
                 xresult(kwobj$Z[contrast], 2),
                 ", ",
-                xpr(kwobj$altP[contrast]))
+                xpr(kwobj$altP.adjusted[contrast]),a="Bonf")
     return(x)
   }
 
@@ -352,7 +310,7 @@ report.text <-
       "$) = ",
       xresult(outobj$emmpairs$t.ratio[emmpairsrow], 2),
       ", ",
-      xpr(outobj$emmpairs$p.value[emmpairsrow]),
+      xpr(outobj$emmpairs$p.value[emmpairsrow],a="Bonf"),
       ", $ES$ = ",
       xresult(outobj$effectsizes$effect.size[effrow] * direction, 2),
       ", 95\\% CI [",
@@ -384,10 +342,10 @@ report.text2 <-
       "$) = ",
       xresult(outobj$emmpairs$t.ratio[effrow], 2),
       ", ",
-      xpr(outobj$emmpairs$p.value[effrow])
+      xpr(outobj$emmpairs$p.value[effrow],a="Bonf")
     )
     x.sigshort <-
-      xpr(outobj$emmpairs$p.value[effrow])
+      xpr(outobj$emmpairs$p.value[effrow],a="Bonf")
     x.eff <- paste0(
       "$ES$ = ",
       xresult(outobj$effectsizes$effect.size[effrow] * direction, 2),
@@ -691,7 +649,7 @@ The material also includes a rationale for cognitive restructuring with methods 
 
 The Swedish adaptation prompted additions to @michel2008, some of which are presented in this paragraph. Based on recent research on exposure and inhibitory learning [e.g., @Craske2008], participants were encouraged to actively vary learning situations and work on new skills in as many environments as possible. In another new passage, inspired by the works on acceptance by Hayes [e.g., -@Hayes2004a] and others, participants were encouraged to actively search for and remain in the respondent discomfort they previously avoided. In line with Öst’s [-@ost2006tillampad] recommendations for applied tension, progressive muscle relaxation was introduced early in the intervention and expanded over several weeks. The written material was also complemented by downloadable audio with relaxation exercises, video of conversations and role-playing, and several new, interactive exercises.
 
-Additional support for participants in the guided Self-help condition included weekly messages in the treatment platform, involving homework feedback, encouragement, validation, psychoeducation, and answers to any questions. Therapists were allocated 15 minutes of work, per participant and week.
+Additional support for participants in the Guided self-help condition included weekly messages in the treatment platform, involving homework feedback, encouragement, validation, psychoeducation, and answers to any questions. Therapists were allocated 15 minutes of work, per participant and week.
 
 ### Therapists
 
@@ -756,7 +714,7 @@ EOF
 
 ```
 
-```{r flowchartout, out.width="100%", fig.align="center", fig.cap="A total of 210 participants were included in the study through randomization; they were further randomized into groups Self-help, Support, and Waitlist, with 70 participants each."}
+```{r flowchartout, out.width="100%", fig.align="center", fig.cap="A total of 210 participants were included in the study through randomization; they were further randomized into groups Unguided self-help, Guided self-help, and Waitlist, with 70 participants each."}
 
 knitr::include_graphics("flowchart.png", auto_pdf = T)
 
@@ -770,8 +728,19 @@ A linear mixed-effects model was fitted using unscaled data to estimate fixed ef
 
 ```{r mixedmodels, fig.width = 13, fig.asp = 0.75, echo = F, eval = T, results='hide'}
 
+lnT4 <-!grepl(xT4, r2fu.long.data$time)
+
 ### Primary measures
 
+aaas_ad.post.lmer <-
+  lmerTest::lmer(
+    aaas_ad ~ group * time + (1 | subject),
+    data = r2fu.long.data[lnT4,],
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(aaas_ad.lmer) # Checked, found to be OK!
+aaas_ad.post.anova <- anova(aaas_ad.post.lmer, type=3, ddf="Kenward-Roger") # Significant interaction time x group
 aaas_ad.lmer <-
   lmerTest::lmer(
     aaas_ad ~ group * time + (1 | subject),
@@ -780,7 +749,7 @@ aaas_ad.lmer <-
     REML = T
   )
 # performance::check_model(aaas_ad.lmer) # Checked, found to be OK!
-aaas_ad.anova <- anova(aaas_ad.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for pairwise comparisons
+aaas_ad.anova <- anova(aaas_ad.lmer, type=3, ddf="Kenward-Roger")
 aaas_ad.emm.plot <-
   plot(
     ggemmeans(aaas_ad.lmer, terms = c("time", "group")),
@@ -794,6 +763,15 @@ aaas_ad.emm.plot <-
 aaas_ad.emm.plot <- aaas_ad.emm.plot +
   labs(y = "AAA-S, Adaptive subscale") + theme_apa(legend.pos = "topleft", legend.font.size = 12, y.font.size = 10)
 
+aaas_ag.post.lmer <-
+  lmerTest::lmer(
+    aaas_ag ~ group * time + (1 | subject),
+    data = r2fu.long.data[lnT4,],
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(aaas_ag.lmer) # Checked, found to be OK!
+aaas_ag.post.anova <- anova(aaas_ag.post.lmer, type=3, ddf="Kenward-Roger") # Significant interaction time x group
 aaas_ag.lmer <-
   lmerTest::lmer(
     aaas_ag ~ group * time + (1 | subject),
@@ -802,7 +780,7 @@ aaas_ag.lmer <-
     REML = T
   )
 # performance::check_model(aaas_ag.lmer) # Checked, found to be OK!
-aaas_ag.anova <- anova(aaas_ag.lmer, type=3, ddf="Kenward-Roger") # No significant interaction
+aaas_ag.anova <- anova(aaas_ag.lmer, type=3, ddf="Kenward-Roger")
 aaas_ag.emm.plot <-
   plot(
     ggemmeans(aaas_ag.lmer, terms = c("time", "group")),
@@ -816,6 +794,15 @@ aaas_ag.emm.plot <-
 aaas_ag.emm.plot <- aaas_ag.emm.plot + 
   labs(y = "AAA-S, Aggressive subscale") + theme_apa(legend.pos = "topleft", legend.font.size = 12, y.font.size = 10)
 
+rathus.post.lmer <-
+  lmerTest::lmer(
+    rathus ~ group * time + (1 | subject),
+    data = r2fu.long.data[lnT4,],
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(rathus.lmer) # Checked, found to be OK!
+rathus.post.anova <- anova(rathus.post.lmer, type=3, ddf="Kenward-Roger") # Significant interaction time x group
 rathus.lmer <-
   lmerTest::lmer(
     rathus ~ group * time + (1 | subject),
@@ -824,7 +811,7 @@ rathus.lmer <-
     REML = T
   )
 # performance::check_model(rathus.lmer) # Checked, found to be OK!
-rathus.anova <- anova(rathus.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for pairwise comparisons
+rathus.anova <- anova(rathus.lmer, type=3, ddf="Kenward-Roger")
 rathus.emm.plot <-
   plot(
     ggemmeans(rathus.lmer, terms = c("time", "group")),
@@ -840,6 +827,15 @@ rathus.emm.plot <- rathus.emm.plot +
 
 ### Secondary measures
 
+lsas_sum.post.lmer <-
+  lmerTest::lmer(
+    lsas_sum ~ group * time + (1 | subject),
+    data = r2fu.long.data[lnT4,],
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(lsas_sum.lmer) # Checked, found to be OK!
+lsas_sum.post.anova <- anova(lsas_sum.post.lmer, type=3, ddf="Kenward-Roger") # Significant interaction time x group
 lsas_sum.lmer <-
   lmerTest::lmer(
     lsas_sum ~ group * time + (1 | subject),
@@ -848,7 +844,7 @@ lsas_sum.lmer <-
     REML = T
   )
 # performance::check_model(lsas_sum.lmer) # Checked, found to be OK!
-lsas_sum.anova <- anova(lsas_sum.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for pairwise comparisons
+lsas_sum.anova <- anova(lsas_sum.lmer, type=3, ddf="Kenward-Roger")
 lsas_sum.emm.plot <-
   plot(
     ggemmeans(lsas_sum.lmer, terms = c("time", "group")),
@@ -863,6 +859,15 @@ lsas_sum.emm.plot <- lsas_sum.emm.plot +
   labs(y = "Liebowitz Social Anxiety Scale (LSAS-SR)") + theme_apa(legend.pos = "bottomleft", legend.font.size = 12, y.font.size = 10) +
   geom_hline(yintercept = lsas_sum.emm.plot$data$predicted[4], linetype="dotted")
 
+phq_sum.post.lmer <-
+  lmerTest::lmer(
+    phq_sum ~ group * time + (1 | subject),
+    data = r2fu.long.data[lnT4,],
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(phq_sum.lmer) # Checked, found to be OK!
+phq_sum.post.anova <- anova(phq_sum.post.lmer, type=3, ddf="Kenward-Roger") # Significant interaction time x group
 phq_sum.lmer <-
   lmerTest::lmer(
     phq_sum ~ group * time + (1 | subject),
@@ -871,7 +876,7 @@ phq_sum.lmer <-
     REML = T
   )
 # performance::check_model(phq_sum.lmer) # Checked, found to be OK!
-phq_sum.anova <- anova(phq_sum.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for pairwise comparisons
+phq_sum.anova <- anova(phq_sum.lmer, type=3, ddf="Kenward-Roger")
 phq_sum.emm.plot <-
   plot(
     ggemmeans(phq_sum.lmer, terms = c("time", "group")),
@@ -886,6 +891,15 @@ phq_sum.emm.plot <- phq_sum.emm.plot +
   labs(y = "Patient Health Questionnaire, 9 items (PHQ-9)") + theme_apa(legend.pos = "bottomleft", legend.font.size = 12, y.font.size = 10) +
   geom_hline(yintercept = phq_sum.emm.plot$data$predicted[1], linetype="dotted")
 
+gad_sum.post.lmer <-
+  lmerTest::lmer(
+    gad_sum ~ group * time + (1 | subject),
+    data = r2fu.long.data[lnT4,],
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(gad_sum.post.lmer) # Checked, found to be OK!
+gad_sum.post.anova <- anova(gad_sum.post.lmer, type=3, ddf="Kenward-Roger") # Significant interaction time x group
 gad_sum.lmer <-
   lmerTest::lmer(
     gad_sum ~ group * time + (1 | subject),
@@ -894,7 +908,7 @@ gad_sum.lmer <-
     REML = T
   )
 # performance::check_model(gad_sum.lmer) # Checked, found to be OK!
-gad_sum.anova <- anova(gad_sum.lmer, type=3, ddf="Kenward-Roger") # No significant interaction
+gad_sum.anova <- anova(gad_sum.lmer, type=3, ddf="Kenward-Roger")
 gad_sum.emm.plot <-
   plot(
     ggemmeans(gad_sum.lmer, terms = c("time", "group")),
@@ -909,29 +923,9 @@ gad_sum.emm.plot <- gad_sum.emm.plot +
   labs(y = "Generalised Anxiety Disorder 7-item Scale (GAD-7)") + theme_apa(legend.pos = "bottomleft", legend.font.size = 12, y.font.size = 10) +
   geom_hline(yintercept = gad_sum.emm.plot$data$predicted[4], linetype="dotted")
 
-well.lmer <-
-  lmerTest::lmer(
-    well ~ group * time + (1 | subject),
-    data = r2fu.long.data,
-    na.action = na.omit,
-    REML = T
-  )
-# performance::check_model(well.lmer) # Checked, found to be OK!
-well.anova <- anova(well.lmer, type=3, ddf="Kenward-Roger") # Significant interaction, calls for pairwise comparisons
-well.emm.plot <-
-  plot(
-    ggemmeans(well.lmer, terms = c("time", "group")),
-    show.title = F,
-    show.x.title = F,
-    colors = "bw",
-    connect.lines = T,
-    line.size = .4,
-    dot.size = 3
-  )
-
 ```
 
-```{r predictions, eval = T, cache = F}
+```{r predictions, eval = T}
 
 ### Output predictions to new data frame
 
@@ -945,8 +939,7 @@ r2fu.predicted.data <- r2fu.predicted.data %>% spread_predictions(
   aaas_ad.lmer,
   lsas_sum.lmer,
   gad_sum.lmer,
-  phq_sum.lmer,
-  well.lmer
+  phq_sum.lmer
 )
 
 # Set column names
@@ -960,13 +953,12 @@ colnames(r2fu.predicted.data) <-
     "aaas_ad",
     "lsas_sum",
     "gad_sum",
-    "phq_sum",
-    "well"
+    "phq_sum"
   )
 
 ```
 
-```{r emmeff, echo = F, eval = T, cache = F}
+```{r emmeff, echo = F, eval = T}
 
 effsel.group <- c(1:3,5:8,9:12)
 effsel.time <- -10
@@ -975,7 +967,7 @@ effsel.time <- -10
 
 # Results
 
-```{r emm.primary.plots, fig.width = 10, fig.asp = 0.4, echo = F, fig.cap = 'Plots of estimated fixed effects for two of the primary transdiagnostic scales used to measure skillful, assertive behaviors. Participants’ estimated means for both measures exhibit increasing levels of assertiveness during the course of treatment in the Support and Self-help groups, with negligable differences between the two treatment conditions. The trends continue beyond the Post time point, showing further increased estimated mean levels of assertive behaviors at 1-year Follow-up. The Waitlist group’s means recovered slightly, although not significantly, between the Pre and Post time points, for both measures.'}
+```{r emm.primary.plots, fig.width = 10, fig.asp = 0.4, echo = F, fig.cap = 'Plots of estimated fixed effects for two of the primary transdiagnostic scales used to measure skillful, assertive behaviors. Participants’ estimated means for both measures exhibit increasing levels of assertiveness during the course of treatment in the Unguided self-help and Guided self-help groups, with negligable differences between the two treatment conditions. The trends continue beyond the Post time point, showing further increased estimated mean levels of assertive behaviors at 1-year Follow-up. The Waitlist group’s means recovered slightly, although not significantly, between the Pre and Post time points, for both measures.'}
 
 (aaas_ad.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
   #(aaas_ag.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
@@ -984,7 +976,7 @@ effsel.time <- -10
 
 ```
 
-```{r emm.secondary.plots, fig.width = 10, fig.asp = 0.4, echo = F, fig.cap = 'Plots of estimated fixed effects for secondary syndromal outcome measures. Participation in the Support and Self-help conditions lead to significant symptom alleviation between the Pre and Post as well as between Pre and 1-year Follow-up time points for depression and social anxiety, as captured with their respective measures. As with the transdiagnostic measures of assertive behaviors, the difference between the two time points was small or statistically inappreciable for both groups and both measures. The Waitlist control group did not significantly change between time points for either measure. However, to counteract even the slightest nocebo effect of Waitlist in the between-group comparisons the most conservative estimate for the Waitlist control condition was used; see dotted line.'}
+```{r emm.secondary.plots, fig.width = 10, fig.asp = 0.4, echo = F, fig.cap = 'Plots of estimated fixed effects for secondary syndromal outcome measures. Participation in the Unguided self-help and Guided self-help conditions lead to significant symptom alleviation between the Pre and Post as well as between Pre and 1-year Follow-up time points for depression and social anxiety, as captured with their respective measures. As with the transdiagnostic measures of assertive behaviors, the difference between the two time points was small or statistically inappreciable for both groups and both measures. The Waitlist control group did not significantly change between time points for either measure. However, to counteract even the slightest nocebo effect of Waitlist in the between-group comparisons the most conservative estimate for the Waitlist control condition was used; see dotted line.'}
 
 (phq_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
   #(gad_sum.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
@@ -1087,7 +1079,7 @@ lsas_sum.out <- rout(lsas_sum.lmer)
 ```
 
 
-```{r buildeffsizetab, echo = F, cache = F, eval = T}
+```{r buildeffsizetab, echo = F, eval = T}
 
 comparison <- linebreak(c(
   "Unguided self-help, Pre vs. Post",
@@ -1128,21 +1120,21 @@ aaas_ad.effsizes <-
 
 aaas_ag.effsizes <-
   c(
-    effsize.tabrow2(aaas_ag.out,paste(xT1,xG1,"-",xT3,xG1),-1,"nostars"),
-    effsize.tabrow2(aaas_ag.out,paste(xT1,xG1,"-",xT4,xG1),-1,"nostars"),
-    effsize.tabrow2(aaas_ag.out,paste(xT3,xG1,"-",xT4,xG1),-1,"nostars"),
-    effsize.tabrow2(aaas_ag.out,paste(xT1,xG2,"-",xT3,xG2),-1,"nostars"),
-    effsize.tabrow2(aaas_ag.out,paste(xT1,xG2,"-",xT4,xG2),-1,"nostars"),
-    effsize.tabrow2(aaas_ag.out,paste(xT3,xG2,"-",xT4,xG2),-1,"nostars"),
-    effsize.tabrow2(aaas_ag.out,paste(xT1,xG3,"-",xT3,xG3),-1,"nostars"),
-    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT3,xG1),-1,"nostars"),
-    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT4,xG1),-1,"nostars"),
+    effsize.tabrow2(aaas_ag.out,paste(xT1,xG1,"-",xT3,xG1),-1),
+    effsize.tabrow2(aaas_ag.out,paste(xT1,xG1,"-",xT4,xG1),-1),
+    effsize.tabrow2(aaas_ag.out,paste(xT3,xG1,"-",xT4,xG1),-1),
+    effsize.tabrow2(aaas_ag.out,paste(xT1,xG2,"-",xT3,xG2),-1),
+    effsize.tabrow2(aaas_ag.out,paste(xT1,xG2,"-",xT4,xG2),-1),
+    effsize.tabrow2(aaas_ag.out,paste(xT3,xG2,"-",xT4,xG2),-1),
+    effsize.tabrow2(aaas_ag.out,paste(xT1,xG3,"-",xT3,xG3),-1),
+    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT3,xG1),-1),
+    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT4,xG1),-1),
     "\\parbox{11.5em}{\\hfil{}(idem)\\hfil{}}",
-    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT3,xG2),-1,"nostars"),
-    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT4,xG2),-1,"nostars"),
+    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT3,xG2),-1),
+    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT4,xG2),-1),
     "\\parbox{11.5em}{\\hfil{}(idem)\\hfil{}}",
-    effsize.tabrow2(aaas_ag.out,paste(xT3,xG1,"-",xT3,xG2),-1,"nostars"),
-    effsize.tabrow2(aaas_ag.out,paste(xT4,xG1,"-",xT4,xG2),-1,"nostars")
+    effsize.tabrow2(aaas_ag.out,paste(xT3,xG1,"-",xT3,xG2),-1),
+    effsize.tabrow2(aaas_ag.out,paste(xT4,xG1,"-",xT4,xG2),-1)
   )
 
 rathus.effsizes <-
@@ -1185,21 +1177,21 @@ phq_sum.effsizes <-
 
 gad_sum.effsizes <-
   c(
-    effsize.tabrow2(gad_sum.out,paste(xT1,xG1,"-",xT3,xG1),1,"nostars"),
-    effsize.tabrow2(gad_sum.out,paste(xT1,xG1,"-",xT4,xG1),1,"nostars"),
-    effsize.tabrow2(gad_sum.out,paste(xT3,xG1,"-",xT4,xG1),1,"nostars"),
-    effsize.tabrow2(gad_sum.out,paste(xT1,xG2,"-",xT3,xG2),1,"nostars"),
-    effsize.tabrow2(gad_sum.out,paste(xT1,xG2,"-",xT4,xG2),1,"nostars"),
-    effsize.tabrow2(gad_sum.out,paste(xT3,xG2,"-",xT4,xG2),1,"nostars"),
-    effsize.tabrow2(gad_sum.out,paste(xT1,xG3,"-",xT3,xG3),1,"nostars"),
-    effsize.tabrow2(gad_sum.out,paste(xT3,xG3,"-",xT3,xG1),1,"nostars"),
-    effsize.tabrow2(gad_sum.out,paste(xT3,xG3,"-",xT4,xG1),1,"nostars"),
-    effsize.tabrow2(gad_sum.out,paste(xT2,xG3,"-",xT4,xG1),1,"nostars"), #levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
-    effsize.tabrow2(gad_sum.out,paste(xT3,xG3,"-",xT3,xG2),1,"nostars"),
-    effsize.tabrow2(gad_sum.out,paste(xT3,xG3,"-",xT4,xG2),1,"nostars"),
-    effsize.tabrow2(gad_sum.out,paste(xT2,xG3,"-",xT4,xG2),1,"nostars"), #levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
-    effsize.tabrow2(gad_sum.out,paste(xT3,xG1,"-",xT3,xG2),1,"nostars"),
-    effsize.tabrow2(gad_sum.out,paste(xT4,xG1,"-",xT4,xG2),1,"nostars")
+    effsize.tabrow2(gad_sum.out,paste(xT1,xG1,"-",xT3,xG1),1),
+    effsize.tabrow2(gad_sum.out,paste(xT1,xG1,"-",xT4,xG1),1),
+    effsize.tabrow2(gad_sum.out,paste(xT3,xG1,"-",xT4,xG1),1),
+    effsize.tabrow2(gad_sum.out,paste(xT1,xG2,"-",xT3,xG2),1),
+    effsize.tabrow2(gad_sum.out,paste(xT1,xG2,"-",xT4,xG2),1),
+    effsize.tabrow2(gad_sum.out,paste(xT3,xG2,"-",xT4,xG2),1),
+    effsize.tabrow2(gad_sum.out,paste(xT1,xG3,"-",xT3,xG3),1),
+    effsize.tabrow2(gad_sum.out,paste(xT3,xG3,"-",xT3,xG1),1),
+    effsize.tabrow2(gad_sum.out,paste(xT3,xG3,"-",xT4,xG1),1),
+    effsize.tabrow2(gad_sum.out,paste(xT2,xG3,"-",xT4,xG1),1), #levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
+    effsize.tabrow2(gad_sum.out,paste(xT3,xG3,"-",xT3,xG2),1),
+    effsize.tabrow2(gad_sum.out,paste(xT3,xG3,"-",xT4,xG2),1),
+    effsize.tabrow2(gad_sum.out,paste(xT2,xG3,"-",xT4,xG2),1), #levels(r2fu.long.data$time)[which.min(gad_sum.emm.plot$data$predicted[c(1,4,7)])]
+    effsize.tabrow2(gad_sum.out,paste(xT3,xG1,"-",xT3,xG2),1),
+    effsize.tabrow2(gad_sum.out,paste(xT4,xG1,"-",xT4,xG2),1)
   )
 
 lsas_sum.effsizes <-
@@ -1645,7 +1637,7 @@ clinsigtext <- function(measure, direction, first, last, group, kwobj) {
     ") = ",
     xresult(kwobj$Z[row],2),
     ", ",
-    xpr(kwobj$altP[row])
+    xpr(kwobj$altP.adjusted[row],a="Bonf")
   ) 
   clinsig <- clinical_significance(
     data = r2fu.itt.data[groupkey, ],
@@ -1686,11 +1678,11 @@ clinsig.table <- rbind(
   ),
   cbind(
     xclinsigcategories,
-    clinsig("aaas_ag", "higher", xT1, xT3, xG3, NULL),
-    clinsig("aaas_ag", "higher", xT1, xT3, xG1, NULL),
-    clinsig("aaas_ag", "higher", xT1, xT4, xG1, NULL),
-    clinsig("aaas_ag", "higher", xT1, xT3, xG2, NULL),
-    clinsig("aaas_ag", "higher", xT1, xT4, xG2, NULL)
+    clinsig("aaas_ag", "higher", xT1, xT3, xG3, aaas_ag.pre.post.kw),
+    clinsig("aaas_ag", "higher", xT1, xT3, xG1, aaas_ag.pre.post.kw),
+    clinsig("aaas_ag", "higher", xT1, xT4, xG1, aaas_ag.pre.fu.kw),
+    clinsig("aaas_ag", "higher", xT1, xT3, xG2, aaas_ag.pre.post.kw),
+    clinsig("aaas_ag", "higher", xT1, xT4, xG2, aaas_ag.pre.fu.kw)
   ),
   cbind(
     xclinsigcategories,
@@ -1710,11 +1702,11 @@ clinsig.table <- rbind(
   ),
   cbind(
     xclinsigcategories,
-    clinsig("gad_sum", "lower", xT1, xT3, xG3, NULL),
-    clinsig("gad_sum", "lower", xT1, xT3, xG1, NULL),
-    clinsig("gad_sum", "lower", xT1, xT4, xG1, NULL),
-    clinsig("gad_sum", "lower", xT1, xT3, xG2, NULL),
-    clinsig("gad_sum", "lower", xT1, xT4, xG2, NULL)
+    clinsig("gad_sum", "lower", xT1, xT3, xG3, gad_sum.pre.post.kw),
+    clinsig("gad_sum", "lower", xT1, xT3, xG1, gad_sum.pre.post.kw),
+    clinsig("gad_sum", "lower", xT1, xT4, xG1, gad_sum.pre.fu.kw),
+    clinsig("gad_sum", "lower", xT1, xT3, xG2, gad_sum.pre.post.kw),
+    clinsig("gad_sum", "lower", xT1, xT4, xG2, gad_sum.pre.fu.kw)
   ),
   cbind(
     xclinsigcategories,
@@ -1789,40 +1781,56 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
 
 ## Treatment efficacy, primary and secondary measures
 
-Mixed models for two of three primary measures of assertive behaviors revealed time \texttimes{} group interaction effects: The Adaptive subscale of AAA-S, `r report.anova(aaas_ad.anova)[3]`, and the RAS, `r report.anova(rathus.anova)[3]`, suggesting that the random assignment to group conditions did have an effect over time on assertive behaviors. However, the model for Aggressive subscale of AAA-S did not reveal a time \texttimes{} group interaction effect, `r report.anova(aaas_ag.anova)[3]`, indicating that the self-assessed expressed or perceived levels of aggressive assertions did not change over time as a result of assignment to one of the conditions. As for the secondary measures of syndromal symptoms, mixed models for PHQ-9 and LSAS-SR both revealed time \texttimes{} group interaction effects, `r report.anova(phq_sum.anova)[3]`, and `r report.anova(lsas_sum.anova)[3]` respectively, while the model for GAD-7 did not, `r report.anova(gad_sum.anova)[3]`, indicating that estimated mean levels of depressive mood and social anxiety symptoms -- but not those of generalized anxiety -- were significantly affected by participation in the intervention. 
+Mixed models including groups Unguided self-help, Guided self-help, and Waitlist at time-points Pre, During and Post revealed time \texttimes{} group interaction effects for all three measures of assertiveness: The Adaptive subscale of AAA-S, `r report.anova(aaas_ad.post.anova)[3]`, the Aggressive subscale of AAA-S, `r report.anova(aaas_ag.post.anova)[3]`, and the RAS, `r report.anova(rathus.post.anova)[3]`, suggesting that the random assignment to group conditions did have an effect over time on assertive behaviors. Similarily, mixed models for the syndromal symptoms revealed time \texttimes{} group interaction effects for all three measures of anxiety and depression: PHQ-9, `r report.anova(phq_sum.post.anova)[3]`, GAD-7, `r report.anova(gad_sum.post.anova)[3]`, and LSAS-SR, `r report.anova(lsas_sum.post.anova)[3]`, indicating that estimated mean levels of depressive mood and generalized and social anxiety symptoms were significantly affected by participation in the intervention.
 
 ### Within-group effects
 
-For the primary transdiagnostic measures of skillful behaviors it is notable that both treatment groups Self-help and Guided self-help improved significantly during the course of the intervention, showing large within-group effects with regards to AAA-S Adaptive from Pre to Post, `r report.text2(aaas_ad.out, paste(xT1,xG1,"-",xT3,xG1), -1)`, and `r report.text2(aaas_ad.out, paste(xT1,xG2,"-",xT3,xG2), -1)` respectively. For the RAS, significant large effects on assertiveness were also found in the Self-help group, `r report.text2(rathus.out, paste(xT1,xG1,"-",xT3,xG1), -1)`, and the Guided self-help group, `r report.text2(rathus.out, paste(xT1,xG2,"-",xT3,xG2), -1)`. 
-<!-- Means in the Waitlist condition did not change between Pre and Post with regards to either AAA-S Adaptive or the RAS, `r xprnot(aaas_ad.out$emmpairs$p.value[2])` and `r xprnot(rathus.out$emmpairs$p.value[2])` respectively.  -->
-Both treatment groups showed sustained within-group effects on assertiveness at 1 year Follow-up when compared to the Pre-treatment measurement time point, measured with AAA-S Adaptive and the RAS, suggesting that assertive behaviors were still manifest well beyond the end of participation in the intervention. However, only in the Guided self-help group were significant Post to Follow-up comparisons found, for measures AAA-S Adaptive and the RAS, `r report.text2(aaas_ad.out, paste(xT3,xG2,"-",xT4,xG2), -1)` and `r report.text2(rathus.out, paste(xT3,xG2,"-",xT4,xG2), -1)` respectively. In the Self-help group, there was no difference between Post and Follow-up time points for either measure, from `r xprnot(rathus.out$emmpairs$p.value[41])` to `r xprnot(aaas_ag.out$emmpairs$p.value[55])`. This indicates, with regards to adaptive assertiveness, that therapist support provided some benefit to participants' ability to generalize behaviors beyond the duration of the intervention. Table 2 summarizes significance tests of estimated marginal mean differences and effect sizes, including 95\% confidence intervals.
+Following up on the significant time \texttimes{} group interactions found for all three primary and all three secondary measures of skillful behaviors, post-hoc testing revealed that participants in both treatment groups Unguided self-help and Guided self-help improved significantly during the course of the intervention, and that effects were sustained or improved at 1-year Follow-up. Table 2 summarizes significance tests of estimated marginal mean differences and effect sizes, including 95\% confidence intervals.
 
-Among the secondary measures of syndromal symptoms, depression as captured with PHQ-9 had decreased significantly from Pre only in the Guided self-help group, and only at Follow-up, `r report.text2(phq_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1)`, possibly indicating that therapist support benefits depressed participants on a longer rather than shorter time scale. Symptoms of social anxiety, however, decreased significantly for all four combinations of time points and groups. In the Self-help group, the effect from Pre to Post was `r report.text2(lsas_sum.out, paste(xT1,xG1,"-",xT3,xG1), 1)`, increasing to `r report.text2(lsas_sum.out, paste(xT1,xG1,"-",xT4,xG1), 1)` Pre to Follow-up. In the Guided self-help group, the effect from Pre to Post was `r report.text2(lsas_sum.out, paste(xT1,xG2,"-",xT3,xG2), 1)`, increasing to `r report.text2(lsas_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1)` Pre to Follow-up. Although effect sizes for LSAS-SR was larger Pre--Follow-up than Pre--Post, there was no significant difference between Post and Follow-up in either group, `r xprnot(lsas_sum.out$emmpairs$p.value[41])` for Self-help and `r xprnot(lsas_sum.out$emmpairs$p.value[55])` for Guided self-help, suggesting that change in relief from symptoms of social phobia plateaued earlier than did change in manifest expressions of adaptive assertiveness. The within-group effects taken together indicate that the intervention was effective at addressing more contextually specific anxiety-induced avoidance and escape behaviors, replacing them with already desired assertive behaviors, to a larger extent than it was effective at helping participants struggling with generalized anxiety or depression to formulate reasons to start responding more flexibly.
+#### Primary measures Pre to Post, and Pre to Follow-up
+
+With regards to assertive behaviors, both the Unguided self-help and Guided self-help improved significantly during the course of the intervention, showing large within-group effects with regards to AAA-S Adaptive from Pre to Post, `r report.text2(aaas_ad.out, paste(xT1,xG1,"-",xT3,xG1), -1)`, and `r report.text2(aaas_ad.out, paste(xT1,xG2,"-",xT3,xG2), -1)` respectively. For the AAA-S Agressive, small to medium effects were observed in the Unguided self-help group, `r report.text2(aaas_ag.out, paste(xT1,xG1,"-",xT3,xG1), -1)`, and the Guided self-help group, `r report.text2(aaas_ag.out, paste(xT1,xG2,"-",xT3,xG2), -1)`, suggesting that participants somewhat increased their levels of assertions that they themselves deemed aggressive. Confirming these trends, large effects on assertiveness from Pre to Post were also found for the RAS in both the Unguided self-help group, `r report.text2(rathus.out, paste(xT1,xG1,"-",xT3,xG1), -1)`, and the Guided self-help group, `r report.text2(rathus.out, paste(xT1,xG2,"-",xT3,xG2), -1)`. Both treatment groups showed sustained within-group effects on assertiveness at 1 year Follow-up when compared to the Pre-treatment measurement time point, measured with AAA-S Adaptive, AAA-S Aggressive and the RAS, suggesting that assertive behaviors were still manifest well beyond the end of participation in the intervention. However, significant effects between the Post to Follow-up time-points were found only in the Guided self-help, where AAA-S Adaptive and the RAS exhibited small to medium effects, `r report.text2(aaas_ad.out, paste(xT3,xG2,"-",xT4,xG2), -1)` and `r report.text2(rathus.out, paste(xT3,xG2,"-",xT4,xG2), -1)` respectively. In the Unguided self-help group, there was no difference between Post and Follow-up time points for either measure, from `r xprnot(rathus.out$emmpairs$p.value[41])` to `r xprnot(aaas_ag.out$emmpairs$p.value[55])`. This indicates that therapist support might have provided some benefit to participants' ability to generalize adaptive behaviors beyond the duration of the intervention.
+
+#### Secondary measures Pre to Post, and Pre to Follow-up
+
+Among the secondary measures of syndromal symptoms, depression as captured with PHQ-9 had decreased significantly from Pre only in the Guided self-help group, and only at Follow-up, showing a medium effect, `r report.text2(phq_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1)`, possibly indicating that therapist support benefits depressed participants on a longer rather than shorter time scale. Symptoms of generalized anxiety, however, decreased significantly for all combinations of time points and groups. In the Unguided self-help group, the effect from Pre to Post was `r report.text2(gad_sum.out, paste(xT1,xG1,"-",xT3,xG1), 1)`, increasing to `r report.text2(gad_sum.out, paste(xT1,xG1,"-",xT4,xG1), 1)` Pre to Follow-up. In the Guided self-help group, the effect from Pre to Post was `r report.text2(gad_sum.out, paste(xT1,xG2,"-",xT3,xG2), 1)`, increasing to `r report.text2(gad_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1)` Pre to Follow-up. Symptoms of social anxiety had also decreased significantly in both groups, at both Post and Follow-up: In the Unguided self-help group, the effect from Pre to Post was `r report.text2(lsas_sum.out, paste(xT1,xG1,"-",xT3,xG1), 1)`, increasing to `r report.text2(lsas_sum.out, paste(xT1,xG1,"-",xT4,xG1), 1)` Pre to Follow-up. In the Guided self-help group, the effect from Pre to Post was `r report.text2(lsas_sum.out, paste(xT1,xG2,"-",xT3,xG2), 1)`, increasing to `r report.text2(lsas_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1)` Pre to Follow-up. Although effect sizes for GAD-7 and LSAS-SR increased from medium Pre--Post-up to large Pre--Follow-up, there was no significant difference between Post and Follow-up in either group, for either measure. 
 
 ### Between-group effects
 
-Comparing against Waitlist, the effect of the Self-help condition on adaptive assertiveness using the AAA-S Adaptive primary measure was large at Post-treatment, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT3,xG1), -1)`, and even larger at 1-year Follow-up,  `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG1), -1)`. Similar effects at Post were found for the primary RAS measure `r report.text2(rathus.out, paste(xT3,xG3,"-",xT3,xG1), -1)`, and at Follow-up,  `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG1), -1)`. These effects were not significantly different from those of the Guided self-help condition for AAA-S Adaptive, which compared against Waitlist were `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT3,xG2), -1)` at Post, and  `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG2), -1)` at Follow-up, suggesting that participants working through the intervention on their own fared just as well as those who were supported by a therapist. The same phenomenon, and a large effect size, was observed on the RAS in the Guided self-help group, `r report.text2(rathus.out, paste(xT3,xG3,"-",xT3,xG2), -1)` at Post, and  `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG2), -1)` at Follow-up. When it comes to assertive behaviors, excluding aggressive assertions, participants benefited from participation in the intervention, regardless of treatment condition. 
+Post-hoc testing of the primary and secondary measures revealed between-group effects for all measures except for GAD-7. See table 2.
 
-Again comparing against Waitlist, there was no significant effect of the Self-help condition on reduction of social anxiety symptoms measured with LSAS-SR at Post-treatment, `r xprnot(lsas_sum.out$emmpairs$p.value[22])`, however, a large effect was found at Follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1)`, comparing against the lowest value collected (at During, half-way through the intervention, in order to cancel out any possible nocebo effect of the Waitlist condition; see Figure 3 for a graphic identification of time point). No effect on alleviation of depressive symptoms measured with PHQ-9 at Post was found comparing Waitlist and Self-help groups, `r  xprnot(phq_sum.out$emmpairs$p.value[22])`. Some evidence was found suggesting that depressive participants might benefit from therapist support, in that the Waitlist versus Guided self-help comparison for PHQ-9 revealed a moderate to large sized effect at Post, `r report.text2(phq_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1)`. However, this effect dissipated when the Follow-up comparison was instead made against the most conservative value collected in the Waitlist group (in this case Pre instead of Post; see Figure 3 for a graphic exploration of a possible nocebo effect, that is symptomatic worsening over time due to self-fulfilling expectations of hopelessness among participants waiting in line for treatment). Thus, the between-group effect on depression at Post should be interpreted with caution.
+#### Primary measures compared at Post and Follow-up
+
+Comparing against Waitlist, the effect of the Unguided self-help condition on adaptive assertiveness using the AAA-S Adaptive primary measure was large at Post-treatment, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT3,xG1), -1)`, and even larger at 1-year Follow-up, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG1), -1)`. Large effects at Post were found also for AAA-S Aggressive, `r report.text2(aaas_ag.out, paste(xT3,xG3,"-",xT3,xG1), -1)`, and at Follow-up,  `r report.text2(aaas_ag.out, paste(xT3,xG3,"-",xT4,xG1), -1)`, as well as for the RAS measure `r report.text2(rathus.out, paste(xT3,xG3,"-",xT3,xG1), -1)`, and at Follow-up, `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG1), -1)`. 
+
+Similarily, the effect of the Guided self-help condition on AAA-S Adaptive was large at Post-treatment, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT3,xG2), -1)`, at 1-year Follow-up having grown to, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG2), -1)`. Large effects at Post were identified for AAA-S Aggressive, `r report.text2(aaas_ag.out, paste(xT3,xG3,"-",xT3,xG2), -1)`, and at Follow-up,  `r report.text2(aaas_ag.out, paste(xT3,xG3,"-",xT4,xG2), -1)`, as well as for the RAS measure `r report.text2(rathus.out, paste(xT3,xG3,"-",xT3,xG2), -1)`, and at Follow-up, `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG2), -1)`. 
+
+Comparing between the Unguided self-help and the Guided self-help conditions, there was no significant difference, neither at Post nor Follow-up, suggesting that participants working through the intervention on their own fared just as well as those who were supported by a therapist.
+
+#### Secondary measures compared at Post and Follow-up
+
+In post-hoc testing, no effect on alleviation of depressive symptoms measured with PHQ-9 at Post was found comparing Waitlist and Unguided self-help groups. Some evidence was found suggesting that depressive participants might benefit from therapist support, in that the Waitlist versus Guided self-help comparison for PHQ-9 revealed a moderate to large sized effect at Post, `r report.text2(phq_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1)`. However, this effect dissipated when the Follow-up comparison was instead made against the most conservative value collected in the Waitlist group (in this case Pre instead of Post; see Figure 3 for a graphic exploration of a possible nocebo effect, that is symptomatic worsening over time due to self-fulfilling expectations of low mood among participants waiting in line for treatment).
+
+No between-group effects were found for GAD-7, comparing treatment groups against Waitlist. Also, there was no significant effect of the Unguided self-help condition on reduction of social anxiety symptoms measured with LSAS-SR at Post-treatment, `r xprnot(lsas_sum.out$emmpairs$p.value[22])`, however, a large effect was found at Follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1)`, comparing against the lowest value collected (at During, half-way through the intervention; see Figure 3 for a graphic identification of time point). 
 
 #### Clinical significant change
 
 Adding to the picture that assertive behaviors increased and symptoms of depression and social phobia decreased as a consequence of participation in the intervention, there was a significant difference between the groups at Post in the number of participants that had recovered clinically, that is had moved across the cutoff for reliable and clinically significant change, into the category 'Recovered', with respect to AAA-S Adaptive, `r report.kw(aaas_ad.pre.post.kw)`;
-RAS, `r report.kw(rathus.pre.post.kw)`, and LSAS-SR, `r report.kw(lsas_sum.pre.post.kw)`. However, there was no difference between groups at Post with regards to AAA-S Aggressive, `r report.kwnot(aaas_ag.pre.post.kw)`, PHQ-9, `r report.kwnot(phq_sum.pre.post.kw)`, or GAD-7, `r report.kwnot(gad_sum.pre.post.kw)`. At Follow-up, the difference in recovery rates between conditions was significant for both behavioral and syndromal measures: AAA-S Adaptive, `r report.kw(aaas_ad.pre.fu.kw)`; RAS, `r report.kw(rathus.pre.fu.kw)`; PHQ-9, `r report.kw(phq_sum.pre.fu.kw)`; and LSAS-SR, `r report.kw(lsas_sum.pre.fu.kw)`; but not for AAA-S Aggressive, `r report.kwnot(aaas_ag.pre.fu.kw)` or GAD-7, `r report.kwnot(gad_sum.pre.fu.kw)`. See Table 3 for a summary of clinical recovery rates and the significance of pairwise tests against Waitlist. 
+RAS, `r report.kw(rathus.pre.post.kw)`, and LSAS-SR, `r report.kw(lsas_sum.pre.post.kw)`. However, there was no difference between groups at Post with regards to AAA-S Aggressive, PHQ-9, or GAD-7. At Follow-up, the difference in recovery rates between conditions was significant for both behavioral and syndromal measures: AAA-S Adaptive, `r report.kw(aaas_ad.pre.fu.kw)`; RAS, `r report.kw(rathus.pre.fu.kw)`; PHQ-9, `r report.kw(phq_sum.pre.fu.kw)`; and LSAS-SR, `r report.kw(lsas_sum.pre.fu.kw)`; but not for AAA-S Aggressive or GAD-7. See Table 3 for a summary of clinical recovery rates and the significance of pairwise tests against Waitlist. 
 
-Notably, a number of participants, `r clinsigtext("aaas_ad", "higher", xT1, xT3, xG1, aaas_ad.pre.post.kw)[1]` in the Self-help group enjoyed clinical recovery with regards to adaptive assertiveness measured with AAA-S Adaptive at Post, increasing to `r clinsigtext("aaas_ad", "higher", xT1, xT4, xG1, aaas_ad.pre.fu.kw)[1]` at Follow-up. In the Guided self-help group the number of recovered participants at Post was non-significantly different from that of the Waitlist, while significantly different at Followup, `r clinsigtext("aaas_ad", "higher", xT1, xT4, xG2, aaas_ad.pre.fu.kw)[1]`. For assertiveness assessed with the RAS, the corresponding numbers and rates were `r clinsigtext("rathus", "higher", xT1, xT3, xG1, rathus.pre.post.kw)[1]` for Self-help and `r clinsigtext("rathus", "higher", xT1, xT3, xG2, rathus.pre.post.kw)[1]` for Guided self-help at Post, increasing to `r clinsigtext("rathus", "higher", xT1, xT4, xG1, rathus.pre.fu.kw)[1]` and `r clinsigtext("rathus", "higher", xT1, xT4, xG2, rathus.pre.fu.kw)[1]` respectively at Follow-up. Thus, the clinical significance findings are in agreement with the statistical analysis of change, confirming that adaptive expressions of assertiveness increased Pre to Post in both treatment groups. Clinical recovery measured with PHQ-9 Pre to Post indicate that the intervention, compared to Waitlist, was effective in moving a number of participants out of depression in the Guided self-help group, `r clinsigtext("phq_sum", "lower", xT1, xT3, xG2, phq_sum.pre.post.kw)[1]`, but not so in Self-help group, pointing to that interaction with therapists might contribute to faster recovery for depressed participants. In addition, a significant number of participants in the Self-help group recovered from symptoms of social anxiety as captured with LSAS-SR, `r clinsigtext("lsas_sum", "lower", xT1, xT3, xG1, lsas_sum.pre.post.kw)[1]` at Post, increasing to `r clinsigtext("lsas_sum", "lower", xT1, xT4, xG1, lsas_sum.pre.fu.kw)[1]` at Follow-up. In the Guided self-help condition, there was no significant number of recovered participants compared to Waitlist at Post, but `r clinsigtext("lsas_sum", "lower", xT1, xT4, xG2, lsas_sum.pre.fu.kw)[1]` at Follow-up. These clinical findings seem to pick up that symptoms of social anxiety continued to subside in the year following treatment, to the point that some participants had recovered. Combined with the clinically relevant recovery for assertive behaviors measured with AAA-S Adaptive and RAS, this could be a sign of generalization of assertive behaviors having continued to occur after the end of treatment, facilitating extinction of anxiety responses and/or reducing avoidance and escape behaviors from them.
+Notably, a number of participants, `r clinsigtext("aaas_ad", "higher", xT1, xT3, xG1, aaas_ad.pre.post.kw)[1]` in the Unguided self-help group enjoyed clinical recovery with regards to adaptive assertiveness measured with AAA-S Adaptive at Post, increasing to `r clinsigtext("aaas_ad", "higher", xT1, xT4, xG1, aaas_ad.pre.fu.kw)[1]` at Follow-up. In the Guided self-help group the number of recovered participants at Post was non-significantly different from that of the Waitlist, while significantly different at Followup, `r clinsigtext("aaas_ad", "higher", xT1, xT4, xG2, aaas_ad.pre.fu.kw)[1]`. For assertiveness assessed with the RAS, the corresponding numbers and rates were `r clinsigtext("rathus", "higher", xT1, xT3, xG1, rathus.pre.post.kw)[1]` for Unguided self-help and `r clinsigtext("rathus", "higher", xT1, xT3, xG2, rathus.pre.post.kw)[1]` for Guided self-help at Post, increasing to `r clinsigtext("rathus", "higher", xT1, xT4, xG1, rathus.pre.fu.kw)[1]` and `r clinsigtext("rathus", "higher", xT1, xT4, xG2, rathus.pre.fu.kw)[1]` respectively at Follow-up. Thus, the clinical significance findings are in agreement with the statistical analysis of change, confirming that adaptive expressions of assertiveness increased Pre to Post in both treatment groups. Clinical recovery measured with PHQ-9 Pre to Post indicate that the intervention, compared to Waitlist, was effective in moving a number of participants out of depression in the Guided self-help group, `r clinsigtext("phq_sum", "lower", xT1, xT3, xG2, phq_sum.pre.post.kw)[1]`, but not so in Unguided self-help group, pointing to that interaction with therapists might contribute to faster recovery for depressed participants. In addition, a significant number of participants in the Unguided self-help group recovered from symptoms of social anxiety as captured with LSAS-SR, `r clinsigtext("lsas_sum", "lower", xT1, xT3, xG1, lsas_sum.pre.post.kw)[1]` at Post, increasing to `r clinsigtext("lsas_sum", "lower", xT1, xT4, xG1, lsas_sum.pre.fu.kw)[1]` at Follow-up. In the Guided self-help condition, there was no significant number of recovered participants compared to Waitlist at Post, but `r clinsigtext("lsas_sum", "lower", xT1, xT4, xG2, lsas_sum.pre.fu.kw)[1]` at Follow-up. These clinical findings seem to pick up that symptoms of social anxiety continued to subside in the year following treatment, to the point that some participants had recovered. Combined with the clinically relevant recovery for assertive behaviors measured with AAA-S Adaptive and RAS, this could be a sign of generalization of assertive behaviors having continued to occur after the end of treatment, facilitating extinction of anxiety responses and/or reducing avoidance and escape behaviors from them.
 
 #### Reliable harm and deterioration
 
-Checking for any signs of reliable harm, the most severe form of deterioration, a significant difference between groups in clinical significant change was found for the AAA-S Aggressive measure, `r report.kw(aaas_ag.pre.post.kw.harmed)`, as $n$ = $3$ participants ($4$\%) had reached below the threshold for the category 'Harmed' while waiting to enter into treatment (see Table 3). However, post hoc testing did not reveal any significant pairwise differences between any of the treatment groups and the Waitlist group, `r xprnot(aaas_ag.pre.post.kw.harmed$altP.adjusted[2])` and `r xprnot(aaas_ag.pre.post.kw.harmed$altP.adjusted[1])`. No other instances of suspected reliable harm Pre to Post or Pre to Follow-up were identified for either measure. The next worst category in assessing reliable change is 'Deteriorated'; in order to identify any possible cases of reliable deterioration _and_ reliable harm, these two categories were collapsed into the conservative ad hoc category 'Worsened' -- gathering participants that had moved into either of these two categories. Using the 'Worsened' portmanteau category, and checking clinical change Pre to Post treatment, we observed a significant difference between groups for LSAS-SR, `r report.kw(lsas_sum.pre.post.kw.worsened)`, meriting a follow-up pairwise comparison. It revealed that the number of participants in the Waitlist condition that had either reached 'Deteriorated' or 'Harmed', going from Pre to Post treatment, was significant compared to the Guided self-help group, $n$ = 7 ($10$\xspace\%), $Z$($2$) = `r xresult(lsas_sum.pre.post.kw.worsened$Z[2],2)`, `r xpr(lsas_sum.pre.post.kw.worsened$altP.adjusted[2])`. The same held true comparing Pre to Follow-up, `r report.kw(lsas_sum.pre.fu.kw.worsened)`, where these $7$ individuals were significantly more than the number of worsened participants in both the Self-help group, $Z$($2$) = `r xresult(lsas_sum.pre.fu.kw.worsened$Z[1],2)`, `r xpr(lsas_sum.pre.fu.kw.worsened$altP.adjusted[1])`, and the Guided self-help group, $Z$($2$) = `r xresult(lsas_sum.pre.fu.kw.worsened$Z[2],2)`, `r xpr(lsas_sum.pre.fu.kw.worsened$altP.adjusted[2])`. Finally, a difference between groups was found for PHQ-9, `r report.kw(phq_sum.pre.fu.kw.worsened)`, with post hoc testing revealing a difference for the Guided self-help group, $n$ = 12 ($18$\xspace\%), $Z$($2$) = `r xresult(phq_sum.pre.fu.kw.worsened$Z[1],2)`, `r xpr(phq_sum.pre.fu.kw.worsened$altP.adjusted[1])`. These findings reveal that the non-active Waitlist condition brought about adverse clinical change for $10$\% of participants with regards to social anxiety and $18$\% with regards to depression, highlighting the need to use caution comparing results for the treatment groups with those of the Waitlist condition, lest running the risk of artificially inflated effect sizes (especially for PHQ-9 for which estimated marginal means in fact increased over time; see Figure 3).
+Checking for any signs of reliable harm, the most severe form of deterioration, a significant difference between groups in clinical significant change was found for the AAA-S Aggressive measure, `r report.kw(aaas_ag.pre.post.kw.harmed)`, as $n$ = $3$ participants ($4$\%) had reached below the threshold for the category 'Harmed' while waiting to enter into treatment (see Table 3). However, post hoc testing did not reveal any significant pairwise differences between any of the treatment groups and the Waitlist group, `r xprnot(aaas_ag.pre.post.kw.harmed$altP.adjusted[2],a="Bonf")` and `r xprnot(aaas_ag.pre.post.kw.harmed$altP.adjusted[1],a="Bonf")`. No other instances of suspected reliable harm Pre to Post or Pre to Follow-up were identified for either measure. The next worst category in assessing reliable change is 'Deteriorated'; in order to identify any possible cases of reliable deterioration _and_ reliable harm, these two categories were collapsed into the conservative ad hoc category 'Worsened' -- gathering participants that had moved into either of these two categories. Using the 'Worsened' portmanteau category, and checking clinical change Pre to Post treatment, we observed a significant difference between groups for LSAS-SR, `r report.kw(lsas_sum.pre.post.kw.worsened)`, meriting a follow-up pairwise comparison. It revealed that the number of participants in the Waitlist condition that had either reached 'Deteriorated' or 'Harmed', going from Pre to Post treatment, was significant compared to the Guided self-help group, $n$ = 7 ($10$\xspace\%), $Z$($2$) = `r xresult(lsas_sum.pre.post.kw.worsened$Z[2],2)`, `r xpr(lsas_sum.pre.post.kw.worsened$altP.adjusted[2],a="Bonf")`. The same held true comparing Pre to Follow-up, `r report.kw(lsas_sum.pre.fu.kw.worsened)`, where these $7$ individuals were significantly more than the number of worsened participants in both the Unguided self-help group, $Z$($2$) = `r xresult(lsas_sum.pre.fu.kw.worsened$Z[1],2)`, `r xpr(lsas_sum.pre.fu.kw.worsened$altP.adjusted[1],a="Bonf")`, and the Guided self-help group, $Z$($2$) = `r xresult(lsas_sum.pre.fu.kw.worsened$Z[2],2)`, `r xpr(lsas_sum.pre.fu.kw.worsened$altP.adjusted[2],a="Bonf")`. Finally, a difference between groups was found for PHQ-9, `r report.kw(phq_sum.pre.fu.kw.worsened)`, with post hoc testing revealing a difference for the Guided self-help group, $n$ = 12 ($18$\xspace\%), $Z$($2$) = `r xresult(phq_sum.pre.fu.kw.worsened$Z[1],2)`, `r xpr(phq_sum.pre.fu.kw.worsened$altP.adjusted[1],a="Bonf")`. These findings reveal that the non-active Waitlist condition brought about adverse clinical change for $10$\% of participants with regards to social anxiety and $18$\% with regards to depression, highlighting the need to use caution comparing results for the treatment groups with those of the Waitlist condition, lest running the risk of artificially inflated effect sizes (especially for PHQ-9 for which estimated marginal means in fact increased over time; see Figure 3).
 
 # Discussion
 
 The present study advances current knowledge about a stand-alone transdiagnostic intervention targeting assertiveness, Respekt^2^, providing evidence for its effects on levels of assertive behaviors, and in turn their effects on symptoms of common psychiatric disorders of anxiety and depression. Having been more or less ignored as a construct in clincical research since the 1990'ies, despite its history as a target for the very first behavioral therapies in the 1950'ies [@Speed2018a], this study brings some much-needed and up-to-date data for assertiveness as a viable transdiagnostic goal in the treatment of various clincial problems.
 
-We found large between-group effects on assertiveness of Self-help and Guided self-help participation in Respekt^2^, compared to Waitlist control. For AAA-S Adaptive and RAS at Post in the Self-help condition, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT3,xG1), -1,"effshort")` and `r report.text2(rathus.out, paste(xT3,xG3,"-",xT3,xG1), -1,"effshort")` respectively. The corresponding effect sizes in the Guided self-help group was `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT3,xG2), -1,"effshort")` and `r report.text2(rathus.out, paste(xT3,xG3,"-",xT3,xG2), -1,"effshort")` respectively. Within-group effects from Pre to Post were also large: `r report.text2(aaas_ad.out, paste(xT1,xG1,"-",xT3,xG1), -1,"effshort")` for AAA-S Adaptive in the Self-group, and `r report.text2(aaas_ad.out, paste(xT1,xG2,"-",xT3,xG2), -1,"effshort")` in the Guided self-help group; `r report.text2(rathus.out, paste(xT1,xG1,"-",xT3,xG1), -1,"effshort")` for the RAS in the Self-group, and `r report.text2(rathus.out, paste(xT1,xG2,"-",xT3,xG2), -1,"effshort")` in the Guided self-help group. For AAA-S Adaptive in the Guided self-group, the `r report.text2(rathus.out, paste(xT3,xG1,"-",xT4,xG1), -1,"effshort")` increase at 1 year Follow-up was also significant. Clinically speaking, $n$ = 15 (22%) of participants in the Self-help group had recovered with regards to AAA-S Adaptive at Follow-up, while $n$ = 18 (26%) of participants in the Guided self-help group had recovered at the same time point. The corresponding recovery rates for RAS were $n$ = 21 (31%) and $n$ = 25 (36%). We conclude that Respekt^2^ did help participants act more assertively, while not acting more aggressively, and that the effects were either sustained or more pronounced 1 year after the intervention.
+We found large between-group effects on assertiveness of Unguided self-help and Guided self-help participation in Respekt^2^, compared to Waitlist control. For AAA-S Adaptive and RAS at Post in the Unguided self-help condition, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT3,xG1), -1,"effshort")` and `r report.text2(rathus.out, paste(xT3,xG3,"-",xT3,xG1), -1,"effshort")` respectively. The corresponding effect sizes in the Guided self-help group was `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT3,xG2), -1,"effshort")` and `r report.text2(rathus.out, paste(xT3,xG3,"-",xT3,xG2), -1,"effshort")` respectively. Within-group effects from Pre to Post were also large: `r report.text2(aaas_ad.out, paste(xT1,xG1,"-",xT3,xG1), -1,"effshort")` for AAA-S Adaptive in the Self-group, and `r report.text2(aaas_ad.out, paste(xT1,xG2,"-",xT3,xG2), -1,"effshort")` in the Guided self-help group; `r report.text2(rathus.out, paste(xT1,xG1,"-",xT3,xG1), -1,"effshort")` for the RAS in the Self-group, and `r report.text2(rathus.out, paste(xT1,xG2,"-",xT3,xG2), -1,"effshort")` in the Guided self-help group. For AAA-S Adaptive in the Guided self-group, the `r report.text2(rathus.out, paste(xT3,xG1,"-",xT4,xG1), -1,"effshort")` increase at 1 year Follow-up was also significant. Clinically speaking, $n$ = 15 (22%) of participants in the Unguided self-help group had recovered with regards to AAA-S Adaptive at Follow-up, while $n$ = 18 (26%) of participants in the Guided self-help group had recovered at the same time point. The corresponding recovery rates for RAS were $n$ = 21 (31%) and $n$ = 25 (36%). We conclude that Respekt^2^ did help participants act more assertively, while not acting more aggressively, and that the effects were either sustained or more pronounced 1 year after the intervention.
 
-Assessing the effect of the Respekt^2^ intervention on symptom burden with respect to depression and common anxiety disorders, we found no significant effects at Post for PHQ-9 or LSAS-SR in the Self-help group, compared with Waitlist. At Follow-up, however, we found a large between-group effect on LSAS-SR, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1,"effshort")`. Effects were also found in the Guided self-help group, where participants were supported by therapists: Compared with waitlist, participants exhibited moderate effects at Post for PHQ-9, `r report.text2(phq_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1,"effshort")`, and LSAS-SR, `r report.text2(lsas_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1,"effshort")` respectively, as well as a large effect only for LSAS-SR at Follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1,"effshort")`. Within-group comparisons revealed moderate effects in the Self-help group for LSAS-SR, `r report.text2(lsas_sum.out, paste(xT1,xG1,"-",xT3,xG1), 1,"effshort")` Pre--Post, and large effects `r report.text2(lsas_sum.out, paste(xT1,xG1,"-",xT4,xG1), 1,"effshort")` Pre--Follow-up. Similar effects were found in the Guided self-help group, `r report.text2(lsas_sum.out, paste(xT1,xG2,"-",xT3,xG2), 1,"effshort")` Pre--Post, and `r report.text2(lsas_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1,"effshort")` Pre--Follow-up. A moderate effect was found for PHQ-9 Pre--Follow-up for the Guided self-help group, `r report.text2(phq_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1,"effshort")`. These findings were supplemented by the analysis of clinical significant change, where, $n$ = 14 (21%) had recovered from social anxiety at Follow-up in the Self-help group, and $n$ = 18 (26%) in the group that were guided by therapists. In addition, $n$ = 18 (26%) in the Guided self-help group had recovered from depression at Follow-up. Thus, we found that Respekt^2^ clearly reduced symptoms of social anxiety across both treatment conditions, and over time possibly reduced symptoms of depression, to a moderate degree, among participants that were guided by therapists.
+Assessing the effect of the Respekt^2^ intervention on symptom burden with respect to depression and common anxiety disorders, we found no significant effects at Post for PHQ-9 or LSAS-SR in the Unguided self-help group, compared with Waitlist. At Follow-up, however, we found a large between-group effect on LSAS-SR, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1,"effshort")`. Effects were also found in the Guided self-help group, where participants were supported by therapists: Compared with waitlist, participants exhibited moderate effects at Post for PHQ-9, `r report.text2(phq_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1,"effshort")`, and LSAS-SR, `r report.text2(lsas_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1,"effshort")` respectively, as well as a large effect only for LSAS-SR at Follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1,"effshort")`. Within-group comparisons revealed moderate effects in the Unguided self-help group for LSAS-SR, `r report.text2(lsas_sum.out, paste(xT1,xG1,"-",xT3,xG1), 1,"effshort")` Pre--Post, and large effects `r report.text2(lsas_sum.out, paste(xT1,xG1,"-",xT4,xG1), 1,"effshort")` Pre--Follow-up. Similar effects were found in the Guided self-help group, `r report.text2(lsas_sum.out, paste(xT1,xG2,"-",xT3,xG2), 1,"effshort")` Pre--Post, and `r report.text2(lsas_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1,"effshort")` Pre--Follow-up. A moderate effect was found for PHQ-9 Pre--Follow-up for the Guided self-help group, `r report.text2(phq_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1,"effshort")`. These findings were supplemented by the analysis of clinical significant change, where, $n$ = 14 (21%) had recovered from social anxiety at Follow-up in the Unguided self-help group, and $n$ = 18 (26%) in the group that were guided by therapists. In addition, $n$ = 18 (26%) in the Guided self-help group had recovered from depression at Follow-up. Thus, we found that Respekt^2^ clearly reduced symptoms of social anxiety across both treatment conditions, and over time possibly reduced symptoms of depression, to a moderate degree, among participants that were guided by therapists.
 
 <!-- Contextualize the current study w/ regards to assertiveness, @Speed2018a (lack of up-to-date research outside of DBT), while @Day2013, @Rozental2015, @Rozental2017 pointing to transdiagnostic interventions as potentially beneficial.  -->
 
