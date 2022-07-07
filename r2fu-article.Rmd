@@ -106,71 +106,64 @@ xT4 = "Followup"
 
 ```{r functions, eval = T, echo = F} 
 
-xresult.off <-
-  function(x, d) {
-    paste("$",
-          formatC(
-            x,
-            digits = d,
-            decimal.mark = ".",
-            drop0trailing = F,
-            format = "f"
-          ),
-          "$",
-          sep = "")
-  }
-
 xresult <-
   function(x, d = 2) {
-    paste("$",
-          apa(value = x, decimals = d, leading = F),
-          "$",
-          sep = "")
-  }
-
-xresulttext.off <-
-  function(x, d) {
-    formatC(
-      x,
-      digits = d,
-      decimal.mark = ".",
-      drop0trailing = F,
-      format = "f"
-    )
+    paste0("$",
+           apa(
+             value = x,
+             decimals = d,
+             leading = F
+           ),
+           "$")
   }
 
 xresulttext <-
   function(x, d = 2) {
-    apa(value = x, decimals = d, leading = F)
+    apa(value = x,
+        decimals = d,
+        leading = F)
   }
 
 xpercent <-
   function(x, d = 2) {
-    paste(
-      "$",
-      apa(value = x, decimals = d, leading = F),
-      "$",
-      "\\xspace%",
-      sep = ""
-    )
+    paste0("$",
+           apa(
+             value = x,
+             decimals = d,
+             leading = F
+           ),
+           "$",
+           "\\xspace%")
   }
 
 xpr <- function(x, d = 3, a = NULL) {
-  paste("$p_{",a,"}$",
+  paste("$p_{", a, "}$",
         ifelse(x < 0.001, "< $.001$", ifelse(
           x < 0.05,
-          paste0("= $", apa(value = x, decimals = d, leading = F), "$"),
+          paste0("= $", apa(
+            value = x,
+            decimals = d,
+            leading = F
+          ), "$"),
           ifelse(x > 0.05, "DO NOT REPORT", "= $.05$")
         )))
 }
 
 xprnot <- function(x, d = 3, a = NULL) {
-  paste("$p_{",a,"}$",
+  paste("$p_{", a, "}$",
         ifelse(x < 0.001, "< $.001$", ifelse(
           x < 0.05,
-          paste0(" = $", apa(value = x, decimals = d, leading = F), "$"),
+          paste0(" = $", apa(
+            value = x,
+            decimals = d,
+            leading = F
+          ), "$"),
           ifelse(x > 0.05, paste0(
-            " = $", apa(value = x, decimals = d, leading = F), "$"
+            " = $", apa(
+              value = x,
+              decimals = d,
+              leading = F
+            ), "$"
           ), "= $.05$")
         )))
 }
@@ -209,7 +202,7 @@ report.anova <- function(anovaobj, row) {
     ") = $",
     round(anovaobj$`F value`[row], 2),
     "$, ",
-    xprnot(anovaobj$`Pr(>F)`[row])
+    xpr(anovaobj$`Pr(>F)`[row])
   )
 }
 
@@ -220,7 +213,7 @@ report.kw <- function(kwobj) {
          "$) = ",
          round(kwobj$chi2, 2),
          ", ",
-         xprnot(pchisq(kwobj$chi2, df, lower.tail = F)))
+         xpr(pchisq(kwobj$chi2, df, lower.tail = F)))
 }
 
 report.kwtext <-
@@ -1785,7 +1778,7 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
 
 ## Treatment efficacy, primary and secondary measures
 
-Mixed models including groups Unguided self-help, Guided self-help, and Waitlist at time-points Pre, During and Post revealed time \texttimes{} group interaction effects for all three measures of assertiveness: The Adaptive subscale of AAA-S, `r report.anova(aaas_ad.post.anova)[3]`, the Aggressive subscale of AAA-S, `r report.anova(aaas_ag.post.anova)[3]`, and the RAS, `r report.anova(rathus.post.anova)[3]`, suggesting that the random assignment to group conditions did have an effect over time on assertive behaviors. Similarily, mixed models for the syndromal symptoms revealed time \texttimes{} group interaction effects for all three measures of anxiety and depression: PHQ-9, `r report.anova(phq_sum.post.anova)[3]`, GAD-7, `r report.anova(gad_sum.post.anova)[3]`, and LSAS-SR, `r report.anova(lsas_sum.post.anova)[3]`, indicating that estimated mean levels of depressive mood and generalized and social anxiety symptoms were significantly affected by participation in the intervention.
+Mixed models including groups Unguided self-help, Guided self-help, and Waitlist at time-points Pre, During and Post revealed time \texttimes{} group interaction effects for all three measures of assertiveness: The Adaptive subscale of AAA-S, `r report.anova(aaas_ad.post.anova)[3]`, the Aggressive subscale of AAA-S, `r report.anova(aaas_ag.post.anova)[3]`, and the RAS, `r report.anova(rathus.post.anova)[3]`. These interactions show that the random assignment to group conditions did have an effect over time on assertive behaviors. Similarily, mixed models for the syndromal symptoms revealed time \texttimes{} group interaction effects for all three measures of anxiety and depression: PHQ-9, `r report.anova(phq_sum.post.anova)[3]`, GAD-7, `r report.anova(gad_sum.post.anova)[3]`, and LSAS-SR, `r report.anova(lsas_sum.post.anova)[3]`. Estimated mean levels of depressive mood and generalized and social anxiety symptoms were significantly affected by participation in the intervention.
 
 ### Between-group effects on assertive behaviors
 
@@ -1817,9 +1810,9 @@ Thus, the 8-week Respekt^2^ intervention had no effect on either depression or g
 
 ### Notable within-group effects
 
-As shown in table 2, participants in both treatment groups enjoyed sustained within-group effects on assertiveness at 1 year Follow-up when compared to the Pre-treatment measurement time point, measured with AAA-S Adaptive, AAA-S Aggressive and the RAS, suggesting that assertive behaviors were still manifest well beyond the end of participation in the intervention. However, significant effects between the Post to Follow-up time-points were found only for two measures in the Guided self-help group, where AAA-S Adaptive and the RAS exhibited small to medium effects, `r report.text2(aaas_ad.out, paste(xT3,xG2,"-",xT4,xG2), -1)` and `r report.text2(rathus.out, paste(xT3,xG2,"-",xT4,xG2), -1)` respectively. In the Unguided self-help group, there was no difference between Post and Follow-up time points for either measure, `r xprnot(aaas_ad.out$emmpairs$p.value[41])` and `r xprnot(rathus.out$emmpairs$p.value[41])`. This indicates that therapist support provided some benefit to participants' ability to generalize adaptive assertive behaviors beyond the duration of the intervention.
+As shown in table 2, participants in both treatment groups enjoyed sustained within-group effects on assertiveness at 1 year Follow-up when compared to the Pre-treatment measurement time point, measured with AAA-S Adaptive, AAA-S Aggressive and the RAS, revealing that assertive behaviors were still manifest well beyond the end of participation in the intervention. However, significant effects between the Post to Follow-up time-points were found only for two measures in the Guided self-help group, where AAA-S Adaptive and the RAS exhibited small to medium effects, `r report.text2(aaas_ad.out, paste(xT3,xG2,"-",xT4,xG2), -1)` and `r report.text2(rathus.out, paste(xT3,xG2,"-",xT4,xG2), -1)` respectively. In the Unguided self-help group, there was no difference between Post and Follow-up time points for either measure, `r xprnot(aaas_ad.out$emmpairs$p.value[41])` and `r xprnot(rathus.out$emmpairs$p.value[41])`, evidencing that therapist support provided some benefit to participants' ability to generalize adaptive assertive behaviors beyond the duration of the intervention.
 
-Among the secondary measures of syndromal symptoms, depression as captured with PHQ-9 had decreased significantly from Pre only in the Guided self-help group, and only at Follow-up, showing a medium effect, `r report.text2(phq_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1)`, indicating that therapist support benefits depressed participants on a longer rather than shorter time scale. 
+Among the secondary measures of syndromal symptoms, depression as captured with PHQ-9 had decreased significantly from Pre only in the Guided self-help group, and only at Follow-up, showing a medium effect, `r report.text2(phq_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1)`, implying that therapist support benefited depressed participants on a longer rather than shorter time scale. 
 
 <!-- Following up on the significant time \texttimes{} group interactions found for all three primary and all three secondary measures of skillful behaviors, post-hoc testing revealed that participants in both treatment groups Unguided self-help and Guided self-help improved significantly during the course of the intervention, and that effects were sustained or improved at 1-year Follow-up. Table 2 summarizes significance tests of estimated marginal mean differences and effect sizes, including 95\% confidence intervals. -->
 
