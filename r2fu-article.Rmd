@@ -40,7 +40,7 @@ editor_options:
 
 ```{r setup, include=F}
 
-# First, get and install fonts locally on your machine from these sources:
+# Font sources:
 # - https://www.ctan.org/pkg/tex-gyre-termes
 # - https://www.ctan.org/pkg/tex-gyre-math-termes
 
@@ -63,6 +63,7 @@ packages <-
     "kableExtra",
     "clinicalsignificance",
     "here",
+    "linebreak",
     "MOTE"
   )
 if (!require("install.load")) install.packages("install.load")
@@ -728,7 +729,7 @@ A linear mixed-effects model was fitted using unscaled data to estimate fixed ef
 
 ```{r mixedmodels, fig.width = 13, fig.asp = 0.75, echo = F, eval = T, results='hide'}
 
-lnT4 <-!grepl(xT4, r2fu.long.data$time)
+lnT4 <-!grepl(xT4, r2fu.long.data$time) # Exclude the Follow-up time-point
 
 ### Primary measures
 
@@ -1081,7 +1082,7 @@ lsas_sum.out <- rout(lsas_sum.lmer)
 
 ```{r buildeffsizetab, echo = F, eval = T}
 
-comparison <- linebreak(c(
+comparison <- c(
   "Unguided self-help, Pre vs. Post",
   "Unguided self-help, Pre vs. Follow-up",
   "Unguided self-help, Post vs. Follow-up",
@@ -1097,7 +1098,7 @@ comparison <- linebreak(c(
   "Guided self-help at Follow-up vs. Waitlist at \\dag",
   "Guided self-help at Post vs. Unguided at Post",
   "Guided self-help at Follow-up vs. Unguided at Follow-up"
-  ), align = "r")
+  )
 
 aaas_ad.effsizes <-
   c(
