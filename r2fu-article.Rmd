@@ -1857,67 +1857,65 @@ Checking for any signs of reliable harm, the most severe form of deterioration, 
 
 # Discussion
 
-## Results discussion
+<!-- ## Results discussion -->
 
-### Main results
+<!-- ### Main results -->
 
 This randomized control trial brings up-to-date empirical data about a trans-diagnostic intervention targeting assertiveness, Respekt^2^, providing evidence for its effects on assertive behaviors and on symptoms of psychiatric disorders. Having been mostly ignored as a construct in clincical research since the 1990'ies, despite its rich history as the target in the very first behavioral therapies of the 1950'ies, and its current status as an important goal for exposure in third wave CBT variants such as DBT and ACT [@Speed2018a], this study brings much-needed data on assertiveness as a viable transdiagnostic stand-alone goal in psychological treatment.
 
-#### Effects on assertiveness
+<!-- #### Effects on assertiveness -->
 
 The moderate to large between-group effects on assertiveness found in Respekt^2^ at Post in the Unguided self-help condition, from `r report.text2(aaas_ag.out, paste(xT3,xG3,"-",xT3,xG1), -1,"effshort")` to `r report.text2(rathus.out, paste(xT3,xG3,"-",xT3,xG1), -1,"effshort")` (with slightly but insignificantly larger effects in the Guided group), are comparable to those found in clinical trails of iCBT interventions for other trans-diagnostic behavioral targets such as procrastination ($d$ = ??) [@Rozental2015], and perfectionism ($d$ = ??) [@Rozental2017], showing that the 'assertiveness' construct can be used successfully as a target in behavior therapy, helping participants appreciate and self-report meaningful change in their daily lives. [Also, compare w/ frequencies or reliable change, e.g. @Rozental2015.]
 
-#### Effects on psychiatric symptoms
+<!-- #### Effects on psychiatric symptoms -->
 
-The delayed effects on social anxiety symptoms, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1,"effshort")`. Effects were also found in the Guided self-help group, where participants were supported by therapists: Comparing with the Waitlist group, participants exhibited moderate effects at Post for PHQ-9, `r report.text2(phq_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1,"eff")`, and LSAS-SR, `r report.text2(lsas_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1,"eff")` respectively, as well as a large effect only for LSAS-SR at Follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1,"eff")`. These are in agreement with those for iCBT in general, where the average between-group effect size is $g$ = $.80$ compared to controls [@Andrews2018], which in turn is about the same as for face-to-face treatment [@Carlbring2018].
+The delayed 1-year Follow-up effects on social anxiety symptoms, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1,"effshort")` and `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1,"effshort")` are also comparable to those found for treatments tailored to social anxiety [REF], as are those on depression, `r report.text2(phq_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1,"effshort")` and `r report.text2(phq_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1,"effshort")`, pointing to the usefulness of assertiveness as a trans-diagnostic target. These are in agreement with those for iCBT in general, where the average between-group effect size is $g$ = $.80$ compared to controls [@Andrews2018], which in turn is about the same as for face-to-face treatment [@Carlbring2018]. [Also, compare w/ frequencies or reliable change, e.g. @Rozental2015.]
 
-<!-- Within-group comparisons revealed moderate effects in the Unguided self-help group for LSAS-SR, `r report.text2(lsas_sum.out, paste(xT1,xG1,"-",xT3,xG1), 1,"eff")` Pre--Post, and large effects `r report.text2(lsas_sum.out, paste(xT1,xG1,"-",xT4,xG1), 1,"eff")` Pre--Follow-up. Similar effects were found in the Guided self-help group, `r report.text2(lsas_sum.out, paste(xT1,xG2,"-",xT3,xG2), 1,"eff")` Pre--Post, and `r report.text2(lsas_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1,"eff")` Pre--Follow-up. A moderate effect was found for PHQ-9 Pre--Follow-up for the Guided self-help group, `r report.text2(phq_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1,"eff")`.  -->
+<!-- These findings were supplemented by the analysis of clinical significant change, where, $n$ = 14 (21%) had recovered from social anxiety at Follow-up in the Unguided self-help group, and $n$ = 18 (26%) in the group that were guided by therapists. In addition, $n$ = 18 (26%) in the Guided self-help group had recovered from depression at Follow-up.   -->
 
-These findings were supplemented by the analysis of clinical significant change, where, $n$ = 14 (21%) had recovered from social anxiety at Follow-up in the Unguided self-help group, and $n$ = 18 (26%) in the group that were guided by therapists. In addition, $n$ = 18 (26%) in the Guided self-help group had recovered from depression at Follow-up.  [Also, compare w/ frequencies or reliable change, e.g. @Rozental2015.]
-
-#### No effects on GAD
+<!-- #### No effects on GAD -->
 
 The intervention was insufficient in ameliorating symptoms of generalized anxiety, which can be understood as a disorder of attentional/cognitive and behavioral rigidity [@Hayes2004a]. Most likely, the overall structure of the Respekt^2^ intervention, with its emphasis on cheer-leading participants in design and performing in-vivo behavioral experiments early on in treatment was not adequate in addressing GAD symptoms where non-commitment to exposure often is an important first hurdle to overcome. (To be investigated.)
 
-#### General conclusion
+<!-- #### General conclusion -->
 
 Thus, we found that Respekt^2^ clearly reduced symptoms of social anxiety across both treatment conditions, and over time possibly reduced symptoms of depression, to a moderate degree, among participants that were guided by therapists. 
-At the end of treatment, there was no difference in effects on assertiveness or social phobia between the two treatment arms, nor at one-year Follow-up. For depression, effects were found only in the Thus, the results provide preliminary evidence for the efficacy of Respekt^2^ as a self-help intervention, showing that iCBT with or without therapist support can be helpful for individuals suffering from self-reported difficulties with assertiveness, and social phobia; and that iCBT with therapist support can be helpful for individuals suffering from depression.
+<!-- At the end of treatment, there was no difference in effects on assertiveness or social phobia between the two treatment arms, nor at one-year Follow-up. For depression, effects were found only in the Thus, the results provide preliminary evidence for the efficacy of Respekt^2^ as a self-help intervention, showing that iCBT with or without therapist support can be helpful for individuals suffering from self-reported difficulties with assertiveness, and social phobia; and that iCBT with therapist support can be helpful for individuals suffering from depression. -->
 
-### Some support for therapist support being helpful
+<!-- ### Some support for therapist support being helpful -->
 
 Although there was no between group difference between treatment conditions at Post or Follow-up in the current study, some within-group evidence was found that being guided by a therapist could entail some advantages for participants in iCBT, in line with @Baumeister2014a, especially with regards to long-term outcomes. In the Guided self-help group, assertiveness (both in general and of the adaptive type) had increased significantly between end of treatment and one-year Follow-up. Also, in the Guided self-help condition analysis of both within-group effects and of clinical change indicated that depression had decreased from pre-treatment to 1-year Follow-up both. Corresponding phenomena were not observed in the group where the participants were engaging with the intervention on their own. The presence of human support during treatment could increase adherence to the intervention through increased levels of accountability, as suggested by @Mohr2011. Speculatively, accountability towards a therapist could be associated with an increased willingness to take part in behavioral experiments, an increased ability to engage in behavioral experiments through active and collaborative problem solving, or increased compliance to homework and therefore an increased ability to generalize adaptive behaviors -- or a combination of such mechanisms.
 
-## Methodological discussion
+## Limitations
 
-### Limitations
+<!-- ### Limitations -->
 
 The study design has a number of limitations that impairs the generalizibility of the findings to the population at large, of which the recruitment method is one of the most important. The recruitment was performed via advertising in social media, where the presentation of the ads by design was skewed to maximize click-throughs (and to provide maximal "bang for the buck" for the advertising budget) by the algorithms employed by the respective ad networks. We achieved distributions with regards to sex (X % female participants), previous participation in therapy (x %) and use of psychotrophic medicine (X %) that were probably far apart from the ones expected had the sampling been random. These distributions probably affected the effects in different ways. For instance, it is easy to imagine that for participants that had previously taken part in CBT, the R^2^ intervention effectively acted as a booster providing opportunities for re-acquisition of assertiveness skills. Any findings using this sample need to be treated with caution before being confirmed with other samples in future studies. Likewise, since this sample was non-clinical, a trial using a purely clinical sample is also called for.
 
-Another methodological drawback of the current study is that some of the measurement scales were recently translated into Swedish, without back-translation, somewhat impairing the ability to compare findings with norms found for the original english-speaking populations where the original scaled were validated. The Swedish adaptations fo the RAS and AAA-S scales need to be quality controlled with back-translation, and subsequently also validated for Swedish clinical and non-clinical populations.
+Another methodological drawback of the current study is that some of the measurement scales were recently translated into Swedish, without back-translation, somewhat impairing the ability to compare findings with norms found for the original english-speaking populations where the original scaled were validated. The Swedish adaptations of the RAS and AAA-S scales should to be quality controlled with back-translation prior to future usage, and if possible also validated for Swedish clinical and non-clinical populations.
 
-## Future directions
+<!-- ## Future directions -->
 
-    What is going on here?
-    Whose story is this?
-    How does this sentence connect backward to the previous sentence?
-    How does this sentence lean forward to where we might go from here?
-    What is the most important piece of information in this sentence, which I should be reading with extra emphasis?
+<!--     What is going on here? -->
+<!--     Whose story is this? -->
+<!--     How does this sentence connect backward to the previous sentence? -->
+<!--     How does this sentence lean forward to where we might go from here? -->
+<!--     What is the most important piece of information in this sentence, which I should be reading with extra emphasis? -->
 
-- Disentangle causality: what causes what, under influence of what (mediation, moderation)?
--- Future replications should collect more data in order to fit more random effects, to investigate possible therapist factors
+<!-- - Disentangle causality: what causes what, under influence of what (mediation, moderation)? -->
+<!-- -- Future replications should collect more data in order to fit more random effects, to investigate possible therapist factors -->
 
-In the current study, we found that participation in Respekt^2^ did indeed increase assertive expressions, thereby reducing self-assessed social anxiety in a non-clinical convenience sample. The intervention did not have an immediate effect on generalized anxiety or depression, although there was some within-group evidence for beneficial longer-term effects on these syndromes. 
+<!-- In the current study, we found that participation in Respekt^2^ did indeed increase assertive expressions, thereby reducing self-assessed social anxiety in a non-clinical convenience sample. The intervention did not have an immediate effect on generalized anxiety or depression, although there was some within-group evidence for beneficial longer-term effects on these syndromes.  -->
 
-Building on this foundation, future studies could try to find answers to important questions such as the following: What are the effects of Respekt^2^ for clinical populations, e.g. patients diagnosed with with any of emotional instability, schizophrenia, social phobia, generalized anxiety, and depression? More specifically, is it possible to replicate the within-group findings in the current study that Respect^2^ might benefit participants suffering from symptoms of generalized anxiety and depression, and if so, on what time-scale? What are the effects for any of non-clinical ailments, such as work-related stress, work--private life balance issues, and relationship problems? And more generally, for which psychological problems and problems in living could assertiveness as a trans-diagnostic treatment target improve compliance to exposure and thus help increase levels of valued living?
+<!-- Building on this foundation, future studies could try to find answers to important questions such as the following: What are the effects of Respekt^2^ for clinical populations, e.g. patients diagnosed with with any of emotional instability, schizophrenia, social phobia, generalized anxiety, and depression? More specifically, is it possible to replicate the within-group findings in the current study that Respect^2^ might benefit participants suffering from symptoms of generalized anxiety and depression, and if so, on what time-scale? What are the effects for any of non-clinical ailments, such as work-related stress, work--private life balance issues, and relationship problems? And more generally, for which psychological problems and problems in living could assertiveness as a trans-diagnostic treatment target improve compliance to exposure and thus help increase levels of valued living? -->
 
-uppföljning inloggningar etc för att kunna särskilja olika kausala faktorer för terapeutstöttningens effekter
+<!-- uppföljning inloggningar etc för att kunna särskilja olika kausala faktorer för terapeutstöttningens effekter -->
 
-Other questions worth persuing include: What are the normative means for the Swedish translations of AAA-S and the RAS in a Swedish clinical and non-clinical population, respectively?
-- What part of the general population would find 'assertiveness' appealing as a possbile treatment target, if presented as one of many choices (among them, reduction of symptoms)?
-- Expanding to a broader question: what are the benefits of using approach behaviors as treatment targets?
--- Idé: kvalitativ studie i psykiatrin, "Om du fick välja att arbeta med de problem du har, vilket eller vilka av följande mål skulle vara hjälpsamma för dig? Öka självmedkänsla? Minska problem med uppskjutande? Minska perfektionism? Öka självhävdelseförmåga? Arbeta med att formulera för dig relevanta livsmål? Öka beteendemässig flexibilitet? Ökad förmåga att ta distans till tankar? Ökad förmåga att acceptera svåra känslor, minnen, upplevelser?"
--- DBT-kontext
+<!-- Other questions worth persuing include: What are the normative means for the Swedish translations of AAA-S and the RAS in a Swedish clinical and non-clinical population, respectively? -->
+<!-- - What part of the general population would find 'assertiveness' appealing as a possbile treatment target, if presented as one of many choices (among them, reduction of symptoms)? -->
+<!-- - Expanding to a broader question: what are the benefits of using approach behaviors as treatment targets? -->
+<!-- -- Idé: kvalitativ studie i psykiatrin, "Om du fick välja att arbeta med de problem du har, vilket eller vilka av följande mål skulle vara hjälpsamma för dig? Öka självmedkänsla? Minska problem med uppskjutande? Minska perfektionism? Öka självhävdelseförmåga? Arbeta med att formulera för dig relevanta livsmål? Öka beteendemässig flexibilitet? Ökad förmåga att ta distans till tankar? Ökad förmåga att acceptera svåra känslor, minnen, upplevelser?" -->
+<!-- -- DBT-kontext -->
 
 <!-- KOPIERAT The present study advances current knowledge about a stand-alone transdiagnostic intervention targeting assertiveness, Respekt^2^, providing evidence for its effects on levels of assertive behaviors, and in turn their effects on symptoms of common psychiatric disorders of anxiety and depression. Having been more or less ignored as a construct in clincical research since the 1990'ies, despite its history as a target for the very first behavioral therapies in the 1950'ies [@Speed2018a], this study brings some much-needed and up-to-date data for assertiveness as a viable transdiagnostic goal in the treatment of various clincial problems. -->
 
