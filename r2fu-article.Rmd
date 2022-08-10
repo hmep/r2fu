@@ -661,6 +661,9 @@ Five participants were excluded from the analyses due to wrongful inclusion as t
 
 ```{bash, include = F, eval = F}
 
+# A better way?
+# https://community.rstudio.com/t/dot-in-rmarkdown/51311/3
+
 filename="flowchart"
 
 cat <<EOF > $filename.dot
@@ -1774,7 +1777,7 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
   row_spec(c(5,10,15,20,25), extra_latex_after = "\\midrule") %>%
   column_spec(c(1), width = "7em") %>%
   column_spec(c(2:6), width = "8em") %>%
-  add_header_above(c(" ", "Waitlist" = 1, "Self-help" = 2, "Guided" = 2)) %>%
+  add_header_above(c(" ", "Waitlist" = 1, "Unguided self-help" = 2, "Guided self-help" = 2)) %>%
   footnote(
     general = c(
       "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale.",
@@ -1872,11 +1875,7 @@ These findings reveal that the non-active Waitlist condition brought about adver
 
 This randomized control trial brings up-to-date empirical data on a trans-diagnostic intervention targeting assertiveness, Respekt^2^, providing evidence for its effects on assertive behavior and on symptoms of psychiatric disorders. Having been mostly ignored as a construct in clincical research since the 1990's, despite its rich history as the target in the very first behavioral therapies of the 1950's, and its current status as an important goal for exposure in third wave CBT variants such as DBT and ACT [@Speed2018a], this study brings much-needed data on assertiveness as a viable transdiagnostic stand-alone goal in psychological treatment.
 
-The large between-group effects on assertiveness measured with AAA-S Adaptive and the RAS at Follow-up in the Unguided self-help condition, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")` and `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")`, 
-<!-- with $22$\% and $31$\% clinically improved,  -->
-and insignificantly larger effects 
-<!-- and $26$\% and $36$\% clinically improved, respectively,  -->
-in the Guided group, are comparable to those found in clinical trials of iCBT interventions for other trans-diagnostic behavioral targets. Benchmarking against procrastination [$d$ = $.50$--$.69$ and $24$--$36$\% clinically improved in an unguided group, and $d$ = $.70$--$.81$ and $31$--$40$\% clinically improved in a guided group\; @Rozental2015], and perfectionism [$d$ = $.68$--$1.00$, with $45$\% of participants clinically improved in a guided group\; @Rozental2017], these results indicate that the assertiveness construct can be used successfully as a target in behavior therapy with various clinical presentations, helping participants appreciate and report changes in healthy assertion levels in their daily lives.
+The large effects on assertiveness, measured with AAA-S Adaptive, comparing the Waitlist and the Unguided self-help conditions at Follow-up, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")`, with $22$\% clinically improved, are comparable to those found in clinical trials of iCBT interventions for other trans-diagnostic behavioral targets. Measurement with the RAS at Follow-up, `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")`, with $31$\% clinically improved, confirm these effects, as does the insignificantly larger effects found for assertiveness measured with AAA-S Adaptive and RAS in the Guided self-help group, with clinical improvement proportions of $26$\% and $36$\% respectively. Benchmarking against procrastination [$d$ = $.50$--$.69$ and $24$--$36$\% clinically improved in an unguided group, and $d$ = $.70$--$.81$ and $31$--$40$\% clinically improved in a guided group\; @Rozental2015], and perfectionism [$d$ = $.68$--$1.00$, with $45$\% of participants clinically improved in a guided group\; @Rozental2017], these results indicate that the assertiveness construct can be used successfully as a target in behavior therapy with various clinical presentations, helping participants appreciate and report changes in healthy assertion levels in their daily lives.
 
 It should be noted that there was no significant effects, nor any statistically significant number of clinically changed participants at either Post or Follow-up, for AAA-S Aggressive. This should not be surprising, however, since the operationalization of aggressive assertiveness is fuzzy and prone to individual differences in interpretation; behavior that one person deems to be aggressive assertion might be healthy assertion to another. 
 <!-- Q: Is an increase in aggressive assertiveness always, never or sometimes desirable for an individual in a situation in therapy? (A: it depends.)  -->
