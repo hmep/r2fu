@@ -1,42 +1,73 @@
 ---
-title: 'Efficacy of Transdiagnostic Cognitive-Behavioral Therapy for Assertiveness:
-  A Randomized Controlled Trial'
+title: "Efficacy of Transdiagnostic Cognitive-Behavioral Therapy for Assertiveness: A Randomized Controlled Trial"
+runtitle: "Transdiagnostic CBT for Assertiveness"
 author:
-- Tobias Hagberg^[University of Somewhere]
-- Patrik Manhem^[University of Nowhere]
-- Martin Oscarsson^[University of Nowhere]
-- Fiona Michel^[University of Nowhere]
-- Gerhard Andersson^[University of Nowhere]
-- Per Carlbring^[University of Nowhere]
-date: "`r format(Sys.time(), '%d %B %Y')`"
-output:
-  pdf_document:
+  - name: "Tobias Hagberg"
+    email: "tobias@hagberg.com"
+    affiliation: "Stockholm University"
+    correspondingauthor: true
+  - name: "Patrik Manhem"
+    affiliation: "Stockholm University"
+  - name: "Martin Oscarsson"
+    affiliation: "Stockholm University"
+  - name: "Fiona Michel"
+    affiliation: "Centre for Clinical Interventions"
+  - name: "Gerhard Andersson"
+    affiliation: "Linköping University"
+  - name: "Per Carlbring"
+    affiliation: "Stockholm University"
+address:
+  - code: "Stockholm University"
+    address: "Department of Psychology, Stockholm University, SE-106 91 Stockholm, Sweden"
+  - code: "Linköping University"
+    address: "Department of Behavioural Sciences and Learning, Linköping University, SE-581 83 Linköping, Sweden"
+  - code: "Centre for Clinical Interventions"
+    address: "Centre for Clinical Interventions, 223 James St, Northbridge WA 6003, Australia"
+abstract: |
+  `r readLines('abstract.txt', encoding = 'UTF-8')`
+keywords: 
+  - "assertiveness"
+  - "assertive behavior"
+  - "anxiety"
+  - "depression"
+  - "stress"
+  - "avoidance"
+date: "`r Sys.Date()`"
+classoption: preprint, 3p, authoryear
+bibliography:
+  - packages.bib
+  - KSH.bib
+  - DBT.bib
+linenumbers: true
+numbersections: false
+#csl: ./elsevier-harvard.csl
+csl: ./apa.csl
+journal: "??"
+output: 
+  rticles::elsevier_article:
+    keep_tex: true
     latex_engine: xelatex
-    keep_tex: yes
+    citation_package: default
   word_document: default
 knit: (function(inputFile, encoding){
   rmarkdown::render(inputFile, encoding = encoding, output_format = "all") })
-tags:
-- nothing
-- nothingness
-bibliography:
-- packages.bib
-- KSH.bib
-- DBT.bib
-link-citations: yes
-csl: apa.csl
-lang: en-US
 header-includes:
-- \widowpenalties 1 150
-- \setlength{\tabcolsep}{0bp}
 - \usepackage{fontspec}
 - \usepackage{unicode-math}
 - \setmainfont[Path=fonts/,BoldFont={texgyretermes-bold.otf},ItalicFont={texgyretermes-italic.otf},BoldItalicFont={texgyretermes-bolditalic.otf}]{texgyretermes-regular.otf}
 - \setmathfont[Path=fonts/]{texgyretermes-math.otf}
-- \hyphenation{}
-editor_options: 
-  chunk_output_type: console
+- \usepackage[format=plain,labelsep=period,labelfont=bf,textfont=it]{caption}
+- \usepackage[nomarkers,nolists]{endfloat}
+- \usepackage[figuresright]{rotating}
+- \DeclareDelayedFloatFlavor{sidewaystable}{table}
+- \usepackage{setspace}
+- \setstretch{1.4}
 ---
+
+<!-- https://ftp.acc.umu.se/mirror/CTAN/macros/latex/contrib/endfloat/endfloat.pdf p 10 -->
+<!-- https://bookdown.org/yihui/rmarkdown-cookbook/kable.html#customize-latex-tables search for "table.envir" -->
+
+**Highlights.** Short-term iCBT assertion training holds promise as a efficacious stand-alone intervention in the treatment of psychological problems and psychiatric syndromes, especially social anxiety.
 
 ```{r setup, include=F}
 
@@ -114,28 +145,46 @@ xT4 = "Followup"
 xresult <-
   function(x, d = 2) {
     paste0("$",
-           apa(
-             value = x,
-             decimals = d,
-             leading = F
+           # apa(
+           #   value = x,
+           #   decimals = d,
+           #   leading = F
+           # ),
+           formatC(
+             x,
+             digits = d,
+             drop0trailing = F,
+             format = "f"
            ),
            "$")
   }
 
 xresulttext <-
   function(x, d = 2) {
-    apa(value = x,
-        decimals = d,
-        leading = F)
+    # apa(
+    #   value = x,
+    #   decimals = d,
+    #   leading = F
+    # ),
+    formatC(x,
+            digits = d,
+            drop0trailing = F,
+            format = "f")
   }
 
 xpercent <-
   function(x, d = 2) {
     paste0("$",
-           apa(
-             value = x,
-             decimals = d,
-             leading = F
+           # apa(
+           #   value = x,
+           #   decimals = d,
+           #   leading = F
+           # ),
+           formatC(
+             x,
+             digits = d,
+             drop0trailing = F,
+             format = "f"
            ),
            "$",
            "\\xspace%")
@@ -143,33 +192,57 @@ xpercent <-
 
 xpr <- function(x, d = 3, a = NULL) {
   paste("$p_{", a, "}$",
-        ifelse(x < 0.001, "< $.001$", ifelse(
+        ifelse(x < 0.001, "< $0.001$", ifelse(
           x < 0.05,
-          paste0("= $", apa(
-            value = x,
-            decimals = d,
-            leading = F
-          ), "$"),
-          ifelse(x > 0.05, "DO NOT REPORT", "= $.05$")
+          paste0("= $",
+                 # apa(
+                 #   value = x,
+                 #   decimals = d,
+                 #   leading = F
+                 # ),
+                 formatC(
+                   x,
+                   digits = d,
+                   drop0trailing = F,
+                   format = "f"
+                 ),
+                 "$"),
+          ifelse(x > 0.05, "DO NOT REPORT", "= $0.05$")
         )))
 }
 
 xprnot <- function(x, d = 3, a = NULL) {
   paste("$p_{", a, "}$",
-        ifelse(x < 0.001, "< $.001$", ifelse(
+        ifelse(x < 0.001, "< $0.001$", ifelse(
           x < 0.05,
-          paste0(" = $", apa(
-            value = x,
-            decimals = d,
-            leading = F
-          ), "$"),
+          paste0(" = $",
+                 # apa(
+                 #   value = x,
+                 #   decimals = d,
+                 #   leading = F
+                 # ),
+                 formatC(
+                   x,
+                   digits = d,
+                   drop0trailing = F,
+                   format = "f"
+                 ),
+                 "$"),
           ifelse(x > 0.05, paste0(
-            " = $", apa(
-              value = x,
-              decimals = d,
-              leading = F
-            ), "$"
-          ), "= $.05$")
+            " = $",
+            # apa(
+            #   value = x,
+            #   decimals = d,
+            #   leading = F
+            # ),
+            formatC(
+              x,
+              digits = d,
+              drop0trailing = F,
+              format = "f"
+            ),
+            "$"
+          ), "= $0.05$")
         )))
 }
 
@@ -406,23 +479,23 @@ effsize.tabrow <- function(outobj, contrast, direction) {
 
 # Introduction
 
-Experiences of stress, anxiety, and depression are often associated with avoidance. A person who is all too stressed from an ever-increasing workload may want nothing more than to tell their supervisor there are too many tasks on the table, yet still takes on another assignment when the supervisor asks. A person with social anxiety may want nothing more than to take part in social gatherings, yet chooses to abstain to avoid the feeling of being judged or scrutinized by others. A person who is depressed may want nothing more than to call a friend, yet chooses not to, for fear of being put down if the friend does not pick up the phone. These behaviors may all be associated with inadequate assertiveness, i.e., avoidance of constructively presenting one’s thoughts, feelings, needs, and wishes in relation to others.
+Experiences of stress, anxiety, and depression are often associated with avoidance. A person who is stressed from an ever-increasing workload may want nothing more than to tell their supervisor that there are too many tasks on the table, yet still takes on another assignment when asked. A person with social anxiety may want nothing more than to take part in social gatherings, yet chooses to abstain to avoid the feeling of being judged or scrutinized. A person who is depressed may want nothing more than to call a friend, yet chooses not to, for fear of being put down if the friend does not pick up the phone. These behaviors may all be associated with inadequate assertiveness (i.e., avoidance of constructively presenting one’s thoughts, feelings, needs, and wishes in relation to others).
 
-Assertiveness can be difficult to delineate from social skills in general [@LINEHAN1979], but a common definition is “direct, firm, positive [...] action [enabling] us to act in our own best interests, to stand up for ourselves without undue anxiety, to exercise personal rights without denying the rights of others, and to express our feelings and needs [...] honestly and comfortably” [@alberti2017your,p.34]. Examples include politely saying ‘no’ to a boss requesting undue overtime, actively participating in social activities, accepting/acknowledging a compliment without deflecting, and verbalizing feelings in personal relationships without acting out. Lack of assertiveness is associated with several psychological problems, including stress, anxiety, depression, and panic disorder, as well as emotional instability, strained relationships, and low self-esteem [@Speed2018a]. While there are diagnoses, diagnostic tools, and treatment manuals for these conditions, no evidence-based interventions specifically target assertiveness for a broader population.
+Assertiveness can be difficult to delineate from social skills in general [@LINEHAN1979], but a common definition is “direct, firm, positive [...] action [enabling] us to act in our own best interests, to stand up for ourselves without undue anxiety, to exercise personal rights without denying the rights of others, and to express our feelings and needs [...] honestly and comfortably” [@alberti2017your,p.34]. Examples include politely saying ‘no’ to a boss requesting undue overtime, actively participating in social activities, accepting/acknowledging a compliment without deflecting, and verbalizing feelings in personal relationships without acting out. A lack of assertiveness is associated with several psychological problems, including stress, anxiety, depression, and panic disorder, as well as emotional instability, strained relationships, and low self-esteem [@Speed2018a]. While there are diagnoses, diagnostic tools, and treatment manuals for these conditions, no evidence-based interventions specifically target assertiveness for a broader population.
 
-Assertiveness training in general, however, goes back to the very first behavioral therapies, for example, as described by @salter1949conditioned or @Wolpe1966. Assertiveness was presented as a behavioristic alternative to psychoanalysis. In the 1970s, the concept was popularized in self-help books by @alberti1974your, @smith1975say, as well as @fensterheim1975don. Research in assertiveness training peaked in the 1980s [@Speed2018a]. Although the behavioral techniques of the first wave of therapy were supplemented by cognitive restructuring techniques [e.g., @beck1979cognitive] in the following decades, techniques such as modeling and behavior rehearsal have remained active parts of treatments for psychological syndromes such as anxiety disorders and depression. The @LINEHAN1979 manual for assertion therapy combining behavior rehearsal with cognitive restructuring was a stepping stone toward Dialectical Behavior Therapy (DBT), of which assertion skills training in a group setting is an integral part [@linehan1993skills].
+Assertiveness training in general, however, dates back to the very first behavioral therapies, for example, as described by @salter1949conditioned or @Wolpe1966. Assertiveness was presented as a behavioristic alternative to psychoanalysis. In the 1970s, the concept was popularized in self-help books by @alberti1974your, @smith1975say, as well as @fensterheim1975don. Research on assertiveness training peaked in the 1980s [@Speed2018a]. Although the behavioral techniques of the first wave of therapy were supplemented by cognitive restructuring techniques [e.g., @beck1979cognitive], in the following decades, techniques such as modeling and behavior rehearsal remained active parts of treatments for psychological syndromes such as anxiety disorders and depression. The @LINEHAN1979 manual for assertion therapy combining behavior rehearsal with cognitive restructuring was a stepping stone toward Dialectical Behavior Therapy (DBT), in which assertion skills training in a group setting is integral [@linehan1993skills].
 
-Assertion is to be regarded as a situation-specific rather than a generalized trait [@Hull1978]. Building on the definition from @alberti2017your, assertiveness can be operationalized as acting with respect to personal rights without infringing on the rights of others. A constructive assertion takes into account both the desired result of the interaction (e.g., having said no to someone else’s demand, or having made a request) and the intensity of the interaction, where the latter is calibrated with regard to both the importance of the relationship and what @linehan1993skills refers to as ‘self-respect’. Assertive behavior, using this definition, can be thought of as the product of respect for the rights of others, and respect for the rights of oneself. This definition is non-normative and offers plenty of opportunities for idiographic and contextual descriptions of assertion in therapy, i.e., when designing in vivo behavioral experiments, regardless of cultural influences on what is considered to be acceptable behavior (within a family, community, society, et.c.) [@Sigler2008;@Mitamura2018].
+Assertion is regarded as a situation-specific trait rather than a generalized trait [@Hull1978]. Building on the definition by @alberti2017your, assertiveness can be operationalized as acting with respect to personal rights without infringing on the rights of others. Constructive assertion takes into account both the desired result of the interaction (e.g., saying “no” to someone else’s demand or making a request) and the intensity of the interaction, where the latter is calibrated with regard to both the importance of the relationship and what @linehan1993skills refers to as self-respect. Using this definition, assertive behavior can be thought of as the product of respect for the rights of others and respect for one’s own rights. This definition is non-normative and offers several opportunities for idiographic and contextual descriptions of assertion in therapy (i.e., when designing in vivo behavioral experiments, regardless of cultural influences on what is considered acceptable behavior within a family, community, society, etc.) [@Sigler2008;@Mitamura2018].
 
-@Speed2018a conclude that while assertiveness training remains part of DBT, as well as acceptance and commitment therapy (ACT), general assertiveness training has otherwise fallen by the wayside in favor of interventions designed for specific psychiatric disorders. Very little research on assertiveness training has been published since the early 1980s. Recent exceptions include @Baker2015, showing a negative relationship between social anxiety and assertiveness, @Vagos2019 showing a negative relationship between mental distress in general and assertiveness, and @Antunez2020, highlighting a link between circadian typology and different constructs related to mental health, among them levels of assertiveness. @Speed2018a further conclude that there is potential for assertiveness training as an intervention for individuals suffering from anxiety and depression, and as a means to increase relationship satisfaction. The lack of contemporary evidence for the assertiveness construct and assertiveness training as a trans-diagnostic intervention calls for new research on the subject. 
+@Speed2018a conclude that while assertiveness training remains part of DBT, as well as acceptance and commitment therapy (ACT), general assertiveness training has otherwise fallen by the wayside in favor of interventions designed for specific psychiatric disorders. Very little research on assertiveness training has been published since the early 1980s. Recent exceptions include @Baker2015, showing a negative relationship between social anxiety and assertiveness, @Vagos2019 showing a negative relationship between mental distress in general and assertiveness, and @Antunez2020, highlighting a link between circadian typology and different constructs related to mental health, among them levels of assertiveness. @Speed2018a further conclude that there is potential for assertiveness training as an intervention for individuals suffering from anxiety and depression, and as a means to increase relationship satisfaction. The lack of contemporary evidence for the assertiveness construct and assertiveness training as a transdiagnostic intervention calls for new research on the subject. 
 
-The Western Australian Centre for Clinical Interventions (CCI) offers various self-help resources for mental health problems. These resources include Assert Yourself [@michel2008], a series of ten modules with concepts and strategies primarily based on CBT, with a focus on assertiveness. While current evidence for assertiveness training is scarce, at best, there is great evidence for CBT for symptoms and syndromes associated with inadequate assertiveness. In a review of meta-analyses, @Hofmann2012 conclude that CBT is one of the most effective forms of therapy. This includes the application for symptoms related to trauma and stress, as well as syndromes related to depression and anxiety. A review by @Andrews2018 also lends support to internet-delivered CBT (iCBT) for anxiety and depression, showing an average between-group effect size $g$ = $0.8$, compared to controls. @Carlbring2018 have also shown that iCBT, on average, produces equivalent overall effects compared to face-to-face treatment. iCBT has been proven effective both in guided and unguided applications (i.e., with or without therapist support), though guided iCBT tends to produce slightly larger effects [@Baumeister2014a]. iCBT has also been proven effective in transdiagnostic applications, including interventions targeting stress [@Day2013], procrastination [@Rozental2015], and perfectionism [@Rozental2017].
+While current evidence for assertiveness training is scarce at best, there is much evidence for the effectiveness of CBT for symptoms and syndromes associated with inadequate assertiveness. In a review of meta-analyses, Hofmann et al. (2012) conclude that CBT is one of the most effective forms of therapy. This includes its application for symptoms related to trauma and stress, as well as syndromes related to depression and anxiety. A review by @Andrews2018 also lends support to internet-delivered CBT (iCBT) for anxiety and depression, showing an average between-group effect size of $g$ = $g$ = `r xresult(0.8,2)` compared to the controls. @Carlbring2018 also show that iCBT, on average, produces equivalent overall effects compared to face-to-face treatment. iCBT has proven effective in both guided and unguided applications (i.e., with or without therapist support), although guided iCBT tends to produce slightly larger effects [@Baumeister2014a]. iCBT has also proven effective in transdiagnostic applications, including interventions targeting stress [@Day2013], procrastination [@Rozental2015], and perfectionism [@Rozental2017]. The Western Australian Centre for Clinical Interventions offers various self-help resources for mental health problems. These resources include Assert Yourself @michel2008, a series of 10 modules with concepts and strategies primarily based on cognitive behavioral therapy (CBT), with a focus on assertiveness.
 
-This study aims to evaluate the effects of an eight-week iCBT intervention for healthy assertiveness, Respekt^2^ ('Respect Squared'), based on the @michel2008 modules, through a randomized controlled trial. The research questions are:
+This study aimed to evaluate the effects of a randomized controlled trial (RCT) of an eight-week iCBT intervention for healthy assertiveness, Respekt^2^ (Respect Squared), based on the @michel2008 modules. The research questions are as follows:
 
-- What are the effects on assertiveness of guided and unguided participation in Respekt^2^, compared to a waitlist control?
+- What are the effects on assertiveness of guided and unguided participation in Respekt^2^ compared to a waitlist control group?
 
-- What are the effects of guided and unguided participation on measures of anxiety and depression, compared to the control?
+- What are the effects of guided and unguided participation on measures of anxiety and depression compared to the control group?
 
 ```{r prepare.data, echo = F, eval = F}
 
@@ -541,10 +614,6 @@ r2fu.long.data$group <- factor(r2fu.long.data$group, labels = c(xG3,xG1,xG2))
 
 # Method
 
-## Ethics and pre-registration
-
-Before recruitment started, the study received ethics approval from the Swedish Ethical Review Authority (Diary number: 2019-05165). The study was pre-registered at ClinicalTrials.gov (NCT04240249).
-
 ## Design
 
 ```{r powercalc, echo = F, eval = F}
@@ -560,17 +629,17 @@ digits = -1) * 3
 
 ```
 
-The study design follows the RCT criteria proposed by @Chambless2001, with a randomized allocation of participants to three groups: (1) Guided self-help, (2) Unguided self-help, and (3) eight-week Waitlist control. A sample size of 210 participants (70 per group) was decided on through an a priori power calculation according to guidelines for linear models outlined in @cohen1988statistical, assuming a between-group effect size of Cohen’s d of 0.80 on the Adaptive and Aggressive Assertiveness Scales [AAA-S\; @Thompson2011], power 0.90, alpha 0.05, and a 15% drop-out rate per week, with a duration of the intervention of 8 weeks in total.
+The study design follows the RCT criteria proposed by @Chambless2001, with a randomized allocation of participants to three groups: (1) guided self-help, (2) unguided self-help, and (3) eight-week wait-list control. A sample size of 210 participants (70 per group) was decided on through an a priori power calculation according to guidelines for linear models outlined in @cohen1988statistical, assuming a between-group effect size of Cohen’s $d$ of `r xresult(0.8,2)` on the Adaptive and Aggressive Assertiveness Scales [AAA-S\; @Thompson2011], power `r xresult(0.9,2)`, alpha `r xresult(0.05,2)`, and a $15$\% drop-out rate per week, with the duration of the intervention being eight weeks in total.
 
 ## Participants
 
-Participants were recruited from the public through advertisements on social media and other websites. Interested individuals were referred to a purpose-built website with more information on the study, including criteria for participation. Participants were required to be Swedish citizens, at least 18 years of age, have access to the internet, and be fluent in Swedish. Information on the website also included risks associated with participation, as well as terms and conditions for participation. People were invited to submit their email addresses and those who did were sent a link to complete an online screening. The online screening included self-report measures of anxiety, depression, and assertiveness, as well as questions regarding socio-demographics, experiences of psychological treatment, any current medication, and motivation for participation. See Table 1 for a summary of socio-demographic baseline characteristics.
+Before recruitment started, the study received ethical approval from the Swedish Ethical Review Authority (Diary number: 2019-05165). The study was registered at ClinicalTrials.gov (NCT04240249). The participants were recruited from the public through advertisements on social media and other websites. Interested individuals were referred to a purpose-built website with more information on the study, including the participation criteria. The participants were required to be Swedish citizens, at least 18 years of age, have access to the internet, and be fluent in Swedish. Information on the website also included the risks associated with participation, as well as the terms and conditions for participation. Volunteers were invited to submit their email addresses, and those who did were sent a link to complete an online screening questionnaire. The questionnaire included self-report measures of anxiety, depression, and assertiveness, as well as questions regarding socio-demographics, experiences of psychological treatment, any current medication, and motivation for participation. See Table 1 for a summary of the socio-demographic baseline characteristics.
 
 \begin{table}
 
 \caption{\label{tab:demdata}Socio-demographic baseline characteristics of participants.}
 \centering
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{10em}>{\centering\arraybackslash}p{5em}>{\centering\arraybackslash}p{5em}>{\centering\arraybackslash}p{5em}>{\centering\arraybackslash}p{5em}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{10em}>{\centering\arraybackslash}p{4em}>{\centering\arraybackslash}p{4em}>{\centering\arraybackslash}p{4em}>{\centering\arraybackslash}p{4em}}
 \toprule
   & Waitlist & Unguided & Guided & Total\\
   & $n$ = 68 & $n$ = 67 & $n$ = 70 & $n$ = 205\\
@@ -623,33 +692,33 @@ Participants were recruited from the public through advertisements on social med
 \end{tabular}
 \end{table}
 
-In total, 657 individuals submitted their email addresses, of which 464 completed the screening questionnaire. Among those, 126 were excluded for meeting exclusion criteria. Exclusion criteria were concurrent psychological treatment, a recent change in psychotropic medication, lack of time and/or motivation for participation, and a rating of 15 or above on the PHQ-9 measure of depression. The remaining 338 individuals were invited to participate in the study. Of those, 253 accepted the invitation.
+In total, 657 individuals submitted their email addresses, of whom 464 completed the screening questionnaire. Of these, 126 were excluded for meeting the exclusion criteria, which were concurrent psychological treatment, a recent change in psychotropic medication, lack of time and/or motivation for participation, and a rating of 15 or above on the Patient Health Questionnaire (PHQ-9) measure of depression. The remaining 338 individuals were invited to participate in the study. Of these, 253 accepted the invitation.
 
 ## Procedure
 
-Following the a priori power calculation, 210 participants were randomized to be included in the study. The remaining 43 individuals were offered access to treatment materials but were excluded from all analyses. The 210 participants were randomized to the three treatment conditions. Participants in the guided condition were randomized to one of two therapists. All randomization was performed by an independent third party at Stockholm University, using random.org [@RandomOrg] and sealedenvelope.com [@sealed].
+Following the a priori power calculation, 210 participants were randomized to be included in the study. The remaining 43 individuals were offered access to the treatment materials but were excluded from all the analyses. The 210 participants were randomized to the three treatment conditions. The participants in the guided condition were randomized to one of two therapists. All randomization was performed by an independent third party at Stockholm University using random.org [@RandomOrg] and sealedenvelope.com [@sealed].
 
 ## Measures
 
-Data were collected using the below measures at four time points: week 0 (pre-treatment), week 4 (midway through the intervention), week 8 (post-treatment), and at a one-year follow-up.
+The data were collected using the measures described below at four time points: week 0 (pre-treatment), week 4 (during the intervention), week 8 (post-treatment), and at a one-year follow-up.
 
 ### Primary measures
 
-Assertiveness style was measured using a Swedish translation (contributed by TH) of the Adaptive and Aggressive Assertiveness Scales [AAA-S\; @Thompson2011] which contained 30 items, including “When someone I don’t know well borrows something from me and forgets to return it, I… a. Demand it back b. Ask if she/he is done and ask for it back” (a. and b. both scored 1 = Never, 5 = Always). The AAA-S has good and excellent internal consistency for aggressive (0.88) and adaptive (0.93) assertiveness, respectively. A Swedish translation (contributed by TH) of the Rathus Assertiveness Schedule [RAS\; @Rathus1973] was used as an additional measure of assertiveness style with 30 items, including “I find it embarrassing to return merchandise”, (+3 = Very characteristic of me, extremely descriptive, -3 = Very uncharacteristic of me, extremely nondescriptive).
+Assertiveness style was measured using a Swedish translation (contributed by TH) of the Adaptive and Aggressive Assertiveness Scales [AAA-S\; @Thompson2011], which contains 30 items, including “When someone I don’t know well borrows something from me and forgets to return it, I… a. Demand it back; b. Ask if she/he is done and ask for it back” (a. and b. both scored from 1 = never to 5 = always). The AAA-S has good and excellent internal consistency for aggressive (`r xresult(0.88,2)`) and adaptive (`r xresult(0.93,2)`) assertiveness, respectively. A Swedish translation (contributed by TH) of the Rathus Assertiveness Schedule [RAS\; @Rathus1973] was used as an additional measure of assertiveness style with 30 items, including “I find it embarrassing to return merchandise” (+3 = very characteristic of me, extremely descriptive to -3 = very uncharacteristic of me, extremely nondescriptive).
 
 ### Secondary measures
 
-Depression was measured using the Patient Health Questionnaire [PHQ-9\; @Kroenke2010] which contained nine items, including “Feeling down, depressed, or hopeless” (0 = Not at all, 3 = Nearly every day). Anxiety was measured using the Generalised Anxiety Disorder 7-item Scale [GAD-7\; @Kroenke2006] which contained seven items, including “Feeling nervous, anxious or on edge” (0 = Not at all, 3 = Nearly every day). Social anxiety was measured using the Liebowitz Social Anxiety Scale [LSAS-SR\; @Fresco2001] which contained 24 items, including “Calling someone you don’t know very well” (Fear or anxiety, 0 = None, 3 = Severe; Avoidance, 0 = Never, 3 = Usually). These self-report measures have reported either good or excellent internal consistency (0.87, 0.89, 0.92, and 0.96, respectively).
+Depression was measured using the PHQ-9 [@Kroenke2010], which contains nine items, including “Feeling down, depressed, or hopeless” (0 = not at all to 3 = nearly every day). Anxiety was measured using the Generalized Anxiety Disorder 7-item Scale [GAD-7\; @Kroenke2006] which contains seven items, including “Feeling nervous, anxious, or on edge” (0 = not at all to 3 = nearly every day). Social anxiety was measured using the Liebowitz Social Anxiety Scale [LSAS-SR\; @Fresco2001] which contains 24 items, including “Calling someone you don’t know very well” (fear or anxiety, 0 = none to 3 = severe; avoidance, 0 = never to 3 = usually). These self-report measures have reported either good or excellent internal consistency (`r xresult(0.87,2)`, `r xresult(0.89,2)`, `r xresult(0.92,2)`, and `r xresult(0.96,2)`, respectively).
 
 ## Intervention
 
-The intervention was based on the Assert Yourself modules by @michel2008, adapted to Swedish by TH with permission from the copyright holders. The self-help material teaches the distinction between different types of assertiveness (constructive, aggressive, passive, and passive-aggressive). It also aids the reader in finding reasons to act more assertive and constructive. The material is inspired by and cites works by @alberti1974your, @gambrill1975assertion, and @smith1975say, among others. In the material, assertiveness is described and operationalized based on the theoretic assumptions by @wolpe1990practice regarding reciprocal inhibition and classic conditioning: By assertively practicing the expression of feelings, wishes, and demands in anxiety-evoking situations and relationships, where the person was previously prone to non-assertive behavior, e.g., subdued disappointment or anger, a person may experience less discomfort from autonomous anxiety responses, over time. This is to be practiced in vivo, not just by acting. The long-term goal is to learn how to inhibit anxiety by being assertive. In cases where a physical counterpart is missing and anxiety is invoked by places, objects, or words, @Wolpe1952 suggests relaxation as a means to inhibit the anxiety response.
+The intervention was based on the Assert Yourself modules by @michel2008, which were adapted to Swedish by TH with permission from the copyright holders. The self-help material teaches the distinction between different types of assertiveness (constructive, aggressive, passive, and passive-aggressive). It also aids the reader in finding reasons to act more assertively and constructively. The material is inspired by and cites works by @alberti1974your, @gambrill1975assertion, and @smith1975say, among others. In the material, assertiveness is described and operationalized based on @wolpe1990practice theoretical assumptions regarding reciprocal inhibition and classic conditioning: by assertively practicing the expression of feelings, wishes, and demands in anxiety-evoking situations and relationships, where the person was previously prone to non-assertive behavior (e.g., subdued disappointment or anger), a person may experience less discomfort from autonomous anxiety responses over time. This is to be practiced in vivo, not just by acting. The long-term goal is to learn how to inhibit anxiety by being assertive. In cases where a physical counterpart is absent and anxiety is invoked by places, objects, or words, @Wolpe1952 suggests relaxation as a means to inhibit the anxiety response.
 
-The material also includes a rationale for cognitive restructuring with methods by @beck1979cognitive, @Clark1986, @clark1995cognitive, and @powell2017mental. Through behavioral experiments, readers are to test the validity of negative thoughts, to achieve greater flexibility in responses. Furthermore, the material includes a passage on progressive muscle relaxation, for the reader to recognize bodily tension, reduce general strain, and practice an active coping technique for stressful situations. Finally, chapters on specific challenges, such as saying no, dealing with criticism, and coping with disappointment, conclude the material.
+The material also includes a rationale for cognitive restructuring with methods by  @beck1979cognitive, @Clark1986, @clark1995cognitive, and @powell2017mental. Through behavioral experiments, readers test the validity of negative thoughts to achieve greater flexibility in their responses. Furthermore, the material includes a passage on progressive muscle relaxation for the reader to recognize bodily tension, reduce general strain, and practice an active coping technique for stressful situations. Chapters on specific challenges, such as saying "no," dealing with criticism, and coping with disappointment, conclude the material.
 
-The Swedish adaptation prompted additions to @michel2008, some of which are presented in this paragraph. Based on recent research on exposure and inhibitory learning [e.g., @Craske2008], participants were encouraged to actively vary learning situations and work on new skills in as many environments as possible. In another new passage, inspired by the works on acceptance by Hayes [e.g., -@Hayes2004a] and others, participants were encouraged to actively search for and remain in the respondent discomfort they previously avoided. In line with Öst’s [-@ost2006tillampad] recommendations for applied tension, progressive muscle relaxation was introduced early in the intervention and expanded over several weeks. The written material was also complemented by downloadable audio with relaxation exercises, video of conversations and role-playing, and several new, interactive exercises.
+The Swedish adaptation prompted additions to @michel2008, some of which are presented here. Based on recent research on exposure and inhibitory learning [e.g., @Craske2008], the participants were encouraged to actively vary learning situations and work on new skills in as many environments as possible. In another new passage, inspired by the works on acceptance by Hayes [e.g., -@Hayes2004a] and others, the participants were encouraged to actively search for and remain in the respondent discomfort they previously avoided. In line with Öst’s [-@ost2006tillampad] recommendations for applied tension, progressive muscle relaxation was introduced early in the intervention and expanded over several weeks. The written material was also complemented by downloadable audio relaxation exercises, videos of conversations and role-playing, and several new interactive exercises.
 
-Additional support for participants in the Guided self-help condition included weekly messages in the treatment platform, involving homework feedback, encouragement, validation, psychoeducation, and answers to any questions. Therapists were allocated 15 minutes of work, per participant and week.
+Additional support for participants in the guided self-help condition included weekly messages on the treatment platform, involving feedback on homework, encouragement, validation, psychoeducation, and answers to any questions. The therapists were allocated 15 minutes of work per participant per week.
 
 ### Therapists
 
@@ -657,9 +726,9 @@ Both therapists working with participants in the guided condition were final-yea
 
 ## Data preparation
 
-Five participants were excluded from the analyses due to wrongful inclusion as they were receiving concurrent psychological treatment.
+Five participants were excluded from the analyses due to wrongful inclusion, as they were receiving concurrent psychological treatment.
 
-```{bash, include = F, eval = F}
+```{bash, include = F, eval = T}
 
 # A better way?
 # https://community.rstudio.com/t/dot-in-rmarkdown/51311/3
@@ -706,7 +775,7 @@ digraph G {
 
   subgraph cluster_selfhelp { margin=8; penwidth=0.5; labelloc="t"; color=black; bgcolor=white; label=<Unguided self-help<BR/><I>n</I> = 70 – 3 (excluded) = 67> ; selfhelp_dur -> selfhelp_post -> selfhelp_fu; } 
   subgraph cluster_support { margin=8; penwidth=0.5; labelloc="t"; color=black; bgcolor=white; label=<Guided self-help<BR/><I>n</I> = 70> ; support_dur -> support_post -> support_fu; } 
-  subgraph cluster_waitlist { margin=8; penwidth=0.5; labelloc="t"; color=black; bgcolor=white; label=<Waitlist<BR/><I>n</I> = 70 – 2 (excluded) = 68> ; waitlist_dur -> waitlist_post; } 
+  subgraph cluster_waitlist { margin=8; penwidth=0.5; labelloc="t"; color=black; bgcolor=white; label=<Wait-list<BR/><I>n</I> = 70 – 2 (excluded) = 68> ; waitlist_dur -> waitlist_post; } 
   { selfhelp_fu support_fu waitlist_post } -> itt
 
 }
@@ -718,7 +787,7 @@ EOF
 
 ```
 
-```{r flowchartout, out.width="100%", fig.align="center", fig.cap="A total of 210 participants were included in the study through randomization; they were further randomized into groups Unguided self-help, Guided self-help, and Waitlist, with 70 participants each."}
+```{r flowchartout, out.width="100%", fig.align="center", fig.cap="A total of 210 participants were included in the study through randomization and further randomized into three groups: unguided self-help, guided self-help, and wait-list, with 70 participants each."}
 
 knitr::include_graphics("flowchart.png", auto_pdf = T)
 
@@ -726,9 +795,9 @@ knitr::include_graphics("flowchart.png", auto_pdf = T)
 
 ## Analysis
 
-All data were organized in one dataset and analyzed using `r R.Version()$language` `r paste(R.Version()[c("major", "minor")], collapse = ".")`, with packages lmerTest [@R-lmerTest], emmeans [@R-emmeans], ggeffects [@R-ggeffects], performance [@R-performance], and clinicalsignificance [@R-clinicalsignificance]. All syntax is available at https://github.com/hmep/r2fu/, together with anonymized data. 
+All the data were analyzed using `r R.Version()$language` `r paste(R.Version()[c("major", "minor")], collapse = ".")`, with the packages lmerTest [@R-lmerTest], emmeans [@R-emmeans], ggeffects [@R-ggeffects], performance [@R-performance], and clinicalsignificance [@R-clinicalsignificance]. All the syntax is available at https://github.com/hmep/r2fu/, together with the anonymized data. 
 
-A linear mixed-effects model was fitted to estimate fixed effects of group, time, and group-time interaction, and random effects of participant (specifying a random intercept to control for individual differences), using an unstructured covariance pattern, and the REML method of estimation. Kenward-Roger approximations were used to estimate denominator degrees of freedom. Post-hoc pairwise comparisons of estimated marginal means were performed using T-tests. Significance of all post-hoc tests were decided with Bonferroni-corrected p-values. The proportions of participants showing reliable change and reaching clinical significance were determined following @Jacobson1991, using the 'c' definition to select the cutoff value. To honor the intention to treat principle in the analysis of clinical significance, for any missing values  the last observation was carried forward.
+A linear mixed-effects model was fitted to estimate the fixed effects of group, time, and group-time interaction, and the random effects of participant (specifying a random intercept to control for individual differences), using an unstructured covariance pattern and the Restricted maximum likelihood (REML) estimation method. The Kenward–Roger approximations were used to estimate denominator degrees of freedom. Post-hoc pairwise comparisons of estimated marginal means were performed using T-tests. The significance of all the post-hoc tests was decided with Bonferroni-corrected p-values. The proportions of participants showing reliable change and reaching clinical significance were determined following @Jacobson1991, using the “c” definition to select the cutoff value. To honor the intention-to-treat principle in the analysis of clinical significance, the last observation was carried forward for any missing values.
 
 ```{r mixedmodels, fig.width = 13, fig.asp = 0.75, echo = F, eval = T, results='hide'}
 
@@ -973,7 +1042,7 @@ effsel.time <- -10
 
 <!--The trends continue beyond the Post time point, showing further increased estimated mean levels of assertive behavior at 1-year Follow-up. The Waitlist means recovered slightly, although not significantly, between the Pre and Post time points, for all measures. -->
 
-```{r emm.primary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of estimated fixed effects for two of the primary transdiagnostic scales used to measure skillful, assertive behavior. Participants’ estimated means for all three measures exhibit increasing levels of assertiveness during treatment in the Unguided self-help and Guided self-help groups, with negligible differences between the two treatment conditions.'}
+```{r emm.primary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of the estimated fixed effects for the primary transdiagnostic scales used to measure skillful, assertive behavior. The participants’ estimated means for all three measures exhibited increasing levels of assertiveness during treatment in the unguided self-help and guided self-help groups, with negligible differences between the two treatment conditions.'}
 
 (aaas_ad.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
   (aaas_ag.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
@@ -982,7 +1051,7 @@ effsel.time <- -10
 
 ```
 
-```{r emm.secondary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of estimated fixed effects for secondary syndromal outcome measures. Participation in the Unguided self-help and Guided self-help conditions lead to significant symptom alleviation between the Pre and Post as well as between Pre and 1-year Follow-up time points for depression and social anxiety, as captured with their respective measures. As with the transdiagnostic measures of assertive behavior, the differences between the Post and Follow-up time points were statistically inappreciable for all three measures, in both treatment groups. The Waitlist control group did not significantly change between any time points for either measure. However, to stay on the conservative side and to counteract even the slightest nocebo effect of the Waitlist condition, the most conservative estimate for the Waitlist control condition was used in each Follow-up between-group comparison; see dotted line for a visual representation of the selected time points.'}
+```{r emm.secondary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of the estimated fixed effects for the secondary syndromal outcome measures. Participation in the unguided self-help and guided self-help conditions led to significant symptom alleviation between the pre and post time points as well as between the pre and one-year follow-up time points for depression and social anxiety, as captured with their respective measures. As with the transdiagnostic measures of assertive behavior, the differences between the post and follow-up time points were statistically inappreciable for all three measures in both treatment groups. The wait-list control group did not significantly change between any time points for either measure. However, to stay on the conservative side and counteract even the slightest nocebo effect of the wait-list condition, the most conservative estimate for the wait-list control condition was used in each follow-up between-group comparison; see the dotted line for a visual representation of the selected time point.'}
 
 (phq_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
   (gad_sum.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
@@ -1247,14 +1316,15 @@ knitr::kable(
   align = "rllllll",
   escape = F,
   booktabs = T,
-  format = "latex"
+  format = "latex",
+  table.envir = "sidewaystable"
 ) %>%
   kable_styling(full_width = F, font_size = 7) %>%
   pack_rows("Within-group effect sizes", 1, 7, bold = F) %>%
   pack_rows("Between-group effect sizes", 8, 15, bold = F) %>%
   row_spec(c(3, 6, 7, 10, 13), extra_latex_after = "\\midrule") %>%
   column_spec(c(1), width = "24em") %>%
-  column_spec(c(2:7), width = "11.5em") %>%
+  column_spec(c(2:7), width = "10.5em") %>% # 11.5em
   add_header_above(
     c(
       " ",
@@ -1274,8 +1344,9 @@ knitr::kable(
     general_title = "Notes.",
     footnote_as_chunk = F,
     threeparttable = T
-  ) %>%
-  kableExtra::landscape()
+  ) 
+# %>%
+#   kableExtra::landscape()
 
 ```
 
@@ -1766,8 +1837,8 @@ colnames(clinsig.table) <- xcolnames
 
 ```{r clinsigtab, echo = F, eval = T, results = 'asis'}
 
-knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of participants that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Followup-time points respectively (rows named 'Recovered'). For missing values (i.e., caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rlllll", escape = F) %>%
-  kable_styling(full_width = F, font_size = 10) %>%
+knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of participants that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Follow-up-time points respectively (rows named 'Recovered'). For missing values (i.e., caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rlllll", escape = F) %>%
+  kable_styling(full_width = F, font_size = 9) %>%
   pack_rows(paste0(measurementnames[1]), 1, 5, bold = F, escape = F) %>%
   pack_rows(paste0(measurementnames[2]), 6, 10, bold = F, escape = F) %>%
   pack_rows(paste0(measurementnames[3]), 11, 15, bold = F, escape = F) %>%
@@ -1776,7 +1847,7 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
   pack_rows(paste0(measurementnames[6]), 26, 30, bold = F, escape = F) %>%
   row_spec(c(5,10,15,20,25), extra_latex_after = "\\midrule") %>%
   column_spec(c(1), width = "7em") %>%
-  column_spec(c(2:6), width = "8em") %>%
+  column_spec(c(2:6), width = "6em") %>%
   add_header_above(c(" ", "Waitlist" = 1, "Unguided self-help" = 2, "Guided self-help" = 2)) %>%
   footnote(
     general = c(
@@ -1791,15 +1862,15 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
 
 ```
 
-## Treatment efficacy, primary and secondary measures
+## Treatment efficacy, primary, and secondary measures
 
-Mixed models including groups Unguided self-help, Guided self-help, and Waitlist at time points Pre, During and Post revealed time \texttimes{} group interaction effects for all three measures of assertiveness: The Adaptive subscale of AAA-S, `r report.anova(aaas_ad.post.anova)[3]`, the Aggressive subscale of AAA-S, `r report.anova(aaas_ag.post.anova)[3]`, and the RAS, `r report.anova(rathus.post.anova)[3]`. These interactions show that the random assignment to group conditions did have an effect over time on assertive behavior. Similarily, mixed models for the syndromal symptoms revealed time \texttimes{} group interaction effects for all three measures of anxiety and depression: PHQ-9, `r report.anova(phq_sum.post.anova)[3]`, GAD-7, `r report.anova(gad_sum.post.anova)[3]`, and LSAS-SR, `r report.anova(lsas_sum.post.anova)[3]`. Estimated mean levels of depressive mood and generalized and social anxiety symptoms were significantly affected by participation in the intervention.
+Mixed models that included the unguided self-help, guided self-help, and wait-list groups at the pre, during, and post time points revealed time–group interaction effects for all three measures of assertiveness: the AAA-S Adaptive subscale, `r report.anova(aaas_ad.post.anova)[3]`, the AAA-S Aggressive subscale, `r report.anova(aaas_ag.post.anova)[3]`, and the RAS, `r report.anova(rathus.post.anova)[3]`. These interactions show that the random assignment to group conditions had an effect over time on assertive behavior. Similarly, mixed models for the syndromal symptoms revealed time–group interaction effects for all three measures of anxiety and depression: the PHQ-9, `r report.anova(phq_sum.post.anova)[3]`, the GAD-7, `r report.anova(gad_sum.post.anova)[3]`, and the LSAS-SR, `r report.anova(lsas_sum.post.anova)[3]`. The estimated mean levels of depressive mood and generalized and social anxiety symptoms were significantly affected by participation in the intervention.
 
 All subsequent post-hoc testing of marginal mean differences in pairwise comparisons included all groups and time points.
 
 ### Between-group effects on assertive behavior
 
-Post-hoc testing revealed significant effects between both treatment groups and the Waitlist group for all three primary measures of assertiveness at Post, that is at the end of the eight-week Respekt^2^ treatment program. It also revealed significant effects at Follow-up one year after the end of treatment, compared to the Waitlist condition at Post. Table 2 summarizes significance tests of estimated marginal mean differences and effect sizes, including 95\% confidence intervals (CI).
+Post-hoc testing revealed significant effects between both treatment groups and the wait-list group for all three primary measures of assertiveness at the post time point, that is, at the end of the eight-week Respekt^2^ treatment program. It also revealed significant effects at the follow-up one year after the end of treatment compared to the wait-list condition at the post time point. Table 2 summarizes the significance tests of the estimated marginal mean differences and effect sizes, with 95\% confidence intervals (CI).
 
 ```{r displaytoggle}
 
@@ -1809,97 +1880,73 @@ display = stats[7]
 
 ```
 
-Comparing against Waitlist, the effect of the Unguided self-help condition on adaptive assertiveness using the AAA-S Adaptive primary measure was large at Post, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT3,xG1), -1, display)`, and even larger at Follow-up, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG1), -1, display)`. Large effects at Post were found also for aggressive assertiveness as measured with AAA-S Aggressive, `r report.text2(aaas_ag.out, paste(xT3,xG3,"-",xT3,xG1), -1, display)`, and at Follow-up,  `r report.text2(aaas_ag.out, paste(xT3,xG3,"-",xT4,xG1), -1, display)`. Large effects were also found for 'compound' assertiveness assessed with the RAS, `r report.text2(rathus.out, paste(xT3,xG3,"-",xT3,xG1), -1, display)`, and at Follow-up, `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG1), -1, display)`. 
+Compared to the wait-list condition, the effect of the unguided self-help condition on adaptive assertiveness using the AAA-S Adaptive subscale primary measure was large at the post time point, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT3,xG1), -1, display)`, and even larger at the follow-up, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG1), -1, display)`. Large effects at the post time point were also found for aggressive assertiveness as measured with the AAA-S Aggressive subscale, `r report.text2(aaas_ag.out, paste(xT3,xG3,"-",xT3,xG1), -1, display)`, and at the follow-up, `r report.text2(aaas_ag.out, paste(xT3,xG3,"-",xT4,xG1), -1, display)`. Large effects were also found for “compound” assertiveness assessed with the RAS, `r report.text2(rathus.out, paste(xT3,xG3,"-",xT3,xG1), -1, display)`, and at the follow-up, `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG1), -1, display)`.
 
-Similarily, the effect of the Guided self-help condition on AAA-S Adaptive was large at Post, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT3,xG2), -1, display)`, growing to `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG2), -1, display)` at Follow-up. Large effects at Post were also identified for AAA-S Aggressive, `r report.text2(aaas_ag.out, paste(xT3,xG3,"-",xT3,xG2), -1, display)`, and at Follow-up,  `r report.text2(aaas_ag.out, paste(xT3,xG3,"-",xT4,xG2), -1, display)`, as well as for RAS, `r report.text2(rathus.out, paste(xT3,xG3,"-",xT3,xG2), -1, display)` at Post, and `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG2), -1, display)` at Follow-up. 
+Similarly, the effect of the guided self-help condition on the AAA-S Adaptive subscale was large at the post time point, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT3,xG2), -1, display)`, reaching `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG2), -1, display)` at the follow-up. Large effects at the post time point were also identified for the AAA-S Aggressive subscale, `r report.text2(aaas_ag.out, paste(xT3,xG3,"-",xT3,xG2), -1, display)`, and at the follow-up, `r report.text2(aaas_ag.out, paste(xT3,xG3,"-",xT4,xG2), -1, display)`, as well as for the RAS, `r report.text2(rathus.out, paste(xT3,xG3,"-",xT3,xG2), -1, display)` at the post time point, and `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG2), -1, display)` at the follow-up.
 
-Comparing the Unguided self-help and Guided self-help conditions, there was no significant difference neither at Post nor Follow-up, revealing that participants working through the intervention on their own fared as well as those who were supported by a therapist.
+Comparing the unguided self-help and guided self-help conditions, no significant differences were found either at the post or the follow-up time points, revealing that the participants working through the intervention on their own fared as well as those who were supported by a therapist.
 
 ### Between-group effects on syndromal symptoms of anxiety and depression
 
-In post-hoc testing, no effect on depressive symptoms, measured with PHQ-9, was found at Post, comparing the Waitlist and the Unguided self-help groups. Tentative evidence was found for support by therapists benefiting depressed participants, as the Waitlist versus Guided self-help comparison revealed a moderate to large effect on PHQ-9 at Post, `r report.text2(phq_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1, display)`. However, this effect dissipated when the Follow-up comparison was instead made against the most conservative value collected in the Waitlist group, in this case from the Pre time point; see Figure 3 for a visual exploration of a possible nocebo effect.
+In the post-hoc testing, no effect on depressive symptoms, measured with the PHQ-9, was found at the post time point comparing the wait-list and the unguided self-help groups. Tentative evidence was found for therapist support benefiting depressed participants: the wait-list versus the guided self-help comparison revealed a moderate to large effect on PHQ-9 at the post time point, `r report.text2(phq_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1, display)`. However, this effect dissipated when the follow-up comparison was instead made against the most conservative value collected in the wait-list group, in this case from the pre time point; see Figure 3 for a visual exploration of a possible nocebo effect.
 
-<!-- , that is symptomatic worsening over time due to self-fulfilling expectations of low mood among participants waiting in line for treatment -->
+No between-group effects were found for the GAD-7 when comparing the treatment and the wait-list groups. In addition, there was no significant effect of the unguided self-help condition on social anxiety symptoms measured with the LSAS-SR at the post time point. However, a large effect was found at the follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1, display)` for the unguided self-help group, compared with the lowest value collected at the during time point. For the guided self-help group, a moderate effect was found at the post time point, `r report.text2(lsas_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1, display)`, with a large effect at the follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1, display)`, this time compared with the most conservative value, from the during time point, for the wait-list group.
 
-No between-group effects were found for GAD-7, comparing treatment groups and Waitlist. Also, there was no significant effect of the Unguided self-help condition on social anxiety symptoms measured with LSAS-SR at Post. However, a large effect was found at Follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1, display)` for the Unguided self-help group, comparing against the lowest value collected, at During. For the Guided self-help group, a moderate effect was found at Post, `r report.text2(lsas_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1, display)`, and a large effect at Follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1, display)`, this time comparing against the most conservative time point, During, for the Waitlist.
-
-Thus, the eight-week Respekt^2^ intervention did not affect either depression or generalized anxiety. However, it did have a pronounced effect on social anxiety. See table 2 for a summary of significant effects, including 95\% CIs.
+Thus, the eight-week Respekt^2^ intervention did not affect either depression or generalized anxiety. However, it did have a pronounced effect on social anxiety. See Table 2 for a summary of the significant effects, including 95\% CIs.
 
 ### Notable within-group effects
 
-As shown in table 2, participants in both treatment groups enjoyed sustained within-group effects on assertiveness at Follow-up, compared to the Pre-treatment time point, measured with AAA-S Adaptive, AAA-S Aggressive, and the RAS. Thus, assertive behavior were still manifested well beyond the end of participation in the intervention. However, significant effects between Post and Follow-up were found only for two measures in the Guided self-help group, where AAA-S Adaptive and the RAS exhibited small to medium effects, `r report.text2(aaas_ad.out, paste(xT3,xG2,"-",xT4,xG2), -1)` and `r report.text2(rathus.out, paste(xT3,xG2,"-",xT4,xG2), -1)` respectively. In the Unguided self-help group, there was no difference between Post and Follow-up for either measure, `r xprnot(aaas_ad.out$emmpairs$p.value[41])` and `r xprnot(rathus.out$emmpairs$p.value[41])`, indicating that therapist support provided some benefit to participants' ability to generalize adaptive assertive behaviors beyond the duration of the intervention.
+As shown in Table 2, the participants in both treatment groups enjoyed sustained within-group effects on assertiveness at the follow-up compared to the pre-treatment time point, measured with the AAA-S Adaptive and Aggressive subscales and the RAS. Thus, assertive behavior was still manifested well beyond the end of participation in the intervention. However, significant effects between the post and the follow-up time points were found only for two measures in the guided self-help group, where the AAA-S Adaptive subscale and the RAS exhibited small to medium effects, `r report.text2(aaas_ad.out, paste(xT3,xG2,"-",xT4,xG2), -1)` and `r report.text2(rathus.out, paste(xT3,xG2,"-",xT4,xG2), -1)`, respectively. In the unguided self-help group, no difference between the post and the follow-up time points was found for either measure, `r xprnot(aaas_ad.out$emmpairs$p.value[41])` and `r xprnot(rathus.out$emmpairs$p.value[41])`, indicating that the therapist support provided some benefit to the participants’ ability to generalize adaptive assertive behaviors beyond the duration of the intervention.
 
-Among the secondary measures of syndromal symptoms, depression, as captured with PHQ-9, decreased significantly from Pre only in the Guided self-help group, and only at Follow-up, showing a medium effect, `r report.text2(phq_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1)`, implying that therapist support benefited depressed participants on a longer rather than shorter time scale.
+Among the secondary measures of syndromal symptoms, depression, as captured with the PHQ-9, decreased significantly from the pre time point only in the guided self-help group and only at the follow-up, showing a medium effect, `r report.text2(phq_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1)`, implying that therapist support benefited depressed participants on a longer rather than a shorter time scale.
 
 ### Clinical significant change
 
-#### Reliable recovery with regards to assertive behavior
+#### Reliable recovery with regard to assertive behavior
 
-Adding to the picture that assertive behavior increased as a consequence of participation in the intervention, there was a significant difference between the groups at Post in the proportion of participants that had recovered clinically, that is had moved across the cutoff for reliable and clinically significant change, with respect to AAA-S Adaptive, `r report.kw(aaas_ad.pre.post.kw)` and the RAS, `r report.kw(rathus.pre.post.kw)`. At Follow-up, the proportions of the 'Recovered' category were also significantly different for AAA-S Adaptive, `r report.kw(aaas_ad.pre.fu.kw)`, and for the RAS, `r report.kw(rathus.pre.fu.kw)`. However, there was no difference in the proportions of recovered participants with regards to AAA-S Aggressive at either time point.
+Adding to the picture that assertive behavior increased as a consequence of participation in the intervention, a significant difference between the groups at the post time point was found in the proportion of participants who had recovered clinically (i.e., had moved across the cutoff for reliable and clinically significant change), with respect to the AAA-S Adaptive subscale, `r report.kw(aaas_ad.pre.post.kw)`, and the RAS, `r report.kw(rathus.pre.post.kw)`. At the follow-up, the proportions of the recovered category were also significantly different for the AAA-S Adaptive subscale,  `r report.kw(aaas_ad.pre.fu.kw)` and for the RAS, `r report.kw(rathus.pre.fu.kw)`. However, no differences in the proportions of recovered participants with regard to the AAA-S Aggressive subscale were found at either time point.
 
-Notably, `r clinsigtext("aaas_ad", "higher", xT1, xT3, xG1, aaas_ad.pre.post.kw)[1]` in the Unguided self-help group enjoyed clinical recovery with regards to adaptive assertiveness measured with AAA-S Adaptive at Post, increasing to `r clinsigtext("aaas_ad", "higher", xT1, xT4, xG1, aaas_ad.pre.fu.kw)[1]` at Follow-up. In the Guided self-help group, the number of participants recovered at Post was not significantly different from that of the Waitlist, while significantly larger at Followup, `r clinsigtext("aaas_ad", "higher", xT1, xT4, xG2, aaas_ad.pre.fu.kw)[1]`. For assertiveness assessed with RAS, the corresponding numbers (and percentages) were `r clinsigtext("rathus", "higher", xT1, xT3, xG1, rathus.pre.post.kw)[1]` for the Unguided self-help condition and `r clinsigtext("rathus", "higher", xT1, xT3, xG2, rathus.pre.post.kw)[1]` for the Guided self-help condition at Post, increasing to `r clinsigtext("rathus", "higher", xT1, xT4, xG1, rathus.pre.fu.kw)[1]` and `r clinsigtext("rathus", "higher", xT1, xT4, xG2, rathus.pre.fu.kw)[1]` respectively at Follow-up. 
+Notably, `r clinsigtext("aaas_ad", "higher", xT1, xT3, xG1, aaas_ad.pre.post.kw)[1]` in the unguided self-help group experienced clinical recovery with regard to adaptive assertiveness measured with the AAA-S Adaptive subscale at the post time point, increasing to `r clinsigtext("aaas_ad", "higher", xT1, xT4, xG1, aaas_ad.pre.fu.kw)[1]` at the follow-up. In the guided self-help group, the number of participants recovered at the post time point was not significantly different from that of the wait-list group, while it was significantly larger at the follow-up, with `r clinsigtext("aaas_ad", "higher", xT1, xT4, xG2, aaas_ad.pre.fu.kw)[1]`. For assertiveness assessed with the RAS, the corresponding numbers (and percentages) were `r clinsigtext("rathus", "higher", xT1, xT3, xG1, rathus.pre.post.kw)[1]` for the unguided self-help condition and `r clinsigtext("rathus", "higher", xT1, xT3, xG2, rathus.pre.post.kw)[1]` for the guided self-help condition at the post time point, increasing to `r clinsigtext("rathus", "higher", xT1, xT4, xG1, rathus.pre.fu.kw)[1]` and `r clinsigtext("rathus", "higher", xT1, xT4, xG2, rathus.pre.fu.kw)[1]`, respectively, at the follow-up.
 
-Thus, the clinical significance findings are mostly in agreement with the statistical analysis of change, confirming that adaptive expressions of assertiveness in both treatment groups increased from Pre to Post, and beyond, while deviating with regards to aggressive expressions. 
+Thus, the clinical significance findings are mostly in agreement with the statistical analysis of the change, confirming that adaptive expressions of assertiveness in both treatment groups increased from the pre to the post time points and beyond, while deviating with regard to aggressive expressions.
 
-#### Reliable recovery with regards to syndromal symptoms
+#### Reliable recovery with regard to syndromal symptoms
 
-As for the syndromal symptoms, the proportions of those with reliable recovery from social phobia, as captured with LSAS-SR, was significantly different between groups at Post, `r report.kw(lsas_sum.pre.post.kw)`. However, there was no difference between groups at Post with regards to PHQ-9 or GAD-7. At Follow-up, the difference in proportions of recovered participants between conditions was significant for PHQ-9, `r report.kw(phq_sum.pre.fu.kw)`, and LSAS-SR, `r report.kw(lsas_sum.pre.fu.kw)`, but not for GAD-7.  
+As for the syndromal symptoms, the proportions of those with reliable recovery from social phobia, as captured with the LSAS-SR, were significantly different between the groups at the post time point, `r report.kw(lsas_sum.pre.post.kw)`. However, no difference between the groups was found at the post time point with regards to the PHQ-9 or GAD-7. At the follow-up, the difference in the proportions of recovered participants between the conditions was significant for the PHQ-9, `r report.kw(phq_sum.pre.fu.kw)`, and the LSAS-SR, `r report.kw(lsas_sum.pre.fu.kw)`, but not for the GAD-7.
 
-Clinical recovery measured with PHQ-9 Pre to Post indicates that the intervention, compared to Waitlist, was effective in taking some participants out of depression in the Guided self-help group, `r clinsigtext("phq_sum", "lower", xT1, xT3, xG2, phq_sum.pre.post.kw)[1]`, but not so in the Unguided self-help group, suggesting that interaction with a therapist may aid in recovery for depressed participants. In addition, a significant number of participants in the Unguided self-help group recovered from symptoms of social anxiety as captured with LSAS-SR, `r clinsigtext("lsas_sum", "lower", xT1, xT3, xG1, lsas_sum.pre.post.kw)[1]` at Post, increasing to `r clinsigtext("lsas_sum", "lower", xT1, xT4, xG1, lsas_sum.pre.fu.kw)[1]` at Follow-up. In the Guided self-help condition, there was no significant number of recovered participants compared to Waitlist at Post, but `r clinsigtext("lsas_sum", "lower", xT1, xT4, xG2, lsas_sum.pre.fu.kw)[1]` at Follow-up. In other words, symptoms of social anxiety subsided in the year following treatment, to the point that a meaningful number of participants had recovered. Combined with the clinically relevant recovery to functional levels of assertive behavior measured with AAA-S Adaptive and RAS, this could be a sign of generalization of assertive behavior having continued after the end of treatment, facilitating extinction of autonomous anxiety responses and/or reducing avoidance and escape behaviors from them.
+Clinical recovery measured with the PHQ-9 between the pre and post time points indicated that the intervention compared to the wait-list condition was effective in taking some participants out of depression in the guided self-help group, `r clinsigtext("phq_sum", "lower", xT1, xT3, xG2, phq_sum.pre.post.kw)[1]`, but not so in the unguided self-help group, suggesting that interaction with a therapist may aid recovery in depressed participants. In addition, a significant number of participants in the unguided self-help group recovered from social anxiety symptoms, as captured with the LSAS-SR, `r clinsigtext("lsas_sum", "lower", xT1, xT3, xG1, lsas_sum.pre.post.kw)[1]`, at the post time point, increasing to `r clinsigtext("lsas_sum", "lower", xT1, xT4, xG1, lsas_sum.pre.fu.kw)[1]` at the follow-up. In the guided self-help condition, no significant number of recovered participants was found compared to the wait-list condition at the post time point, but `r clinsigtext("lsas_sum", "lower", xT1, xT4, xG2, lsas_sum.pre.fu.kw)[1]` were found at the follow-up. In other words, social anxiety symptoms subsided in the year following treatment, to the point that a meaningful number of participants had recovered. Combined with the clinically relevant recovery to functional levels of assertive behavior measured with the AAA-S Adaptive subscale and the RAS, this could be a sign of generalization of assertive behavior having continued after the end of treatment, facilitating extinction of autonomous anxiety responses and/or reducing avoidance and escape behaviors from them.
 
-Table 3 gives a summary of numbers and proportions of clinical recovery in the different groups, and the significance, if any, of pairwise tests of those proportions against those of the Waitlist.
+Table 3 provides a summary of the numbers and proportions of clinical recovery in the different groups and the significance, if any, of the pairwise tests of those proportions against those of the wait-list group.
 
 #### Reliable deterioration and harm
 
-Checking for any signs of reliable harm, the most severe of the adverse outcome categories (see Table 3), a significant difference between groups in clinical significant change was found for the AAA-S Aggressive measure, 
-<!-- `r report.kw(aaas_ag.pre.post.kw.harmed)`, -->
-as $3$ participants ($4$\%) had fallen below the threshold for 'Harmed' while waiting to begin treatment. However, post hoc testing did not reveal any significant pairwise differences between any of the treatment groups and the Waitlist group, `r xprnot(aaas_ag.pre.post.kw.harmed$altP.adjusted[2],a="Bonf")` and `r xprnot(aaas_ag.pre.post.kw.harmed$altP.adjusted[1],a="Bonf")`. No other instances of suspected reliable harm Pre to Post or Pre to Follow-up were identified for either measure. The second to worst category in assessing reliable change is 'Deteriorated'; to identify any possible cases of reliable deterioration _and_ reliable harm, these two categories were collapsed into the conservative ad hoc category 'Worsened' -- gathering participants that had moved into either of these two categories. Applying the 'Worsened' portmanteau category, a significant difference between groups for LSAS-SR was found, 
-<!-- `r report.kw(lsas_sum.pre.post.kw.worsened)`,  -->
-meriting a follow-up pairwise comparison. It revealed that the 7 participants ($10$\xspace\%) in the Waitlist condition that had reached either 'Deteriorated' or 'Harmed', going from Pre to Post treatment, was significantly larger than the corresponding number in the Guided self-help group.
-<!-- $Z$($2$) = `r xresult(lsas_sum.pre.post.kw.worsened$Z[2],2)`,  -->
-<!-- `r xpr(lsas_sum.pre.post.kw.worsened$altP.adjusted[2],a="Bonf")`.  -->
-The same held true comparing Pre to Follow-up, 
-<!-- `r report.kw(lsas_sum.pre.fu.kw.worsened)`,  -->
-where these $7$ individuals were significantly more than the number of worsened participants in both the Unguided self-help group
-<!-- , $Z$($2$) = `r xresult(lsas_sum.pre.fu.kw.worsened$Z[1],2)`,  -->
-<!-- `r xpr(lsas_sum.pre.fu.kw.worsened$altP.adjusted[1],a="Bonf")`,  -->
-and the Guided self-help group.
-<!-- , $Z$($2$) = `r xresult(lsas_sum.pre.fu.kw.worsened$Z[2],2)`, `r xpr(lsas_sum.pre.fu.kw.worsened$altP.adjusted[2],a="Bonf")`.  -->
-Finally, a difference between groups was found for PHQ-9, 
-<!-- `r report.kw(phq_sum.pre.fu.kw.worsened)`,  -->
-with post hoc testing revealing a difference for the Guided self-help group, with 12 worsened participants ($18$\xspace\%).
-<!-- , $Z$($2$) = `r xresult(phq_sum.pre.fu.kw.worsened$Z[1],2)`, `r xpr(phq_sum.pre.fu.kw.worsened$altP.adjusted[1],a="Bonf")`.  -->
-These findings reveal that the non-active Waitlist condition brought about adverse clinical change for $10$\% of participants with regards to social anxiety and $18$\% with regards to depression.
+Checking for any reliable signs of harm in the most severe of the adverse outcome categories (see Table 3), a significant difference between the groups in clinically significant change was found for the AAA-S Aggressive subscale, as $3$ participants ($4$\%) fell below the threshold for “harmed” while waiting to begin treatment. However, the post-hoc testing did not reveal any significant pairwise differences between any of the treatment groups and the wait-list group, `r xprnot(aaas_ag.pre.post.kw.harmed$altP.adjusted[2],a="Bonf")` and `r xprnot(aaas_ag.pre.post.kw.harmed$altP.adjusted[1],a="Bonf")`. No other instances of suspected reliable harm between the pre and the post time points or the pre to the follow-up time points were identified for either measure. The second to worst category in assessing reliable change is “deteriorated.” To identify any possible cases of reliable deterioration *and* reliable harm, these two categories were collapsed into the conservative ad hoc category “worsened” gathering participants who had moved into either category. Applying the “worsened” portmanteau category, a significant difference between the groups for the LSAS-SR was found, meriting a follow-up pairwise comparison. This revealed that the number of participants (7 participants; $10$\xspace\%) in the wait-list condition who had reached either “deteriorated” or “harmed” between pre and post treatment, was significantly larger than the corresponding number in the guided self-help group. The same held true when comparing the pre to the follow-up time points, where these individuals were significantly more than the number of worsened participants in both the unguided and the guided self-help groups. Finally, a difference between the groups was found for the PHQ-9, with the post-hoc testing revealing a difference for the guided self-help group, with $12$ worsened participants ($18$\xspace\%). These findings reveal that the non-active wait-list condition brought about adverse clinical change for $10$\% of the participants with regard to social anxiety and $18$\% with regard to depression.
 
 # Discussion
 
-This randomized control trial brings up-to-date empirical data on a trans-diagnostic intervention targeting assertiveness, Respekt^2^, providing evidence for its effects on assertive behavior and on symptoms of psychiatric disorders. Having been mostly ignored as a construct in clincical research since the 1990's, despite its rich history as the target in the very first behavioral therapies of the 1950's, and its current status as an important goal for exposure in third wave CBT variants such as DBT and ACT [@Speed2018a], this study brings much-needed data on assertiveness as a viable transdiagnostic stand-alone goal in psychological treatment.
+This randomized controlled trial provides up-to-date empirical data on a transdiagnostic intervention targeting assertiveness, Respekt^2^, which is evidence of its effects on assertive behavior and psychiatric disorder symptoms. Having mostly been ignored as a construct in clinical research since the 1990s, despite its rich history as the target in the very first behavioral therapies of the 1950s and its current status as an important goal for exposure in third-wave CBT variants, such as DBT and ACT [@Speed2018a], this study brings much-needed data on assertiveness as a viable transdiagnostic stand-alone goal in psychological treatment.
 
-The large effects on assertiveness, measured with AAA-S Adaptive, comparing the Waitlist and the Unguided self-help conditions at Follow-up, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")`, with $22$\% clinically improved, are comparable to those found in clinical trials of iCBT interventions for other trans-diagnostic behavioral targets. Measurement with the RAS at Follow-up, `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")`, with $31$\% clinically improved, confirm these effects, as does the insignificantly larger effects found for assertiveness measured with AAA-S Adaptive and RAS in the Guided self-help group, with clinical improvement proportions of $26$\% and $36$\% respectively. Benchmarking against procrastination [$d$ = $.50$--$.69$ and $24$--$36$\% clinically improved in an unguided group, and $d$ = $.70$--$.81$ and $31$--$40$\% clinically improved in a guided group\; @Rozental2015], and perfectionism [$d$ = $.68$--$1.00$, with $45$\% of participants clinically improved in a guided group\; @Rozental2017], these results indicate that the assertiveness construct can be used successfully as a target in behavior therapy with various clinical presentations, helping participants appreciate and report changes in healthy assertion levels in their daily lives.
+The large effects on assertiveness measured with the AAA-S Adaptive subscale, comparing the wait-list and the unguided self-help conditions at the follow-up, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")`, with $22$\% clinically improved, are comparable to those found in clinical trials of iCBT interventions for other transdiagnostic behavioral targets. Measurement with the RAS at the follow-up, `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")`, with $31$\% clinically improved, confirms these effects, as does the insignificantly larger effects found for assertiveness measured with the AAA-S Adaptive subscale and the RAS in the guided self-help group, with clinical improvement proportions of $26$\% and $36$\%, respectively. Benchmarking against procrastination [$d$ = `r xresult(0.5,2)`--`r xresult(0.69,2)` and $24$--$36$\% clinically improved in an unguided group, and $d$ = `r xresult(0.70,2)`--`r xresult(0.81,2)` and $31$--$40$\% clinically improved in a guided group\; @Rozental2015] and perfectionism [$d$ = `r xresult(0.68,2)`--`r xresult(1.00,2)`, with $45$\% of participants clinically improved in a guided group\; @Rozental2017], these results indicate that the assertiveness construct can be used successfully as a behavior therapy target with various clinical presentations, helping participants to appreciate and report changes in healthy assertion levels in their daily lives.
 
-It should be noted that there was no significant effects, nor any statistically significant number of clinically changed participants at either Post or Follow-up, for AAA-S Aggressive. This should not be surprising, however, since the operationalization of aggressive assertiveness is fuzzy and prone to individual differences in interpretation; behavior that one person deems to be aggressive assertion might be healthy assertion to another. 
-<!-- Q: Is an increase in aggressive assertiveness always, never or sometimes desirable for an individual in a situation in therapy? (A: it depends.)  -->
-Likewise, what counts as healthy assertion in one specific societal/cultural context might be perceived as normatively aggressive in another [@Mitamura2018]. Therefore, for a particular individual in a particular context, it is probably warranted to track only how the relationship between levels of adaptive and aggressive assertiveness change over time, taking into account that individual's idiographic goals in therapy. This topic may well be further explored in future studies. For the purposes of this study, however, the lack of effects for aggressive assertiveness point to that participation did not lead to possibly adverse effects in relationships.
+It should be noted that no statistically significant number of clinically changed participants was found at either the post or the follow-up time points for the AAA-S Aggressive subscale. This should not be surprising, however, since the operationalization of aggressive assertiveness is fuzzy and prone to individual differences in interpretation; behavior that one person deems aggressive assertion might be healthy assertion to another. Likewise, what counts as healthy assertion in one specific societal/cultural context might be perceived as normatively aggressive in another [@Mitamura2018]. Therefore, for a particular individual in a particular context, it is probably warranted to track only how the relationship between levels of adaptive and aggressive assertiveness changes over time, taking into account that individual’s idiographic goals in therapy. This topic may well be further explored in future studies. For the purposes of this study, however, the lack of clinical levels of aggressive assertiveness indicates that participation did not lead to possibly adverse effects in relationships.
 
-The effects at Follow-up on social anxiety symptoms, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1,"effshort")` and `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1,"effshort")` and on depression, `r report.text2(phq_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1,"effshort")` and `r report.text2(phq_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1,"effshort")`, are in agreement with those for iCBT in general, where the average between-group effect size is $g$ = $.80$ compared to controls [@Andrews2018], which in turn is about the same as for face-to-face treatment [@Carlbring2018]. The current intervention was insufficient in ameliorating symptoms of generalized anxiety, however. Possibly, the overall structure of the Respekt^2^ intervention, with its emphasis on cheer-leading participants in designing and performing in vivo behavioral experiments early on in treatment, and for a limited time, was not adequate in addressing symptoms of generalized anxiety where non-commitment to exposure and behavioral rigidity often are important first hurdles to overcome. 
+The effects at the follow-up on social anxiety symptoms, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1,"effshort")` and `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1,"effshort")`, and depression, `r report.text2(phq_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1,"effshort")` and `r report.text2(phq_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1,"effshort")`, are in agreement with those for iCBT in general, where the average between-group effect size is $g$ = `r xresult(0.8,2)` compared to controls [@Andrews2018], which in turn is about the same as for face-to-face treatment [@Carlbring2018]. However, the current intervention was insufficient for ameliorating generalized anxiety symptoms. Possibly, the overall structure of the Respekt^2^ intervention, with its emphasis on cheerleading participants in designing and performing in vivo behavioral experiments early on in treatment and for a limited time, was not adequate for addressing generalized anxiety symptoms where non-commitment to exposure and behavioral rigidity are often important first hurdles to overcome.
 
 ## Limitations and future directions
 
-The study design has a number of limitations that impairs the generalizability of the findings to the population at large. In studies of iCBT, the recruitment method is one of the most important factors influencing the symptom burden of the sample under investigation [@Lindner2015]. The recruitment was performed via advertising on social media, where the presentation of the ads by revenue-maximizing design was skewed to boost click-throughs by the algorithms employed by the respective ad networks. We achieved distributions with regards to sex ($79$--$91$% female participants), higher education level ($70$--$74$%) and previous participation in therapy ($60$--$62$%) that are higher than expected had the sampling been purely random. Generalization of the findings needs to be made with caution before being confirmed with other samples in future studies. 
+The study design has a number of limitations that impair the generalizability of the findings. In studies of iCBT, the recruitment method is one of the most important factors influencing the symptom burden of the sample under investigation [@Lindner2015]. Recruitment for this study was performed via advertising on social media, where the presentation of the ads by revenue-maximizing design was skewed to boost click-throughs by the algorithms employed by the respective ad networks. We achieved distributions with regards to sex ($79$--$91$% female participants), higher education level ($70$--$74$%) and previous participation in therapy ($60$--$62$%) that are higher than expected had the sampling been purely random. Generalization of the findings needs to be made with caution before being confirmed with other samples in future studies.
 
-Another methodological drawback of the current study is that some of the measurement scales were recently translated into Swedish, without back-translation, somewhat impairing the ability to compare findings with the norms for the English-speaking populations where the scales were originally validated. The Swedish adaptations of the RAS and AAA-S scales should be quality controlled with back-translation prior to future usage, and if possible also validated for Swedish clinical and non-clinical populations.
+Another methodological drawback of the current study is that some of the measurement scales were recently translated into Swedish without back translation, somewhat impairing the ability to compare findings with the norms for the English-speaking populations where the scales were originally validated. The Swedish adaptations of the RAS and AAA-S scales should be quality controlled with back translation prior to future usage and, if possible, also validated for Swedish clinical and non-clinical populations.
 
-It is also noteworthy that the mean levels of depression in the Waitlist control group increased as the participants waited in line to begin treatment; this might be due to a nocebo or ”reverse placebo” effect, where participants’ expectations contribute to their mood worsening [@Furukawa2014], which in turn risks inflating between group effect sizes. Analysis of reliable change confirmed this hypothesis, revealing that 12 individuals ($18$%) in the Waitlist group worsened while waiting for treatment. To cancel out this nocebo effect in the analysis, the most conservative estimated marginal mean from either of the Pre, During and Post time points was used for the Follow-up comparison (in effect underestimating rather than overestimating the difference). In any future studies, researchers would be wise to employ an active wait-list condition, such as participation in a discussion forum, lest running the risk of artificially inflated effect sizes [@Cuijpers2016].
-
-<!-- , highlighting the need to use caution comparing results for the treatment groups with those of the Waitlist condition, lest running the risk of artificially inflated effect sizes (especially for PHQ-9 for which estimated marginal means in fact increased over time; see Figure 3) -->
+It is also noteworthy that the mean levels of depression in the wait-list control group increased as the participants waited in line to begin treatment; this might be due to a nocebo or reverse placebo effect, where participants’ expectations contribute to their mood worsening [@Furukawa2014], which in turn risks inflating between-group effect sizes. Analysis of reliable change confirmed this hypothesis, revealing that 12 individuals ($18$%) in the wait-list group worsened while waiting for treatment. To cancel out this nocebo effect in the analysis, the most conservative estimated marginal mean from either of the pre, during, or post time points was used for the follow-up comparison (in effect, underestimating rather than overestimating the difference). In any future studies, researchers would be wise to employ an active wait-list condition, such as participation in a discussion forum, to avoid running the risk of artificially inflated effect sizes [@Cuijpers2016].
 
 <!-- https://yury-zablotski.netlify.app/post/mixed-models/#why-do-we-need-it-what-are-the-benefits -->
 <!-- https://ourcodingclub.github.io/tutorials/mixed-models/#extra -->
-Preferably, any future replication or extended version of the current study should also collect data at no less than four time points, allowing data to be fitted not only using random intercepts (controlling for/capturing initial differences between subjects), but also with random slopes (controlling for/capturing individual trajectories). It might also be called for to add a third level to the model, to control for therapist factors.
+Preferably, any future replication or extended version of the current study should also collect data at no less than four time points, allowing data to be fitted not only using random intercepts (controlling for/capturing initial differences between subjects) but also with random slopes (controlling for/capturing individual trajectories). It might also be necessary to add a third level to the model to control for therapist factors.
 
-Along with the third wave of CBT, trans-diagnostic behavioral approach goals have gained ground, i.e., those captured with the Valued Living Questionnaire [VLQ\; @Wilson2010], the Acceptance and Action Questionnaire [AAQ-II\; @Fledderus2012;@Lundgren2016], or more generally, the Process-Based Assessment Tool [PBAT\; @Ciarrochi2022]. Further exploration of how the pursuit of healthy assertion goals might influence these and other similar constructs could illuminate what goals are best suited for different patients (or populations), to find acceptable targets that can help "short circuit" verbally expressed defenses head-on and thus increase the likelihood of engagement in new learning in CBT. Rhetorically, who doesn't want to be better still at respectfully asserting their feelings, wishes and needs?
+Along with the third wave of CBT, transdiagnostic behavioral approach goals have gained ground; that is, those captured with the Valued Living Questionnaire [VLQ\; @Wilson2010], the Acceptance and Action Questionnaire [AAQ-II\; @Fledderus2012;@Lundgren2016], or, more generally, the Process-Based Assessment Tool [PBAT\; @Ciarrochi2022]. Further exploration of how the pursuit of healthy assertion goals might influence these and other similar constructs could illuminate what goals are best suited for different patients (or populations) to find acceptable targets that can help short-circuit verbally expressed defenses head-on and thus increase the likelihood of engagement in new learning in CBT. Rhetorically, who does not want to be better still at respectfully asserting their feelings, wishes, and needs?
 
-In the current study, we found that participation in Respekt^2^ did indeed increase assertive expressions, thereby reducing self-assessed social anxiety, in a non-clinical sample. The intervention did not have an immediate effect on generalized anxiety or depression, although there was some within-group evidence for beneficial longer-term effects on depression. Overall, the findings demonstrate that assertiveness is a potentially useful target in CBT and iCBT, in the treatment of both psychiatric syndromes and non-syndromal problems in living, calling for more research on the construct in various applications.
+In the current study, we found that participation in Respekt^2^ increased assertive expressions, thereby reducing self-assessed social anxiety in a non-clinical sample. The intervention did not have an immediate effect on generalized anxiety or depression, although there was some within-group evidence of beneficial longer-term effects on depression. Overall, the findings demonstrate that assertiveness is a potentially useful target in CBT and iCBT in the treatment of both psychiatric syndromes and non-syndromal problems in daily life, calling for more research on the construct in various applications.
 
 <!-- \pagebreak -->
 
