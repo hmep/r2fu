@@ -67,7 +67,7 @@ header-includes:
 <!-- https://ftp.acc.umu.se/mirror/CTAN/macros/latex/contrib/endfloat/endfloat.pdf p 10 -->
 <!-- https://bookdown.org/yihui/rmarkdown-cookbook/kable.html#customize-latex-tables search for "table.envir" -->
 
-**Highlights.** Short-term iCBT assertion training holds promise as a efficacious stand-alone intervention in the treatment of psychological problems and psychiatric syndromes, especially social anxiety.
+**Highlights.** Short-term iCBT assertion training holds promise as an efficacious stand-alone intervention in the treatment of psychological problems and psychiatric syndromes, especially social anxiety.
 
 ```{r setup, include=F}
 
