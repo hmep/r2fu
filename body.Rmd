@@ -1717,11 +1717,11 @@ clinsig.table <- rbind(
 xcolnames <-
   c(
     " ",
-    paste0("\\parbox{8em}{\\hfil{}",xT1,"--",xT3,"\\hfil{}}"),
-    paste0("\\parbox{8em}{\\hfil{}",xT1,"--",xT3,"\\hfil{}}"),
-    paste0("\\parbox{8em}{\\hfil{}",xT1,"--",xT4text,"\\hfil{}}"),
-    paste0("\\parbox{8em}{\\hfil{}",xT1,"--",xT3,"\\hfil{}}"),
-    paste0("\\parbox{8em}{\\hfil{}",xT1,"--",xT4text,"\\hfil{}}")
+    paste0("\\parbox{7em}{\\hfil{}",xT1,"--",xT3,"\\hfil{}}"),
+    paste0("\\parbox{7em}{\\hfil{}",xT1,"--",xT3,"\\hfil{}}"),
+    paste0("\\parbox{7em}{\\hfil{}",xT1,"--",xT4text,"\\hfil{}}"),
+    paste0("\\parbox{7em}{\\hfil{}",xT1,"--",xT3,"\\hfil{}}"),
+    paste0("\\parbox{7em}{\\hfil{}",xT1,"--",xT4text,"\\hfil{}}")
   )
 
 colnames(clinsig.table) <- xcolnames
