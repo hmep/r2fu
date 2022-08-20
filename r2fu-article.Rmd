@@ -41,7 +41,7 @@ bibliography:
 linenumbers: true
 numbersections: false
 csl: ./elsevier-harvard.csl
-journal: (to be decided)
+journal: Behaviour research and therapy
 output: 
   # https://www.elsevier.com/authors/policies-and-guidelines/documents/elsdoc-1.pdf
   rticles::elsevier_article:
