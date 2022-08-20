@@ -1845,6 +1845,15 @@ In the current study, we found that participation in Respekt^2^ increased assert
 
 <!-- \pagebreak -->
 
+# ORCID
+
+- Tobias Hagberg, https://orcid.org/0000-0001-6059-6668
+- Patrik Manhem, ??
+- Martin Oscarsson, https://orcid.org/0000-0002-8209-5351
+- Fiona Michel, ??
+- Gerhard Andersson, https://orcid.org/0000-0003-4753-6745
+- Per Carlbring, https://orcid.org/0000-0002-2172-8813
+
 # References {.allowframebreaks}
 
 ```{r references, echo = F, eval = T}
