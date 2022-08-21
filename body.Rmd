@@ -1233,7 +1233,7 @@ knitr::kable(
       "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale.",
       "Pre = pre-treatment measurement at 0 weeks; During = measurement during week 4; Post = measurement after completion of treatment at week 8; Follow-up = measurement at 1 year after completion.",
       "\\\\textsuperscript{\\\\dag} = the most conservative measurement for the Wait-list control condition, in order to suppress any nocebo effects; see dotted lines in graphs in Figure 3 for identification of time point.",
-      "\\\\textsuperscript{*} = \\\\textit{p} < .05, \\\\textsuperscript{**} = \\\\textit{p} < .01, \\\\textsuperscript{***} = \\\\textit{p} < .00; \\\\textit{p}-values are Bonferroni adjusted, based on pairwise comparisons of all sampled time points and conditions."
+      "\\\\textsuperscript{*} = \\\\textit{p} < 0.05, \\\\textsuperscript{**} = \\\\textit{p} < 0.01, \\\\textsuperscript{***} = \\\\textit{p} < 0.00; \\\\textit{p}-values are Bonferroni adjusted, based on pairwise comparisons of all sampled time points and conditions."
     ),
     escape = F,
     general_title = "Notes.",
@@ -1745,7 +1745,7 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
   footnote(
     general = c(
       "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale.",
-      "\\\\textsuperscript{*} = \\\\textit{p} < .05, \\\\textsuperscript{**} = \\\\textit{p} < .01, \\\\textsuperscript{***} = \\\\textit{p} < .00; \\\\textit{p}-values are Bonferroni adjusted."
+      "\\\\textsuperscript{*} = \\\\textit{p} < 0.05, \\\\textsuperscript{**} = \\\\textit{p} < 0.01, \\\\textsuperscript{***} = \\\\textit{p} < 0.00; \\\\textit{p}-values are Bonferroni adjusted."
       ),
     escape = F,
     general_title = "Notes.",
