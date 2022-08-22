@@ -3,9 +3,7 @@ title: "Efficacy of Transdiagnostic Cognitive-Behavioral Therapy for Assertivene
 runtitle: "Transdiagnostic CBT for Assertiveness"
 author:
   - name: "Tobias Hagberg"
-    email: "tobias@hagberg.com"
     affiliation: "Stockholm University"
-    correspondingauthor: true
   - name: "Patrik Manhem"
     affiliation: "Stockholm University"
   - name: "Martin Oscarsson"
@@ -15,6 +13,8 @@ author:
   - name: "Gerhard Andersson"
     affiliation: "Linköping University"
   - name: "Per Carlbring"
+    email: "per@carlbring.se"
+    correspondingauthor: true
     affiliation: "Stockholm University"
 address:
   - code: "Stockholm University"
