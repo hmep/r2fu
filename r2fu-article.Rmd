@@ -61,7 +61,10 @@ header-includes:
   - \DeclareDelayedFloatFlavor{sidewaystable}{table}
 ---
 
-<!-- **Highlights.** Short-term iCBT assertion training holds promise as an efficacious stand-alone intervention in the treatment of psychological problems and psychiatric syndromes, especially social anxiety. -->
+<!-- - Stand-alone iCBT assertion training is effective at increasing levels of adaptive assertiveness -->
+<!-- - Stand-alone iCBT assertion training is effective at alleviating symptoms of social anxiety to the point of clinical recovery for a significant number of participants -->
+<!-- - The effects were maintained at the one year follow-up -->
+<!-- - The assertiveness construct is worthy of revived clinical research interest -->
 
 ```{r body, child="body.Rmd", eval=TRUE}
 ```

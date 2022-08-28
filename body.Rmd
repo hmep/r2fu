@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 ```{r setup, include=F}
 
 # Font sources:
@@ -662,14 +667,7 @@ Both therapists working with participants in the guided condition were final-yea
 
 Five participants were excluded from the analyses due to wrongful inclusion, as they were receiving concurrent psychological treatment.
 
-```{bash flowchartgen, include = F, eval = F}
-
-# A better way?
-# https://community.rstudio.com/t/dot-in-rmarkdown/51311/3
-
-filename="flowchart"
-
-cat <<EOF > $filename.dot
+```{r dot-ex, engine = "dot", fig.cap = "A total of 210 participants were included in the study through randomization and further randomized into three groups: unguided self-help, guided self-help, and wait-list, with 70 participants each.",results = "as.is"}
 digraph G {
 
   dpi=600
@@ -685,7 +683,9 @@ digraph G {
   invited  -> { invitation_non_responders invitation_responders }
   invitation_responders -> { trimmed keepers }
   keepers -> randomization
-  randomization -> { selfhelp_dur support_dur waitlist_dur }
+  randomization -> selfhelp_dur [lhead=cluster_selfhelp]
+  randomization -> support_dur [lhead=cluster_support]
+  randomization -> waitlist_dur [lhead=cluster_waitlist]
 
   leads[label=<Leads from social media<BR/><I>n</I> = 657>]
   screening_completers[label=<Completed screening<BR/><I>n</I> = 464>]
@@ -713,18 +713,6 @@ digraph G {
   { selfhelp_fu support_fu waitlist_post } -> itt
 
 }
-EOF
-
-/opt/homebrew/bin/dot -Tpng -o$filename.png $filename.dot
-/opt/homebrew/bin/dot -Tpdf -o$filename.pdf $filename.dot
-/Library/TeX/texbin/pdfcrop $filename.pdf $filename.pdf
-
-```
-
-```{r flowchartout, out.width="100%", fig.align="center", fig.cap="A total of 210 participants were included in the study through randomization and further randomized into three groups: unguided self-help, guided self-help, and wait-list, with 70 participants each."}
-
-knitr::include_graphics("flowchart.png", auto_pdf = T)
-
 ```
 
 ## Analysis
