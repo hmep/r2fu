@@ -33,22 +33,24 @@ keywords:
   - "stress"
   - "avoidance"
 date: "`r Sys.Date()`"
-classoption: review, 3p, authoryear
+classoption: review, 3p
 bibliography:
   - packages.bib
   - KSH.bib
   - DBT.bib
 linenumbers: true
 numbersections: false
+#csl: .apa.csl
 csl: ./elsevier-harvard.csl
 journal: Behaviour research and therapy
 output: 
-  # https://www.elsevier.com/authors/policies-and-guidelines/documents/elsdoc-1.pdf
   rticles::elsevier_article:
     keep_tex: true
     latex_engine: xelatex
     citation_package: default
-  word_document: default
+  word_document:
+    default
+    #reference_docx: "2110071135_ip_m-template-instructions.docx"
 knit: (function(inputFile, encoding){rmarkdown::render(inputFile, encoding = encoding, output_format = "all") })
 header-includes:
   - \usepackage{fontspec}
@@ -61,10 +63,11 @@ header-includes:
   - \DeclareDelayedFloatFlavor{sidewaystable}{table}
 ---
 
-<!-- - Stand-alone iCBT assertion training is effective at increasing levels of adaptive assertiveness -->
-<!-- - Stand-alone iCBT assertion training is effective at alleviating symptoms of social anxiety to the point of clinical recovery for a significant number of participants -->
-<!-- - The effects were maintained at the one year follow-up -->
-<!-- - The assertiveness construct is worthy of revived clinical research interest -->
+<!-- highlights: -->
+<!--   - "Stand-alone iCBT assertion training is effective at increasing levels of adaptive assertiveness" -->
+<!--   - "Stand-alone iCBT assertion training is effective at alleviating symptoms of social anxiety to the point of clinical recovery for a significant number of participants" -->
+<!--   - "The effects were maintained at the one year follow-up" -->
+<!--   - "The assertiveness construct is worthy of revived clinical research interest" -->
 
 ```{r body, child="body.Rmd", eval=TRUE}
 ```

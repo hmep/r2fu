@@ -1,8 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
 ```{r setup, include=F}
 
 # Font sources:
@@ -568,11 +563,13 @@ digits = -1) * 3
 
 ```
 
-The study design follows the RCT criteria proposed by @Chambless2001, with a randomized allocation of participants to three groups: (1) guided self-help, (2) unguided self-help, and (3) eight-week wait-list control. A sample size of 210 participants (70 per group) was decided on through an a priori power calculation according to guidelines for linear models outlined in @cohen1988statistical, assuming a between-group effect size of Cohen’s $d$ of `r xresult(0.8,2)` on the Adaptive and Aggressive Assertiveness Scales [AAA-S\; @Thompson2011], power `r xresult(0.9,2)`, alpha `r xresult(0.05,2)`, and a $15$\% drop-out rate per week, with the duration of the intervention being eight weeks in total.
+The study design follows the RCT criteria proposed by @Chambless2001, with a randomized allocation of participants to three groups: (1) guided self-help, (2) unguided self-help, and (3) eight-week wait-list control. A sample size of 210 participants (70 per group) was decided on through an a priori power calculation according to guidelines for linear models outlined in @cohen1988statistical, assuming a between-group effect size of Cohen’s $d$ of `r xresult(0.8,2)` on the Adaptive and Aggressive Assertiveness Scales [AAA-S\; @Thompson2011], power `r xresult(0.9,2)`, alpha `r xresult(0.05,2)`, and a $15$\% "worst case" drop-out rate per week, with the duration of the intervention being eight weeks in total.
+
+The study was registered at ClinicalTrials.gov (NCT04240249). An error in the design was corrected post-registration, in that the Rathus Assertivness Schedule (RAS) scale was moved from the list of secondary outcome measures to the list of primary outcome measures, as it captures levels of assertiveness, the primary dependent variable of interest. Before recruitment started, the study received ethical approval from the Swedish Ethical Review Authority (Diary number: 2019-05165). 
 
 ## Participants
 
-Before recruitment started, the study received ethical approval from the Swedish Ethical Review Authority (Diary number: 2019-05165). The study was registered at ClinicalTrials.gov (NCT04240249). The participants were recruited from the public through advertisements on social media and other websites. Interested individuals were referred to a purpose-built website with more information on the study, including the participation criteria. The participants were required to be Swedish citizens, at least 18 years of age, have access to the internet, and be fluent in Swedish. Information on the website also included the risks associated with participation, as well as the terms and conditions for participation. Volunteers were invited to submit their email addresses, and those who did were sent a link to complete an online screening questionnaire. The questionnaire included self-report measures of anxiety, depression, and assertiveness, as well as questions regarding socio-demographics, experiences of psychological treatment, any current medication, and motivation for participation. See Table 1 for a summary of the socio-demographic baseline characteristics.
+The participants were recruited from the public through advertisements on social media and other websites. Interested individuals were referred to a purpose-built website with more information on the study, including the participation criteria. The participants were required to be Swedish citizens, at least 18 years of age, have access to the internet, and be fluent in Swedish. Information on the website also included the risks associated with participation, as well as the terms and conditions for participation. Volunteers were invited to submit their email addresses, and those who did were sent a link to complete an online screening questionnaire. The questionnaire included self-report measures of anxiety, depression, and assertiveness, as well as questions regarding socio-demographics, experiences of psychological treatment, any current medication, and motivation for participation. See Table 1 for a summary of the socio-demographic baseline characteristics.
 
 \begin{table}
 
@@ -643,17 +640,17 @@ The data were collected using the measures described below at four time points: 
 
 ### Primary measures
 
-Assertiveness style was measured using a Swedish translation (contributed by TH) of the Adaptive and Aggressive Assertiveness Scales [AAA-S\; @Thompson2011], which contains 30 items, including “When someone I don’t know well borrows something from me and forgets to return it, I… a. Demand it back; b. Ask if she/he is done and ask for it back” (a. and b. both scored from 1 = never to 5 = always). The AAA-S has good and excellent internal consistency for aggressive (`r xresult(0.88,2)`) and adaptive (`r xresult(0.93,2)`) assertiveness, respectively. A Swedish translation (contributed by TH) of the Rathus Assertiveness Schedule [RAS\; @Rathus1973] was used as an additional measure of assertiveness style with 30 items, including “I find it embarrassing to return merchandise” (+3 = very characteristic of me, extremely descriptive to -3 = very uncharacteristic of me, extremely nondescriptive).
+Assertiveness style was measured using a Swedish translation (contributed by TH) of the Adaptive and Aggressive Assertiveness Scales [AAA-S\; @Thompson2011], which contains 30 items, including “When someone I don’t know well borrows something from me and forgets to return it, I… a. Demand it back; b. Ask if she/he is done and ask for it back” (a. and b. both scored from 1 = never to 5 = always). The English-language version of the AAA-S have good internal consistency for aggressive assertiveness (`r xresult(0.88,2)`), and excellent for adaptive assertiveness  (`r xresult(0.93,2)`), respectively. A Swedish translation (contributed by TH) of the Rathus Assertiveness Schedule [RAS\; @Rathus1973] was used as an additional measure of assertiveness style with 30 items, including “I find it embarrassing to return merchandise” (+3 = very characteristic of me, extremely descriptive to -3 = very uncharacteristic of me, extremely nondescriptive). The original versions of the AAA-S Adaptive a of the RAS has good internal consistency (`r xresult(0.87,2)`), 
 
 ### Secondary measures
 
-Depression was measured using the PHQ-9 [@Kroenke2010], which contains nine items, including “Feeling down, depressed, or hopeless” (0 = not at all to 3 = nearly every day). Anxiety was measured using the Generalized Anxiety Disorder 7-item Scale [GAD-7\; @Kroenke2006] which contains seven items, including “Feeling nervous, anxious, or on edge” (0 = not at all to 3 = nearly every day). Social anxiety was measured using the Liebowitz Social Anxiety Scale [LSAS-SR\; @Fresco2001] which contains 24 items, including “Calling someone you don’t know very well” (fear or anxiety, 0 = none to 3 = severe; avoidance, 0 = never to 3 = usually). These self-report measures have reported either good or excellent internal consistency (`r xresult(0.87,2)`, `r xresult(0.89,2)`, `r xresult(0.92,2)`, and `r xresult(0.96,2)`, respectively).
+Depression was measured using the Patient Health Questionnaire 9-Item Scale [PHQ-9\; @Kroenke2010], which contains nine items, including “Feeling down, depressed, or hopeless” (0 = not at all to 3 = nearly every day). Anxiety was measured using the Generalized Anxiety Disorder 7-item Scale [GAD-7\; @Kroenke2006], which contains seven items, including “Feeling nervous, anxious, or on edge” (0 = not at all to 3 = nearly every day). Social anxiety was measured using the Liebowitz Social Anxiety Scale [LSAS-SR\; @Fresco2001], which contains 24 items, including “Calling someone you don’t know very well” (fear or anxiety, 0 = none to 3 = severe; avoidance, 0 = never to 3 = usually). General well-being was measured using the Questionnaire on well-being [@Braconier2015], which contains 18 items, such as "To what extent during the past week have you felt calm and relaxed?" (0 = never to 5 = very often). These self-report measures have reported either good or excellent internal consistency (`r xresult(0.89,2)`, `r xresult(0.92,2)`, `r xresult(0.96,2)`, and `r xresult(0.926,2)`, respectively).
 
 ## Intervention
 
 The intervention was based on the Assert Yourself modules by @michel2008, which were adapted to Swedish by TH with permission from the copyright holders. The self-help material teaches the distinction between different types of assertiveness (constructive, aggressive, passive, and passive-aggressive). It also aids the reader in finding reasons to act more assertively and constructively. The material is inspired by and cites works by @alberti1974your, @gambrill1975assertion, and @smith1975say, among others. In the material, assertiveness is described and operationalized based on @wolpe1990practice theoretical assumptions regarding reciprocal inhibition and classic conditioning: by assertively practicing the expression of feelings, wishes, and demands in anxiety-evoking situations and relationships, where the person was previously prone to non-assertive behavior (e.g., subdued disappointment or anger), a person may experience less discomfort from autonomous anxiety responses over time. This is to be practiced in vivo, not just by acting. The long-term goal is to learn how to inhibit anxiety by being assertive. In cases where a physical counterpart is absent and anxiety is invoked by places, objects, or words, @Wolpe1952 suggests relaxation as a means to inhibit the anxiety response.
 
-The material also includes a rationale for cognitive restructuring with methods by  @beck1979cognitive, @Clark1986, @clark1995cognitive, and @powell2017mental. Through behavioral experiments, readers test the validity of negative thoughts to achieve greater flexibility in their responses. Furthermore, the material includes a passage on progressive muscle relaxation for the reader to recognize bodily tension, reduce general strain, and practice an active coping technique for stressful situations. Chapters on specific challenges, such as saying "no," dealing with criticism, and coping with disappointment, conclude the material.
+The material also includes a rationale for cognitive restructuring with methods by @beck1979cognitive, @Clark1986, @clark1995cognitive, and @powell2017mental. Through behavioral experiments, readers test the validity of negative thoughts to achieve greater flexibility in their responses. Furthermore, the material includes a passage on progressive muscle relaxation for the reader to recognize bodily tension, reduce general strain, and practice an active coping technique for stressful situations. Chapters on specific challenges, such as saying "no," dealing with criticism, and coping with disappointment, conclude the material.
 
 The Swedish adaptation prompted additions to @michel2008, some of which are presented here. Based on recent research on exposure and inhibitory learning [e.g., @Craske2008], the participants were encouraged to actively vary learning situations and work on new skills in as many environments as possible. In another new passage, inspired by the works on acceptance by Hayes [e.g., -@Hayes2004a] and others, the participants were encouraged to actively search for and remain in the respondent discomfort they previously avoided. In line with Öst’s [-@ost2006tillampad] recommendations for applied tension, progressive muscle relaxation was introduced early in the intervention and expanded over several weeks. The written material was also complemented by downloadable audio relaxation exercises, videos of conversations and role-playing, and several new interactive exercises.
 
@@ -916,6 +913,37 @@ gad_sum.emm.plot <-
   ) + scale_shape_manual(values=c(1, 17, 15), name = "Group", labels = c(`xG3text`, xG1, xG2)) + scale_x_continuous(labels=c(xT1, xT2, xT3, `xT4text`))
 gad_sum.emm.plot <- gad_sum.emm.plot + labs(y = "Generalised Anxiety Disorder 7-item Scale (GAD-7)") + theme_apa(legend.pos = "bottomleft", legend.font.size = 12, y.font.size = 10) + geom_hline(yintercept = gad_sum.emm.plot$data$predicted[4], linetype="dotted")
 
+well.post.lmer <-
+  lmerTest::lmer(
+    well ~ group * time + (1 | subject),
+    data = r2fu.long.data[lnT4,],
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(gad_sum.post.lmer) # Checked, issues with linearity?
+well.post.anova <- anova(well.post.lmer, type=3, ddf="Kenward-Roger") # Significant interaction time x group
+well.lmer <-
+  lmerTest::lmer(
+    well ~ group * time + (1 | subject),
+    data = r2fu.long.data,
+    na.action = na.omit,
+    REML = T
+  )
+# performance::check_model(gad_sum.lmer) # Checked, found to be OK!
+well.anova <- anova(well.lmer, type=3, ddf="Kenward-Roger")
+well.emm.plot <-
+  plot(
+    ggemmeans(well.lmer, terms = c("time", "group")),
+    show.title = F,
+    show.x.title = F,
+    colors = "bw",
+    connect.lines = T,
+    line.size = .4,
+    dot.size = 3
+  ) + scale_shape_manual(values=c(1, 17, 15), name = "Group", labels = c(`xG3text`, xG1, xG2)) + scale_x_continuous(labels=c(xT1, xT2, xT3, `xT4text`))
+well.emm.plot <- well.emm.plot + labs(y = "Questionnaire on well-being") + theme_apa(legend.pos = "topleft", legend.font.size = 12, y.font.size = 10) + geom_hline(yintercept = well.emm.plot$data$predicted[1], linetype="dotted")
+
+
 ```
 
 ```{r emmeff, echo = F, eval = T}
@@ -927,19 +955,25 @@ effsel.time <- -10
 
 ```{r emm.primary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of the estimated fixed effects for the primary transdiagnostic scales used to measure skillful, assertive behavior, and aggressive assertive behavior. The participants’ estimated means for all three measures exhibited increasing levels of assertiveness during treatment in the unguided self-help and guided self-help groups, with negligible differences between the two treatment conditions.'}
 
-(aaas_ad.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
-  (aaas_ag.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
-  (rathus.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) + 
-  guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2) 
+(aaas_ad.emm.plot + theme(plot.margin = unit(c(0,8,8,0), "pt"))) +
+  (aaas_ag.emm.plot + theme(plot.margin = unit(c(0,0,8,8), "pt"))) +
+  (rathus.emm.plot + theme(plot.margin = unit(c(8,8,0,0), "pt"))) +
+  guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2)
 
 ```
 
 ```{r emm.secondary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of the estimated fixed effects for the secondary syndromal outcome measures. Participation in the unguided self-help and guided self-help conditions led to significant symptom alleviation between the pre and post time points as well as between the pre and one-year follow-up time points for depression and social anxiety, as captured with their respective measures. As with the transdiagnostic measures of assertive behavior, the differences between the post and follow-up time points were statistically inappreciable for all three measures in both treatment groups. The wait-list control group did not significantly change between any time points for either measure. However, to stay on the conservative side and counteract even the slightest nocebo effect of the wait-list condition, the most conservative estimate for the wait-list control condition was used in each follow-up between-group comparison; see the dotted line for a visual representation of the selected time point.'}
 
-(phq_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
-  (gad_sum.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
-  (lsas_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) + 
-  guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2) 
+# (phq_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
+#   (gad_sum.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
+#   (lsas_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) + 
+#   guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2) 
+
+(phq_sum.emm.plot + theme(plot.margin = unit(c(0,8,8,0), "pt"))) +
+  (gad_sum.emm.plot + theme(plot.margin = unit(c(0,0,8,8), "pt"))) +
+  (lsas_sum.emm.plot + theme(plot.margin = unit(c(8,8,0,0), "pt"))) + 
+  (well.emm.plot + theme(plot.margin = unit(c(8,0,0,8), "pt"))) +
+  plot_layout(ncol = 2) 
 
 ```
 
@@ -997,13 +1031,24 @@ sd.Rathus.norm = 23.9 # s 326 @Thompson2011
 mean.Rathus.norm = 6.2 # s 326 @Thompson2011
 ref.Rathus = "icke-kliniskt stickprov (student-sample 1) från @Thompson2011"
 
+### Questionnaire on well-being
+# Normer Braconier2015
+# Icke-klinisk population (N=163)
+#     Medel = 43,81
+#     SD = 11,75
+r.Well = 0.8 # ICC; @Braconier2015
+sd.Well.norm = 11.75 # @Braconier2015
+mean.Well.norm = 43.81 # @Braconier2015
+ref.Well = "icke-kliniskt stickprov från @Braconier2015"
+
 measurementnames <-
   c("AAA-S Adaptive",
     "AAA-S Aggressive",
     "RAS",
     "PHQ-9",
     "GAD-7",
-    "LSAS-SR")
+    "LSAS-SR",
+    "Well-being")
 
 measurementshortnames <-
   c("aaas_ad",
@@ -1011,7 +1056,8 @@ measurementshortnames <-
     "rathus",
     "phq_sum",
     "gad_sum",
-    "lsas_sum")
+    "lsas_sum",
+    "well")
 
 norms <- rbind(
   c(r.AAAS_ad, mean.AAAS_ad.norm, sd.AAAS_ad.norm),
@@ -1019,7 +1065,8 @@ norms <- rbind(
   c(r.Rathus, mean.Rathus.norm, sd.Rathus.norm),
   c(r.PHQ9, mean.PHQ9.norm, sd.PHQ9.norm),
   c(r.GAD7, mean.GAD7.norm, sd.GAD7.norm),
-  c(r.LSAS24, mean.LSAS24.norm, sd.LSAS24.norm)
+  c(r.LSAS24, mean.LSAS24.norm, sd.LSAS24.norm),
+  c(r.Well, mean.Well.norm, sd.Well.norm)
 )
 
 ```
@@ -1032,12 +1079,13 @@ rathus.out <- rout(rathus.lmer)
 phq_sum.out <- rout(phq_sum.lmer)
 gad_sum.out <- rout(gad_sum.lmer)
 lsas_sum.out <- rout(lsas_sum.lmer)
+well.out <- rout(well.lmer)
 
 ```
 
 ```{r buildeffsizetab, echo = F, eval = T}
 
-comparison <- c(
+comparison.long <- c(
   "Unguided self-help, Pre vs. Post",
   "Unguided self-help, Pre vs. Follow-up",
   "Unguided self-help, Post vs. Follow-up",
@@ -1055,6 +1103,24 @@ comparison <- c(
   "Guided self-help at Follow-up vs. Unguided at Follow-up"
   )
 
+comparison <- c(
+  "Unguided, Pre vs. Post",
+  "Unguided, Pre vs. Follow-up",
+  "Unguided, Post vs. Follow-up",
+  "Guided, Pre vs. Post",
+  "Guided, Pre vs. Follow-up",
+  "Guided, Post vs. Follow-up",
+  "Wait-list, Pre vs. Post",
+  "Unguided at Post vs. Wait-list at Post",
+  "Unguided at Follow-up vs. Wait-list at Post",
+  "Unguided at Follow-up vs. Wait-list at \\dag",
+  "Guided at Post vs. Wait-list at Post",
+  "Guided at Follow-up vs. Wait-list at Post",
+  "Guided at Follow-up vs. Wait-list at \\dag",
+  "Guided vs. Unguided at Post",
+  "Guided vs. Unguided at Follow-up"
+  )
+
 aaas_ad.effsizes <-
   c(
     effsize.tabrow2(aaas_ad.out,paste(xT1,xG1,"-",xT3,xG1),-1),
@@ -1066,31 +1132,31 @@ aaas_ad.effsizes <-
     effsize.tabrow2(aaas_ad.out,paste(xT1,xG3,"-",xT3,xG3),-1),
     effsize.tabrow2(aaas_ad.out,paste(xT3,xG3,"-",xT3,xG1),-1),
     effsize.tabrow2(aaas_ad.out,paste(xT3,xG3,"-",xT4,xG1),-1),
-    "\\parbox{11.5em}{\\hfil{}(idem)\\hfil{}}",
+    "\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
     effsize.tabrow2(aaas_ad.out,paste(xT3,xG3,"-",xT3,xG2),-1),
     effsize.tabrow2(aaas_ad.out,paste(xT3,xG3,"-",xT4,xG2),-1),
-    "\\parbox{11.5em}{\\hfil{}(idem)\\hfil{}}",
+    "\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
     effsize.tabrow2(aaas_ad.out,paste(xT3,xG1,"-",xT3,xG2),-1),
     effsize.tabrow2(aaas_ad.out,paste(xT4,xG1,"-",xT4,xG2),-1)
   )
 
 aaas_ag.effsizes <-
   c(
-    effsize.tabrow2(aaas_ag.out,paste(xT1,xG1,"-",xT3,xG1),-1),
-    effsize.tabrow2(aaas_ag.out,paste(xT1,xG1,"-",xT4,xG1),-1),
-    effsize.tabrow2(aaas_ag.out,paste(xT3,xG1,"-",xT4,xG1),-1),
-    effsize.tabrow2(aaas_ag.out,paste(xT1,xG2,"-",xT3,xG2),-1),
-    effsize.tabrow2(aaas_ag.out,paste(xT1,xG2,"-",xT4,xG2),-1),
-    effsize.tabrow2(aaas_ag.out,paste(xT3,xG2,"-",xT4,xG2),-1),
-    effsize.tabrow2(aaas_ag.out,paste(xT1,xG3,"-",xT3,xG3),-1),
-    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT3,xG1),-1),
-    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT4,xG1),-1),
-    "\\parbox{11.5em}{\\hfil{}(idem)\\hfil{}}",
-    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT3,xG2),-1),
-    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT4,xG2),-1),
-    "\\parbox{11.5em}{\\hfil{}(idem)\\hfil{}}",
-    effsize.tabrow2(aaas_ag.out,paste(xT3,xG1,"-",xT3,xG2),-1),
-    effsize.tabrow2(aaas_ag.out,paste(xT4,xG1,"-",xT4,xG2),-1)
+    effsize.tabrow2(aaas_ag.out,paste(xT1,xG1,"-",xT3,xG1),1),
+    effsize.tabrow2(aaas_ag.out,paste(xT1,xG1,"-",xT4,xG1),1),
+    effsize.tabrow2(aaas_ag.out,paste(xT3,xG1,"-",xT4,xG1),1),
+    effsize.tabrow2(aaas_ag.out,paste(xT1,xG2,"-",xT3,xG2),1),
+    effsize.tabrow2(aaas_ag.out,paste(xT1,xG2,"-",xT4,xG2),1),
+    effsize.tabrow2(aaas_ag.out,paste(xT3,xG2,"-",xT4,xG2),1),
+    effsize.tabrow2(aaas_ag.out,paste(xT1,xG3,"-",xT3,xG3),1),
+    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT3,xG1),1),
+    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT4,xG1),1),
+    "\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
+    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT3,xG2),1),
+    effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT4,xG2),1),
+    "\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
+    effsize.tabrow2(aaas_ag.out,paste(xT3,xG1,"-",xT3,xG2),1),
+    effsize.tabrow2(aaas_ag.out,paste(xT4,xG1,"-",xT4,xG2),1)
   )
 
 rathus.effsizes <-
@@ -1104,10 +1170,10 @@ rathus.effsizes <-
     effsize.tabrow2(rathus.out,paste(xT1,xG3,"-",xT3,xG3),-1),
     effsize.tabrow2(rathus.out,paste(xT3,xG3,"-",xT3,xG1),-1),
     effsize.tabrow2(rathus.out,paste(xT3,xG3,"-",xT4,xG1),-1),
-    "\\parbox{11.5em}{\\hfil{}(idem)\\hfil{}}",
+    "\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
     effsize.tabrow2(rathus.out,paste(xT3,xG3,"-",xT3,xG2),-1),
     effsize.tabrow2(rathus.out,paste(xT3,xG3,"-",xT4,xG2),-1),
-    "\\parbox{11.5em}{\\hfil{}(idem)\\hfil{}}",
+    "\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
     effsize.tabrow2(rathus.out,paste(xT3,xG1,"-",xT3,xG2),-1),
     effsize.tabrow2(rathus.out,paste(xT4,xG1,"-",xT4,xG2),-1)
   )
@@ -1169,6 +1235,24 @@ lsas_sum.effsizes <-
     effsize.tabrow2(lsas_sum.out,paste(xT4,xG1,"-",xT4,xG2),1)
   )
 
+well.effsizes <-
+  c(
+    effsize.tabrow2(well.out,paste(xT1,xG1,"-",xT3,xG1),-1),
+    effsize.tabrow2(well.out,paste(xT1,xG1,"-",xT4,xG1),-1),
+    effsize.tabrow2(well.out,paste(xT3,xG1,"-",xT4,xG1),-1),
+    effsize.tabrow2(well.out,paste(xT1,xG2,"-",xT3,xG2),-1),
+    effsize.tabrow2(well.out,paste(xT1,xG2,"-",xT4,xG2),-1),
+    effsize.tabrow2(well.out,paste(xT3,xG2,"-",xT4,xG2),-1),
+    effsize.tabrow2(well.out,paste(xT1,xG3,"-",xT3,xG3),-1),
+    effsize.tabrow2(well.out,paste(xT3,xG3,"-",xT3,xG1),-1),
+    effsize.tabrow2(well.out,paste(xT3,xG3,"-",xT4,xG1),-1),
+    effsize.tabrow2(well.out,paste(xT1,xG3,"-",xT4,xG1),-1), #levels(r2fu.long.data$time)[which.max(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
+    effsize.tabrow2(well.out,paste(xT3,xG3,"-",xT3,xG2),-1),
+    effsize.tabrow2(well.out,paste(xT3,xG3,"-",xT4,xG2),-1),
+    effsize.tabrow2(well.out,paste(xT1,xG3,"-",xT4,xG2),-1), #levels(r2fu.long.data$time)[which.max(lsas_sum.emm.plot$data$predicted[c(1,4,7)])]
+    effsize.tabrow2(well.out,paste(xT3,xG1,"-",xT3,xG2),-1),
+    effsize.tabrow2(well.out,paste(xT4,xG1,"-",xT4,xG2),-1)
+  )
 effectsize.table <- cbind.data.frame(
   comparison,
   aaas_ad.effsizes,
@@ -1176,10 +1260,11 @@ effectsize.table <- cbind.data.frame(
   rathus.effsizes,
   phq_sum.effsizes,
   gad_sum.effsizes,
-  lsas_sum.effsizes
+  lsas_sum.effsizes,
+  well.effsizes
   )
 
-measurementnamesspecial <- paste0("\\parbox{11.5em}{\\hfil{}",measurementnames,"\\hfil{}}")
+measurementnamesspecial <- paste0("\\parbox{10.5em}{\\hfil{}\\hspace{2em}",measurementnames,"\\hfil{}}")
 
 colnames(effectsize.table) <- c(" ",measurementnamesspecial)
 
@@ -1202,23 +1287,23 @@ knitr::kable(
   format = "latex",
   table.envir = "sidewaystable"
 ) %>%
-  kable_styling(full_width = F, font_size = 7) %>%
+  kable_styling(full_width = F, font_size = 6.75) %>%
   pack_rows("Within-group effect sizes", 1, 7, bold = F) %>%
   pack_rows("Between-group effect sizes", 8, 15, bold = F) %>%
-  row_spec(c(3, 6, 7, 10, 13), extra_latex_after = "\\midrule") %>%
-  column_spec(c(1), width = "24em") %>%
-  column_spec(c(2:7), width = "10.5em") %>% # 11.5em
+  row_spec(c(3, 6, 7, 10, 13, 16), extra_latex_after = "\\midrule") %>%
+  column_spec(c(1), width = "19em") %>%
+  column_spec(c(2:7), width = c("10.5em","11em","10.5em","10.5em","10.5em","10.5em")) %>% # 11.5em
   add_header_above(
     c(
       " ",
       "Primary transdiagnostic measures of skillful behavior" = 3,
-      "Secondary measures of syndromal symptoms" = 3
+      "Secondary measures of syndromal symptoms and well-being" = 4
     )
   ) %>%
   footnote(
     general = c(
       "CI = confidence interval",
-      "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale.",
+      "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale; Well-being = Questionnaire on Well-being.",
       "Pre = pre-treatment measurement at 0 weeks; During = measurement during week 4; Post = measurement after completion of treatment at week 8; Follow-up = measurement at 1 year after completion.",
       "\\\\textsuperscript{\\\\dag} = the most conservative measurement for the Wait-list control condition, in order to suppress any nocebo effects; see dotted lines in graphs in Figure 3 for identification of time point.",
       "\\\\textsuperscript{*} = \\\\textit{p} < 0.05, \\\\textsuperscript{**} = \\\\textit{p} < 0.01, \\\\textsuperscript{***} = \\\\textit{p} < 0.00; \\\\textit{p}-values are Bonferroni adjusted, based on pairwise comparisons of all sampled time points and conditions."
@@ -1310,28 +1395,51 @@ aaas_ad.pre.post.kw <- dunn.test(list(
 # ), method="bonferroni", altp=TRUE)
 # No worsening in any group, nothing to test!
 
-aaas_ag.pre.post.kw <- dunn.test(list(
-  clinsigraw("aaas_ag", "higher", xT1, xT3, xG3)$recovered,
-  clinsigraw("aaas_ag", "higher", xT1, xT3, xG1)$recovered,
-  clinsigraw("aaas_ag", "higher", xT1, xT3, xG2)$recovered
-), method="bonferroni", altp=TRUE)
-# Kruskal-Wallis chi-squared = 0.1847, df = 2, p-value = 0.91
+# aaas_ag.pre.post.kw.higher <- dunn.test(list(
+#   clinsigraw("aaas_ag", "higher", xT1, xT3, xG3)$recovered,
+#   clinsigraw("aaas_ag", "higher", xT1, xT3, xG1)$recovered,
+#   clinsigraw("aaas_ag", "higher", xT1, xT3, xG2)$recovered
+# ), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 0.1847, df = 2, p-value = 0.91 with direction = "higher"
 
-aaas_ag.pre.post.kw.harmed <- dunn.test(list(
-  clinsigraw("aaas_ag", "higher", xT1, xT3, xG3)$harmed,
-  clinsigraw("aaas_ag", "higher", xT1, xT3, xG1)$harmed,
-  clinsigraw("aaas_ag", "higher", xT1, xT3, xG2)$harmed
+aaas_ag.pre.post.kw <- dunn.test(list(
+  clinsigraw("aaas_ag", "lower", xT1, xT3, xG3)$recovered,
+  clinsigraw("aaas_ag", "lower", xT1, xT3, xG1)$recovered,
+  clinsigraw("aaas_ag", "lower", xT1, xT3, xG2)$recovered
 ), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 6.104, df = 2, p-value = 0.05
+# $altP.adjusted
+# [1] 0.09974166 0.09408707 1.00000000 # No significant pairs
+
+# aaas_ag.pre.post.kw.harmed.higher <- dunn.test(list(
+#   clinsigraw("aaas_ag", "higher", xT1, xT3, xG3)$harmed,
+#   clinsigraw("aaas_ag", "higher", xT1, xT3, xG1)$harmed,
+#   clinsigraw("aaas_ag", "higher", xT1, xT3, xG2)$harmed
+# ), method="bonferroni", altp=TRUE)
 # Kruskal-Wallis chi-squared = 6.104, df = 2, p-value = 0.05, calls for pairwise comparisons
 # $altP.adjusted
 # [1] 0.09974166 0.09408707 1.00000000; no difference found
 
-aaas_ag.pre.post.kw.worsened <- dunn.test(list(
-  clinsigraw("aaas_ag", "higher", xT1, xT3, xG3)$worsened,
-  clinsigraw("aaas_ag", "higher", xT1, xT3, xG1)$worsened,
-  clinsigraw("aaas_ag", "higher", xT1, xT3, xG2)$worsened
+aaas_ag.pre.post.kw.harmed <- dunn.test(list(
+  clinsigraw("aaas_ag", "lower", xT1, xT3, xG3)$harmed,
+  clinsigraw("aaas_ag", "lower", xT1, xT3, xG1)$harmed,
+  clinsigraw("aaas_ag", "lower", xT1, xT3, xG2)$harmed
 ), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 0.1847, df = 2, p-value = 0.91
+
+# aaas_ag.pre.post.kw.worsened.higher <- dunn.test(list(
+#   clinsigraw("aaas_ag", "higher", xT1, xT3, xG3)$worsened,
+#   clinsigraw("aaas_ag", "higher", xT1, xT3, xG1)$worsened,
+#   clinsigraw("aaas_ag", "higher", xT1, xT3, xG2)$worsened
+# ), method="bonferroni", altp=TRUE)
 # Kruskal-Wallis chi-squared = 3.1136, df = 2, p-value = 0.21
+
+aaas_ag.pre.post.kw.worsened <- dunn.test(list(
+  clinsigraw("aaas_ag", "lower", xT1, xT3, xG3)$worsened,
+  clinsigraw("aaas_ag", "lower", xT1, xT3, xG1)$worsened,
+  clinsigraw("aaas_ag", "lower", xT1, xT3, xG2)$worsened
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 1.1106, df = 2, p-value = 0.57
 
 rathus.pre.post.kw <- dunn.test(list(
   clinsigraw("rathus", "higher", xT1, xT3, xG3)$recovered,
@@ -1420,6 +1528,27 @@ lsas_sum.pre.post.kw.worsened <- dunn.test(list(
 # $altP.adjusted
 # [1] 0.11608446 0.00972895 1.00000000; differences found
 
+well.pre.post.kw <- dunn.test(list(
+  clinsigraw("well", "higher", xT1, xT3, xG3)$recovered,
+  clinsigraw("well", "higher", xT1, xT3, xG1)$recovered,
+  clinsigraw("well", "higher", xT1, xT3, xG2)$recovered
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 5.1068, df = 2, p-value = 0.08
+
+well.pre.post.kw.harmed <- dunn.test(list(
+  clinsigraw("well", "higher", xT1, xT3, xG3)$harmed,
+  clinsigraw("well", "higher", xT1, xT3, xG1)$harmed,
+  clinsigraw("well", "higher", xT1, xT3, xG2)$harmed
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 6.3683, df = 2, p-value = 0.04
+
+well.pre.post.kw.worsened <- dunn.test(list(
+  clinsigraw("well", "higher", xT1, xT3, xG3)$worsened,
+  clinsigraw("well", "higher", xT1, xT3, xG1)$worsened,
+  clinsigraw("well", "higher", xT1, xT3, xG2)$worsened
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 3.7677, df = 2, p-value = 0.15
+
 ## Test statistical significance of clinical significant change Pre --> Follow-up
 
 aaas_ad.pre.fu.kw <- dunn.test(list(
@@ -1438,26 +1567,47 @@ aaas_ad.pre.fu.kw <- dunn.test(list(
 # ), method="bonferroni", altp=TRUE)
 # No worsening in any group, nothing to test!
 
-aaas_ag.pre.fu.kw <- dunn.test(list(
-  clinsigraw("aaas_ag", "higher", xT1, xT4, xG3)$recovered,
-  clinsigraw("aaas_ag", "higher", xT1, xT4, xG1)$recovered,
-  clinsigraw("aaas_ag", "higher", xT1, xT4, xG2)$recovered
-), method="bonferroni", altp=TRUE)
+# aaas_ag.pre.fu.kw.higher <- dunn.test(list(
+#   clinsigraw("aaas_ag", "higher", xT1, xT4, xG3)$recovered,
+#   clinsigraw("aaas_ag", "higher", xT1, xT4, xG1)$recovered,
+#   clinsigraw("aaas_ag", "higher", xT1, xT4, xG2)$recovered
+# ), method="bonferroni", altp=TRUE)
 # Kruskal-Wallis chi-squared = 1.7287, df = 2, p-value = 0.42
 
-aaas_ag.pre.fu.kw.harmed <- dunn.test(list(
-  clinsigraw("aaas_ag", "higher", xT1, xT4, xG3)$harmed,
-  clinsigraw("aaas_ag", "higher", xT1, xT4, xG1)$harmed,
-  clinsigraw("aaas_ag", "higher", xT1, xT4, xG2)$harmed
+aaas_ag.pre.fu.kw <- dunn.test(list(
+  clinsigraw("aaas_ag", "lower", xT1, xT4, xG3)$recovered,
+  clinsigraw("aaas_ag", "lower", xT1, xT4, xG1)$recovered,
+  clinsigraw("aaas_ag", "lower", xT1, xT4, xG2)$recovered
 ), method="bonferroni", altp=TRUE)
 # Kruskal-Wallis chi-squared = 3.5677, df = 2, p-value = 0.17
 
-aaas_ag.pre.fu.kw.worsened <- dunn.test(list(
-  clinsigraw("aaas_ag", "higher", xT1, xT4, xG3)$worsened,
-  clinsigraw("aaas_ag", "higher", xT1, xT4, xG1)$worsened,
-  clinsigraw("aaas_ag", "higher", xT1, xT4, xG2)$worsened
+# aaas_ag.pre.fu.kw.harmed.higher <- dunn.test(list(
+#   clinsigraw("aaas_ag", "higher", xT1, xT4, xG3)$harmed,
+#   clinsigraw("aaas_ag", "higher", xT1, xT4, xG1)$harmed,
+#   clinsigraw("aaas_ag", "higher", xT1, xT4, xG2)$harmed
+# ), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 3.5677, df = 2, p-value = 0.17
+
+aaas_ag.pre.fu.kw.harmed <- dunn.test(list(
+  clinsigraw("aaas_ag", "lower", xT1, xT4, xG3)$harmed,
+  clinsigraw("aaas_ag", "lower", xT1, xT4, xG1)$harmed,
+  clinsigraw("aaas_ag", "lower", xT1, xT4, xG2)$harmed
 ), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 1.7287, df = 2, p-value = 0.42
+
+# aaas_ag.pre.fu.kw.worsened.higher <- dunn.test(list(
+#   clinsigraw("aaas_ag", "higher", xT1, xT4, xG3)$worsened,
+#   clinsigraw("aaas_ag", "higher", xT1, xT4, xG1)$worsened,
+#   clinsigraw("aaas_ag", "higher", xT1, xT4, xG2)$worsened
+# ), method="bonferroni", altp=TRUE)
 # Kruskal-Wallis chi-squared = 4.0919, df = 2, p-value = 0.13
+
+aaas_ag.pre.fu.kw.worsened <- dunn.test(list(
+  clinsigraw("aaas_ag", "lower", xT1, xT4, xG3)$worsened,
+  clinsigraw("aaas_ag", "lower", xT1, xT4, xG1)$worsened,
+  clinsigraw("aaas_ag", "lower", xT1, xT4, xG2)$worsened
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 3.2728, df = 2, p-value = 0.19
 
 rathus.pre.fu.kw <- dunn.test(list(
   clinsigraw("rathus", "higher", xT1, xT4, xG3)$recovered,
@@ -1546,6 +1696,29 @@ lsas_sum.pre.fu.kw.worsened <- dunn.test(list(
 # $altP.adjusted
 # [1] 0.03836684 0.03371498 1.00000000; differences found
 
+well.pre.fu.kw <- dunn.test(list(
+  clinsigraw("well", "higher", xT1, xT4, xG3)$recovered,
+  clinsigraw("well", "higher", xT1, xT4, xG1)$recovered,
+  clinsigraw("well", "higher", xT1, xT4, xG2)$recovered
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 4.7252, df = 2, p-value = 0.09
+
+well.pre.fu.kw.harmed <- dunn.test(list(
+  clinsigraw("well", "higher", xT1, xT4, xG3)$harmed,
+  clinsigraw("well", "higher", xT1, xT4, xG1)$harmed,
+  clinsigraw("well", "higher", xT1, xT4, xG2)$harmed
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 7.3482, df = 2, p-value = 0.03
+# $altP.adjusted
+# [1] 0.24182013 0.02279335 1.00000000
+
+well.pre.fu.kw.worsened <- dunn.test(list(
+  clinsigraw("well", "higher", xT1, xT4, xG3)$worsened,
+  clinsigraw("well", "higher", xT1, xT4, xG1)$worsened,
+  clinsigraw("well", "higher", xT1, xT4, xG2)$worsened
+), method="bonferroni", altp=TRUE)
+# Kruskal-Wallis chi-squared = 4.9377, df = 2, p-value = 0.08
+
 ```
 
 ```{r buildclinsigtab, echo = F, eval = T}
@@ -1631,6 +1804,15 @@ clinsigtext <- function(measure, direction, first, last, group, kwobj, stats = "
   
 xclinsigcategories <- c("Recovered", "Improved", "Unchanged", "Deteriorated", "Harmed")
 
+  # cbind(
+  #   xclinsigcategories,
+  #   clinsig("aaas_ag", "higher", xT1, xT3, xG3, aaas_ag.pre.post.kw),
+  #   clinsig("aaas_ag", "higher", xT1, xT3, xG1, aaas_ag.pre.post.kw),
+  #   clinsig("aaas_ag", "higher", xT1, xT4, xG1, aaas_ag.pre.fu.kw),
+  #   clinsig("aaas_ag", "higher", xT1, xT3, xG2, aaas_ag.pre.post.kw),
+  #   clinsig("aaas_ag", "higher", xT1, xT4, xG2, aaas_ag.pre.fu.kw)
+  # ),
+
 clinsig.table <- rbind(
   cbind(
     xclinsigcategories,
@@ -1642,11 +1824,11 @@ clinsig.table <- rbind(
   ),
   cbind(
     xclinsigcategories,
-    clinsig("aaas_ag", "higher", xT1, xT3, xG3, aaas_ag.pre.post.kw),
-    clinsig("aaas_ag", "higher", xT1, xT3, xG1, aaas_ag.pre.post.kw),
-    clinsig("aaas_ag", "higher", xT1, xT4, xG1, aaas_ag.pre.fu.kw),
-    clinsig("aaas_ag", "higher", xT1, xT3, xG2, aaas_ag.pre.post.kw),
-    clinsig("aaas_ag", "higher", xT1, xT4, xG2, aaas_ag.pre.fu.kw)
+    clinsig("aaas_ag", "lower", xT1, xT3, xG3, aaas_ag.pre.post.kw),
+    clinsig("aaas_ag", "lower", xT1, xT3, xG1, aaas_ag.pre.post.kw),
+    clinsig("aaas_ag", "lower", xT1, xT4, xG1, aaas_ag.pre.fu.kw),
+    clinsig("aaas_ag", "lower", xT1, xT3, xG2, aaas_ag.pre.post.kw),
+    clinsig("aaas_ag", "lower", xT1, xT4, xG2, aaas_ag.pre.fu.kw)
   ),
   cbind(
     xclinsigcategories,
@@ -1679,6 +1861,14 @@ clinsig.table <- rbind(
     clinsig("lsas_sum", "lower", xT1, xT4, xG1, lsas_sum.pre.fu.kw),
     clinsig("lsas_sum", "lower", xT1, xT3, xG2, lsas_sum.pre.post.kw),
     clinsig("lsas_sum", "lower", xT1, xT4, xG2, lsas_sum.pre.fu.kw)
+  ),
+  cbind(
+    xclinsigcategories,
+    clinsig("well", "higher", xT1, xT3, xG3, well.pre.post.kw),
+    clinsig("well", "higher", xT1, xT3, xG1, well.pre.post.kw),
+    clinsig("well", "higher", xT1, xT4, xG1, well.pre.fu.kw),
+    clinsig("well", "higher", xT1, xT3, xG2, well.pre.post.kw),
+    clinsig("well", "higher", xT1, xT4, xG2, well.pre.fu.kw)
   )
 )
 
@@ -1719,20 +1909,21 @@ colnames(clinsig.table) <- xcolnames
 ```{r clinsigtab, echo = F, eval = T, results = 'asis'}
 
 knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of participants that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Follow-up-time points respectively (rows named 'Recovered'). For missing values (i.e., caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rlllll", escape = F) %>%
-  kable_styling(full_width = F, font_size = 9) %>%
+  kable_styling(full_width = F, font_size = 8) %>%
   pack_rows(paste0(measurementnames[1]), 1, 5, bold = F, escape = F) %>%
   pack_rows(paste0(measurementnames[2]), 6, 10, bold = F, escape = F) %>%
   pack_rows(paste0(measurementnames[3]), 11, 15, bold = F, escape = F) %>%
   pack_rows(paste0(measurementnames[4]), 16, 20, bold = F, escape = F) %>%
   pack_rows(paste0(measurementnames[5]), 21, 25, bold = F, escape = F) %>%
   pack_rows(paste0(measurementnames[6]), 26, 30, bold = F, escape = F) %>%
-  row_spec(c(5,10,15,20,25), extra_latex_after = "\\midrule") %>%
+  pack_rows(paste0(measurementnames[7]), 31, 35, bold = F, escape = F) %>%
+  row_spec(c(5,10,15,20,25,30), extra_latex_after = "\\midrule") %>%
   column_spec(c(1), width = "7em") %>%
   column_spec(c(2:6), width = "7em") %>%
   add_header_above(c(" ", "Wait-list" = 1, "Unguided self-help" = 2, "Guided self-help" = 2)) %>%
   footnote(
     general = c(
-      "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale.",
+      "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalised Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale; Well-being = Questionnaire on Well-being.",
       "\\\\textsuperscript{*} = \\\\textit{p} < 0.05, \\\\textsuperscript{**} = \\\\textit{p} < 0.01, \\\\textsuperscript{***} = \\\\textit{p} < 0.00; \\\\textit{p}-values are Bonferroni adjusted."
       ),
     escape = F,
@@ -1803,7 +1994,17 @@ Table 3 provides a summary of the numbers and proportions of clinical recovery i
 
 #### Reliable deterioration and harm
 
-Checking for any reliable signs of harm in the most severe of the adverse outcome categories (see Table 3), a significant difference between the groups in clinically significant change was found for the AAA-S Aggressive subscale, as $3$ participants ($4$\%) fell below the threshold for “harmed” while waiting to begin treatment. However, the post-hoc testing did not reveal any significant pairwise differences between any of the treatment groups and the wait-list group, `r xprnot(aaas_ag.pre.post.kw.harmed$altP.adjusted[2],a="Bonf")` and `r xprnot(aaas_ag.pre.post.kw.harmed$altP.adjusted[1],a="Bonf")`. No other instances of suspected reliable harm between the pre and the post time points or the pre to the follow-up time points were identified for either measure. The second to worst category in assessing reliable change is “deteriorated.” To identify any possible cases of reliable deterioration *and* reliable harm, these two categories were collapsed into the conservative ad hoc category “worsened” gathering participants who had moved into either category. Applying the “worsened” portmanteau category, a significant difference between the groups for the LSAS-SR was found, meriting a follow-up pairwise comparison. This revealed that the number of participants (7 participants; $10$\%) in the wait-list condition who had reached either “deteriorated” or “harmed” between pre and post treatment, was significantly larger than the corresponding number in the guided self-help group. The same held true when comparing the pre to the follow-up time points, where these individuals were significantly more than the number of worsened participants in both the unguided and the guided self-help groups. Finally, a difference between the groups was found for the PHQ-9, with the post-hoc testing revealing a difference for the guided self-help group, with $12$ worsened participants ($18$\%). These findings reveal that the non-active wait-list condition brought about adverse clinical change for $10$\% of the participants with regard to social anxiety and $18$\% with regard to depression.
+Checking for any reliable signs of harm in the most severe of the adverse outcome categories (see Table 3), significant differences between the groups in clinically significant change were found for the Well-being scale. Post-hoc testing revealed that the number of participants having fallen into the "harmed" category ($6$ participants; $9$\%) in the wait-list group, was significantly larger than in the guided group at both the post time-point
+<!-- , `r xpr(well.pre.post.kw.harmed$altP.adjusted[2],a="Bonf")`,  -->
+and the follow-up time-point.
+<!-- , `r xpr(well.pre.fu.kw.harmed$altP.adjusted[2],a="Bonf")`.  -->
+No other instances of suspected reliable harm between the pre and the post time points or the pre to the follow-up time points were identified for either measure.
+
+The second to worst category in assessing reliable change is “deteriorated.” To identify any possible cases of reliable deterioration *and* reliable harm, these two categories were collapsed into the conservative ad hoc category “worsened” gathering participants who had moved into either category. Applying the “worsened” portmanteau category, a significant difference between the groups for the LSAS-SR was found, meriting a follow-up pairwise comparison. This revealed that the number of participants (7 participants; $10$\%) in the wait-list condition who had reached either “deteriorated” or “harmed” between pre and post treatment, was significantly larger than the corresponding number in the guided self-help group. The same held true when comparing the pre to the follow-up time points, where these individuals were significantly more than the number of worsened participants in both the unguided and the guided self-help groups. Finally, a difference between the groups was found for the PHQ-9, with the post-hoc testing revealing a difference for the guided self-help group, with $12$ worsened participants ($18$\%). 
+
+In summary, these findings reveal that the non-active wait-list condition brought about adverse clinical change for $9$\% of the participants with regard to general well-being, $10$\% with regard to social anxiety, and $18$\% with regard to depression.
+
+<!-- 2do: Add in reliable harm for Waitlist with regards to Välmåendeskalan, compared to the Guided condition. -->
 
 # Discussion
 
@@ -1811,7 +2012,17 @@ This randomized controlled trial provides up-to-date empirical data on a transdi
 
 The large effects on assertiveness measured with the AAA-S Adaptive subscale, comparing the wait-list and the unguided self-help conditions at the follow-up, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")`, with $22$\% clinically improved, are comparable to those found in clinical trials of iCBT interventions for other transdiagnostic behavioral targets. Measurement with the RAS at the follow-up, `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")`, with $31$\% clinically improved, confirms these effects, as does the insignificantly larger effects found for assertiveness measured with the AAA-S Adaptive subscale and the RAS in the guided self-help group, with clinical improvement proportions of $26$\% and $36$\%, respectively. Benchmarking against procrastination [$d$ = `r xresult(0.5,2)`--`r xresult(0.69,2)` and $24$--$36$\% clinically improved in an unguided group, and $d$ = `r xresult(0.70,2)`--`r xresult(0.81,2)` and $31$--$40$\% clinically improved in a guided group\; @Rozental2015] and perfectionism [$d$ = `r xresult(0.68,2)`--`r xresult(1.00,2)`, with $45$\% of participants clinically improved in a guided group\; @Rozental2017], these results indicate that the assertiveness construct can be used successfully as a behavior therapy target with various clinical presentations, helping participants to appreciate and report changes in healthy assertion levels in their daily lives.
 
-It should be noted that while there were significant effects on aggressive assertiveness in both treatment groups, no statistically significant number of clinically changed participants was found at either the post or the follow-up time points for the AAA-S Aggressive subscale. This should not be surprising, however, since for this particular sample the baseline levels of aggressive assertiveness were very low. Also, the operationalization of aggressive assertiveness is fuzzy and prone to individual differences in interpretation; behavior that one person deems aggressive assertion might be healthy assertion to another. Likewise, what counts as healthy assertion in one specific societal/cultural context might be perceived as normatively aggressive in another [@Mitamura2018]. Therefore, for a particular individual in a particular context, it is probably warranted to track only how the relationship between levels of adaptive and aggressive assertiveness changes over time, taking into account that individual’s idiographic goals in therapy. This topic may well be further explored in future studies. For the purposes of this study, however, the lack of clinical levels of aggressive assertiveness indicates that participation did not lead to possibly adverse effects in relationships.
+It should be noted that while there were significant negative effects on aggressive assertiveness in both treatment groups, no statistically significant number of clinically harmed or worsened participants was found at either the post or the follow-up time points for the AAA-S Aggressive subscale in either group, compared to the wait-list. This should not be surprising, however, since for this particular sample the baseline levels of aggressive assertiveness were very low. Also, the operationalization of aggressive assertiveness is fuzzy and prone to individual differences in interpretation; behavior that one person deems aggressive assertion might be healthy assertion to another. Likewise, what counts as healthy assertion in one specific societal/cultural context might be perceived as normatively aggressive in another [@Mitamura2018]. Therefore, for a particular individual in a particular context, it is probably warranted to track only how the relationship between levels of adaptive and aggressive assertiveness changes over time, taking into account that individual’s idiographic goals in therapy. This topic may well be further explored in future studies. For the purposes of this study, however, the lack of clinical levels of aggressive assertiveness indicates that participation did not lead to possibly adverse effects in relationships.
+
+<!-- 2do: Give rationale for moving Rathus from secondary to primary outcome measure. -->
+
+<!-- 2do: Include BBQ outcomes. -->
+
+<!-- 2do: Double-check analysis of clinical change for aggressive assertiveness. Is higher or lower desirable for this sample? Compare baseline levels with norms. Check @Thompson2011 -->
+
+<!-- 2do: Introduce and also discuss inverse link anxiety/assertiveness, cite Borkovec1994; Craske and Barlow1988;O’Donnell et al.2007? -->
+
+<!-- 2do: Discuss gender diffs in aggressive assertiveness? @Thompson2011 p 10. -->
 
 The effects at the follow-up on social anxiety symptoms, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1,"effshort")` and `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1,"effshort")`, and depression, `r report.text2(phq_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1,"effshort")` and `r report.text2(phq_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1,"effshort")`, are in agreement with those for iCBT in general, where the average between-group effect size is $g$ = `r xresult(0.8,2)` compared to controls [@Andrews2018], which in turn is about the same as for face-to-face treatment [@Carlbring2018]. However, the current intervention was insufficient for ameliorating generalized anxiety symptoms. Possibly, the overall structure of the Respekt^2^ intervention, with its emphasis on cheerleading participants in designing and performing in vivo behavioral experiments early on in treatment and for a limited time, was not adequate for addressing generalized anxiety symptoms where non-commitment to exposure and behavioral rigidity are often important first hurdles to overcome.
 
