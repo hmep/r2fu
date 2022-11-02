@@ -1,47 +1,9 @@
-```{r setup, include=F}
-
-# Font sources:
-# - https://www.ctan.org/pkg/tex-gyre-termes
-# - https://www.ctan.org/pkg/tex-gyre-math-termes
-
-packages <-
-  c(
-    "pwr",
-    "readxl",
-    "writexl",
-    "lmerTest",
-    "dunn.test",
-    "ggplot2",
-    "tidyr",
-    "jtools",
-    "modelr",
-    "ggeffects",
-    "emmeans",
-    "patchwork",
-    "performance",
-    "sjPlot",
-    "kableExtra",
-    "clinicalsignificance",
-    "here",
-    "linebreak",
-    "MOTE",
-    "rticles"
-  )
-if (!require("install.load")) install.packages("install.load")
-library(install.load)
-install_load(packages)
-
-knitr::opts_chunk$set(
-  warning = F,
-  message = F,
-  echo = F,
-  collapse = T,
-  fig.retina = 4,
-  dpi = 196,
-  out.width = "100%",
-  fig.width = 7.5,
-  fig.asp = 0.618
-)
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r constants, include=F}
 
 xg1 = "unguided"
 xg2 = "guided"
@@ -245,7 +207,8 @@ report.kwnot <- function(kwobj) {
   paste0(xprnot(pchisq(kwobj$chi2, df, lower.tail = F)))
 }
 
-# Better build custom contrasts with less comparisons?
+# Would it be better to build custom contrasts with fewer comparisons?
+# (Yes, that would be better, but we are still protected from p-hacking by Bonferroni correction)
 # https://aosmith.rbind.io/2019/04/15/custom-contrasts-emmeans/#reasons-for-custom-comparisons
 
 rout <- function(lmerobj) {
@@ -459,7 +422,7 @@ r2fu.raw.data <- as.data.frame(r2fu.raw.data)
 cols.count <- 21
 g3key <- which(!is.na(r2fu.raw.data[3 * cols.count + 8]))
 r2fu.raw.data[g3key, c(1:cols.count) + 2 * cols.count] <-
-  r2fu.raw.data[g3key, c(1:cols.count) + 3 * cols.count] # 2do: check if this is correct
+  r2fu.raw.data[g3key, c(1:cols.count) + 3 * cols.count]
 
 # Create vector with group designations
 r2fu.groups <-
@@ -565,7 +528,7 @@ digits = -1) * 3
 
 The study design follows the RCT criteria proposed by @Chambless2001, with a randomized allocation of participants to three groups: (1) guided self-help, (2) unguided self-help, and (3) eight-week wait-list control. A sample size of 210 participants (70 per group) was decided on through an a priori power calculation according to guidelines for linear models outlined in @cohen1988statistical, assuming a between-group effect size of Cohen’s $d$ of `r xresult(0.8,2)` on the Adaptive and Aggressive Assertiveness Scales [AAA-S\; @Thompson2011], power `r xresult(0.9,2)`, alpha `r xresult(0.05,2)`, and a $15$\% "worst case" drop-out rate per week, with the duration of the intervention being eight weeks in total.
 
-The study was registered at ClinicalTrials.gov (NCT04240249). An error in the design was corrected post-registration, in that the Rathus Assertivness Schedule (RAS) scale was moved from the list of secondary outcome measures to the list of primary outcome measures, as it captures levels of assertiveness, the primary dependent variable of interest. Before recruitment started, the study received ethical approval from the Swedish Ethical Review Authority (Diary number: 2019-05165). 
+The study was registered at ClinicalTrials.gov (NCT04240249). An error in the design was corrected post-registration, in that the Rathus Assertivness Schedule (RAS) scale was moved from the secondary outcome measures category to the primary outcome measures category, as the scale captures the primary dependent variable of interest. Before recruitment started, the study received ethical approval from the Swedish Ethical Review Authority (Diary number: 2019-05165). 
 
 ## Participants
 
@@ -664,7 +627,7 @@ Both therapists working with participants in the guided condition were final-yea
 
 Five participants were excluded from the analyses due to wrongful inclusion, as they were receiving concurrent psychological treatment.
 
-```{r dot-ex, engine = "dot", fig.cap = "A total of 210 participants were included in the study through randomization and further randomized into three groups: unguided self-help, guided self-help, and wait-list, with 70 participants each.",results = "as.is"}
+```{r flowchart-dot, engine = "dot", fig.cap = "A total of 210 participants were included in the study through randomization and further randomized into three groups: unguided self-help, guided self-help, and wait-list, with 70 participants each.",results = "as.is"}
 digraph G {
 
   dpi=600
@@ -1938,7 +1901,7 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
 
 ## Treatment efficacy, primary, and secondary measures
 
-Mixed models that included the unguided self-help, guided self-help, and wait-list groups at the pre, during, and post time points revealed time–group interaction effects for all three measures of assertiveness: the AAA-S Adaptive subscale, `r report.anova(aaas_ad.post.anova)[3]`, the AAA-S Aggressive subscale, `r report.anova(aaas_ag.post.anova)[3]`, and the RAS, `r report.anova(rathus.post.anova)[3]`. These interactions show that the random assignment to group conditions had an effect over time on assertive behavior. Similarly, mixed models for the syndromal symptoms revealed time–group interaction effects for all three measures of anxiety and depression: the PHQ-9, `r report.anova(phq_sum.post.anova)[3]`, the GAD-7, `r report.anova(gad_sum.post.anova)[3]`, and the LSAS-SR, `r report.anova(lsas_sum.post.anova)[3]`. The estimated mean levels of depressive mood and generalized and social anxiety symptoms were significantly affected by participation in the intervention.
+Mixed models that included the unguided self-help, guided self-help, and wait-list groups at the pre, during, and post time points revealed time–group interaction effects for all three measures of assertiveness: the AAA-S Adaptive subscale, `r report.anova(aaas_ad.post.anova)[3]`, the AAA-S Aggressive subscale, `r report.anova(aaas_ag.post.anova)[3]`, and the RAS, `r report.anova(rathus.post.anova)[3]`. These interactions show that the random assignment to group conditions had an effect over time on assertive behavior. Similarly, mixed models for the syndromal symptoms revealed time–group interaction effects for all four measures of anxiety, depression, and well-being: the PHQ-9, `r report.anova(phq_sum.post.anova)[3]`, the GAD-7, `r report.anova(gad_sum.post.anova)[3]`, the LSAS-SR, `r report.anova(lsas_sum.post.anova)[3]`, and the Well-being questionnaire, `r report.anova(well.post.anova)[3]`. The estimated mean levels of depressive mood, generalized and social anxiety, and general well-being were significantly affected by participation in the intervention.
 
 All subsequent post-hoc testing of marginal mean differences in pairwise comparisons included all groups and time points.
 
@@ -1960,13 +1923,19 @@ Similarly, the effect of the guided self-help condition on the AAA-S Adaptive su
 
 Comparing the unguided self-help and guided self-help conditions, no significant differences were found either at the post or the follow-up time points, revealing that the participants working through the intervention on their own fared as well as those who were supported by a therapist.
 
-### Between-group effects on syndromal symptoms of anxiety and depression
+### Between-group effects on syndromal symptoms of anxiety, depression, and well-being
 
 In the post-hoc testing, no effect on depressive symptoms, measured with the PHQ-9, was found at the post time point comparing the wait-list and the unguided self-help groups. Tentative evidence was found for therapist support benefiting depressed participants: the wait-list versus the guided self-help comparison revealed a moderate to large effect on PHQ-9 at the post time point, `r report.text2(phq_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1, display)`. However, this effect dissipated when the follow-up comparison was instead made against the most conservative value collected in the wait-list group, in this case from the pre time point; see Figure 3 for a visual exploration of a possible nocebo effect.
 
 No between-group effects were found for the GAD-7 when comparing the treatment and the wait-list groups. In addition, there was no significant effect of the unguided self-help condition on social anxiety symptoms measured with the LSAS-SR at the post time point. However, a large effect was found at the follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1, display)` for the unguided self-help group, compared with the lowest value collected at the during time point. For the guided self-help group, a moderate effect was found at the post time point, `r report.text2(lsas_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1, display)`, with a large effect at the follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1, display)`, this time compared with the most conservative value, from the during time point, for the wait-list group.
 
-Thus, the eight-week Respekt^2^ intervention did not affect either depression or generalized anxiety. However, it did have a pronounced effect on social anxiety. See Table 2 for a summary of the significant effects, including 95\% CIs.
+For general well-being, medium effects were found at post in both the unguided and the guided groups, 
+`r report.text2(well.out, paste(xT3,xG3,"-",xT3,xG1), -1, display)`, and
+`r report.text2(well.out, paste(xT3,xG3,"-",xT3,xG2), -1, display)`, respectively, increasing to large effects at follow-up in both groups,
+`r report.text2(well.out, paste(xT1,xG3,"-",xT4,xG1), -1, display)`, and
+`r report.text2(well.out, paste(xT1,xG3,"-",xT4,xG2), -1, display)`, respectively.
+
+Thus, the eight-week Respekt^2^ intervention did not affect either depression or generalized anxiety. However, it did have a pronounced effect on social anxiety, and on general well-being. See Table 2 for a summary of the significant effects, including 95\% CIs.
 
 ### Notable within-group effects
 
@@ -2004,8 +1973,6 @@ The second to worst category in assessing reliable change is “deteriorated.”
 
 In summary, these findings reveal that the non-active wait-list condition brought about adverse clinical change for $9$\% of the participants with regard to general well-being, $10$\% with regard to social anxiety, and $18$\% with regard to depression.
 
-<!-- 2do: Add in reliable harm for Waitlist with regards to Välmåendeskalan, compared to the Guided condition. -->
-
 # Discussion
 
 This randomized controlled trial provides up-to-date empirical data on a transdiagnostic intervention targeting assertiveness, Respekt^2^, which is evidence of its effects on assertive behavior and psychiatric disorder symptoms. Having mostly been ignored as a construct in clinical research since the 1990s, despite its rich history as the target in the very first behavioral therapies of the 1950s and its current status as an important goal for exposure in third-wave CBT variants, such as DBT and ACT [@Speed2018a], this study brings much-needed data on assertiveness as a viable transdiagnostic stand-alone goal in psychological treatment.
@@ -2013,12 +1980,6 @@ This randomized controlled trial provides up-to-date empirical data on a transdi
 The large effects on assertiveness measured with the AAA-S Adaptive subscale, comparing the wait-list and the unguided self-help conditions at the follow-up, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")`, with $22$\% clinically improved, are comparable to those found in clinical trials of iCBT interventions for other transdiagnostic behavioral targets. Measurement with the RAS at the follow-up, `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")`, with $31$\% clinically improved, confirms these effects, as does the insignificantly larger effects found for assertiveness measured with the AAA-S Adaptive subscale and the RAS in the guided self-help group, with clinical improvement proportions of $26$\% and $36$\%, respectively. Benchmarking against procrastination [$d$ = `r xresult(0.5,2)`--`r xresult(0.69,2)` and $24$--$36$\% clinically improved in an unguided group, and $d$ = `r xresult(0.70,2)`--`r xresult(0.81,2)` and $31$--$40$\% clinically improved in a guided group\; @Rozental2015] and perfectionism [$d$ = `r xresult(0.68,2)`--`r xresult(1.00,2)`, with $45$\% of participants clinically improved in a guided group\; @Rozental2017], these results indicate that the assertiveness construct can be used successfully as a behavior therapy target with various clinical presentations, helping participants to appreciate and report changes in healthy assertion levels in their daily lives.
 
 It should be noted that while there were significant negative effects on aggressive assertiveness in both treatment groups, no statistically significant number of clinically harmed or worsened participants was found at either the post or the follow-up time points for the AAA-S Aggressive subscale in either group, compared to the wait-list. This should not be surprising, however, since for this particular sample the baseline levels of aggressive assertiveness were very low. Also, the operationalization of aggressive assertiveness is fuzzy and prone to individual differences in interpretation; behavior that one person deems aggressive assertion might be healthy assertion to another. Likewise, what counts as healthy assertion in one specific societal/cultural context might be perceived as normatively aggressive in another [@Mitamura2018]. Therefore, for a particular individual in a particular context, it is probably warranted to track only how the relationship between levels of adaptive and aggressive assertiveness changes over time, taking into account that individual’s idiographic goals in therapy. This topic may well be further explored in future studies. For the purposes of this study, however, the lack of clinical levels of aggressive assertiveness indicates that participation did not lead to possibly adverse effects in relationships.
-
-<!-- 2do: Give rationale for moving Rathus from secondary to primary outcome measure. -->
-
-<!-- 2do: Include BBQ outcomes. -->
-
-<!-- 2do: Double-check analysis of clinical change for aggressive assertiveness. Is higher or lower desirable for this sample? Compare baseline levels with norms. Check @Thompson2011 -->
 
 <!-- 2do: Introduce and also discuss inverse link anxiety/assertiveness, cite Borkovec1994; Craske and Barlow1988;O’Donnell et al.2007? -->
 

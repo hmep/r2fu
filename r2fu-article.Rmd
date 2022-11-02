@@ -69,5 +69,52 @@ header-includes:
 <!--   - "The effects were maintained at the one year follow-up" -->
 <!--   - "The assertiveness construct is worthy of revived clinical research interest" -->
 
+```{r setup, include=F}
+
+# Font sources:
+# - https://www.ctan.org/pkg/tex-gyre-termes
+# - https://www.ctan.org/pkg/tex-gyre-math-termes
+
+packages <-
+  c(
+    "pwr",
+    "readxl",
+    "writexl",
+    "lmerTest",
+    "dunn.test",
+    "ggplot2",
+    "tidyr",
+    "jtools",
+    "modelr",
+    "ggeffects",
+    "emmeans",
+    "patchwork",
+    "performance",
+    "sjPlot",
+    "kableExtra",
+    "clinicalsignificance",
+    "here",
+    "linebreak",
+    "MOTE",
+    "rticles"
+  )
+if (!require("install.load")) install.packages("install.load")
+library(install.load)
+install_load(packages)
+
+knitr::opts_chunk$set(
+  warning = F,
+  message = F,
+  echo = F,
+  collapse = T,
+  fig.retina = 4,
+  dpi = 196,
+  out.width = "100%",
+  fig.width = 7.5,
+  fig.asp = 0.618
+)
+
+```
+
 ```{r body, child="body.Rmd", eval=TRUE}
 ```
