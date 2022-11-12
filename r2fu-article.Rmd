@@ -2,27 +2,29 @@
 title: "Efficacy of Transdiagnostic Cognitive-Behavioral Therapy for Assertiveness: A Randomized Controlled Trial"
 runtitle: "Transdiagnostic CBT for Assertiveness"
 author:
-  - name: "Tobias Hagberg"
-    affiliation: "Stockholm University"
-  - name: "Patrik Manhem"
-    affiliation: "Stockholm University"
-  - name: "Martin Oscarsson"
-    affiliation: "Stockholm University"
-  - name: "Fiona Michel"
-    affiliation: "Centre for Clinical Interventions"
-  - name: "Gerhard Andersson"
-    affiliation: "Linköping University"
-  - name: "Per Carlbring"
-    email: "per@carlbring.se"
+  - name: Tobias Hagberg
+    affiliation: Stockholm University
+  - name: Patrik Manhem
+    affiliation: Stockholm University
+  - name: Martin Oscarsson
+    affiliation: Stockholm University
+  - name: Fiona Michel
+    affiliation: Centre for Clinical Interventions
+  - name: Gerhard Andersson
+    affiliation: 'Linköping University, Karolinska Institutet'
+  - name: Per Carlbring
+    email: per.carlbring@psychology.su.se
     correspondingauthor: true
-    affiliation: "Stockholm University"
+    affiliation: Stockholm University
 address:
-  - code: "Stockholm University"
-    address: "Department of Psychology, Stockholm University, SE-106 91 Stockholm, Sweden"
-  - code: "Linköping University"
-    address: "Department of Behavioural Sciences and Learning, Linköping University, SE-581 83 Linköping, Sweden"
-  - code: "Centre for Clinical Interventions"
-    address: "Centre for Clinical Interventions, 223 James St, Northbridge WA 6003, Australia"
+  - code: Stockholm University
+    address: Department of Psychology, Stockholm University, SE-106 91 Stockholm, Sweden
+  - code: Karolinska Institutet
+    address: Department of Clinical Neuroscience, Karolinska Institutet, SE-171 77 Stockholm, Sweden
+  - code: Linköping University
+    address: Department of Behavioural Sciences and Learning, Department of Biomedical and Clinical Sciences, Linköping University, SE-581 83 Linköping, Sweden
+  - code: Centre for Clinical Interventions
+    address: Centre for Clinical Interventions, 223 James St, Northbridge WA 6003, Australia
 abstract: |
   `r readLines('abstract.Rmd', encoding = 'UTF-8')`
 keywords: 
@@ -64,8 +66,8 @@ header-includes:
 ---
 
 <!-- highlights: -->
-<!--   - "Stand-alone iCBT assertion training is effective at increasing levels of adaptive assertiveness" -->
-<!--   - "Stand-alone iCBT assertion training is effective at alleviating symptoms of social anxiety to the point of clinical recovery for a significant number of participants" -->
+<!--   - "Stand-alone iCBT assertiveness training is effective at increasing levels of adaptive assertiveness" -->
+<!--   - "Stand-alone iCBT assertiveness training is effective at alleviating symptoms of social anxiety to the point of clinical recovery for a significant number of participants" -->
 <!--   - "The effects were maintained at the one year follow-up" -->
 <!--   - "The assertiveness construct is worthy of revived clinical research interest" -->
 
