@@ -3,27 +3,27 @@ title: "Efficacy of Transdiagnostic Cognitive-Behavioral Therapy for Assertivene
 runtitle: "Transdiagnostic CBT for Assertiveness"
 author:
   - name: Tobias Hagberg
-    affiliation: Stockholm University
+    affiliation: SU
   - name: Patrik Manhem
-    affiliation: Stockholm University
+    affiliation: SU
   - name: Martin Oscarsson
-    affiliation: Stockholm University
+    affiliation: SU
   - name: Fiona Michel
-    affiliation: Centre for Clinical Interventions
+    affiliation: CCI
   - name: Gerhard Andersson
-    affiliation: 'Linköping University, Karolinska Institutet'
+    affiliation: LU,KI
   - name: Per Carlbring
     email: per.carlbring@psychology.su.se
     correspondingauthor: true
-    affiliation: Stockholm University
+    affiliation: SU
 address:
-  - code: Stockholm University
+  - code: SU
     address: Department of Psychology, Stockholm University, SE-106 91 Stockholm, Sweden
-  - code: Karolinska Institutet
+  - code: KI
     address: Department of Clinical Neuroscience, Karolinska Institutet, SE-171 77 Stockholm, Sweden
-  - code: Linköping University
-    address: Department of Behavioural Sciences and Learning, Department of Biomedical and Clinical Sciences, Linköping University, SE-581 83 Linköping, Sweden
-  - code: Centre for Clinical Interventions
+  - code: LU
+    address: Dept. of Behavioural Sciences and Learning, Dept. of Biomedical and Clinical Sciences, Linköping University, SE-581 83 Linköping, Sweden
+  - code: CCI
     address: Centre for Clinical Interventions, 223 James St, Northbridge WA 6003, Australia
 abstract: |
   `r readLines('abstract.Rmd', encoding = 'UTF-8')`
