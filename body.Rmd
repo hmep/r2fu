@@ -2019,7 +2019,7 @@ In the current study, we found that participation in Respekt^2^ increased assert
 
 # Author contributions
 
-Tobias Hagberg performed Conceptualization, Methodology, Data curation, Software, Formal Analysis, Writing - Original Draft; Patrik Manhem performed Conceptualization, Methodology, Data curation; Martin Oscarsson performed Writing - Original Draft; Per Carlbring performed Supervision, Writing - Review & Editing; and Gerhard Andersson performed Writing - Review & Editing.
+Tobias Hagberg performed Conceptualization, Methodology, Data curation, Software, Formal Analysis, Writing - Original Draft; Patrik Manhem performed Conceptualization, Methodology, Writing - Original Draft; Martin Oscarsson performed Writing - Original Draft; Per Carlbring performed Supervision, Writing - Review & Editing; and Gerhard Andersson performed Writing - Review & Editing.
 
 # ORCID
 
