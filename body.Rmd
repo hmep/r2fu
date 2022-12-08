@@ -2021,7 +2021,7 @@ In the current study, we found that participation in Respekt^2^ increased assert
 
 <!-- https://www.elsevier.com/authors/policies-and-guidelines/credit-author-statement -->
 
-Tobias Hagberg performed Conceptualization, Methodology, Investigation, Data curation, Software, Formal Analysis, Writing - Original Draft; Patrik Manhem performed Conceptualization, Methodology, Investigation, Writing - Original Draft; Martin Oscarsson performed Writing - Original Draft; Per Carlbring performed Supervision, Writing - Review & Editing; Fiona Michel and Gerhard Andersson both provided Resources and performed Writing - Review & Editing.
+Tobias Hagberg and Patrik Manhem performed Conceptualization, Methodology, Investigation, Data curation and Writing - Original Draft; Tobias Hagberg also Software and Formal Analysis; Martin Oscarsson performed Writing - Original Draft; Per Carlbring performed Supervision, Writing - Review & Editing; Fiona Michel and Gerhard Andersson both provided Resources and performed Writing - Review & Editing.
 
 # ORCID
 
