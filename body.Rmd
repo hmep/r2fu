@@ -1246,7 +1246,7 @@ colnames(effectsize.table) <- c(" ",measurementnamesspecial)
 knitr::kable(
   effectsize.table,
   caption = "Within-group effect sizes [95\\% CI] comparing estimated marginal means between Pre- and Post-treatment, as well as between Pre-treatment and 1-year Follow-up, and between group effect sizes [95\\% CI] at Post-treatment and 1-year Follow-up.",
-  align = "rllllll",
+  align = "rlllllll",
   escape = F,
   booktabs = T,
   format = "latex",
