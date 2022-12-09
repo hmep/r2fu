@@ -573,7 +573,7 @@ Following the a priori power calculation, 210 participants were randomized to be
 
 ## Measures
 
-The data were collected using the measures described below at four time points: week 0 (pre-treatment), week 4 (during the intervention), week 8 (post-treatment), and at a one-year follow-up. Participants in the wait-list condition were not administered the follow-up measurement since they were given access to the unguided branch of the intervention after the post-treatment time point. 
+The data were collected using the measures described below at four time points: week 0 (pre-treatment), week 4 (during the intervention), week 8 (post-treatment), and at a one-year follow-up. Participants in the wait-list condition were not included in the follow-up measurement since they had been given access to the unguided branch of the intervention after the post-treatment time point. 
 
 ### Primary measures
 
