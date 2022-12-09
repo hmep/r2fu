@@ -50,16 +50,17 @@ xresult <-
   }
 
 xresulttext <-
-  function(x, d = 2, f="c") {
-    # apa(
-    #   value = x,
-    #   decimals = d,
-    #   leading = F
-    # )
-    formatC(x,
-            digits = d,
-            drop0trailing = F,
-            format = "f")
+  function(x, d = 2, f = "c") {
+    if (f == "a") {
+      apa(value = x,
+          decimals = d,
+          leading = F)
+    } else {
+      formatC(x,
+              digits = d,
+              drop0trailing = F,
+              format = "f")
+    }
   }
 
 xpercent <-
@@ -576,11 +577,11 @@ The data were collected using the measures described below at four time points: 
 
 ### Primary measures
 
-Assertiveness style was measured using a Swedish translation (contributed by TH) of the Adaptive and Aggressive Assertiveness Scales [AAA-S\; @Thompson2011], which contains 30 items, including “When someone I don’t know well borrows something from me and forgets to return it, I… a. Demand it back; b. Ask if she/he is done and ask for it back” (a. and b. both scored from 1 = never to 5 = always). The English-language version of the AAA-S have good internal consistency for aggressive assertiveness (`r xresult(0.88,2)`), and excellent for adaptive assertiveness  (`r xresult(0.93,2)`), respectively. A Swedish translation (contributed by TH) of the Rathus Assertiveness Schedule [RAS\; @Rathus1973] was used as an additional measure of assertiveness style with 30 items, including “I find it embarrassing to return merchandise” (+3 = very characteristic of me, extremely descriptive to --3 = very uncharacteristic of me, extremely nondescriptive). The RAS has good internal consistency (`r xresult(0.87,2)`) [@Thompson2011].
+Assertiveness style was measured using a Swedish translation (contributed by TH) of the Adaptive and Aggressive Assertiveness Scales [AAA-S\; @Thompson2011], which contains 30 items, including “When someone I don’t know well borrows something from me and forgets to return it, I… a. Demand it back; b. Ask if she/he is done and ask for it back” (a. and b. both scored from 1 = never to 5 = always). The English-language version of the AAA-S have good internal consistency for aggressive assertiveness (`r xresult(0.88,2,f="a")`), and excellent for adaptive assertiveness  (`r xresult(0.93,2,f="a")`), respectively. A Swedish translation (contributed by TH) of the Rathus Assertiveness Schedule [RAS\; @Rathus1973] was used as an additional measure of assertiveness style with 30 items, including “I find it embarrassing to return merchandise” (+3 = very characteristic of me, extremely descriptive to --3 = very uncharacteristic of me, extremely nondescriptive). The RAS has good internal consistency (`r xresult(0.87,2,f="a")`) [@Thompson2011].
 
 ### Secondary measures
 
-Depression was measured using the Patient Health Questionnaire 9-Item Scale [PHQ-9\; @Kroenke2010], which contains nine items, including “Feeling down, depressed, or hopeless” (0 = not at all to 3 = nearly every day). Generalized anxiety was measured using the Generalized Anxiety Disorder 7-item Scale [GAD-7\; @Kroenke2006], which contains seven items, including “Feeling nervous, anxious, or on edge” (0 = not at all to 3 = nearly every day). Social anxiety was measured using the Liebowitz Social Anxiety Scale [LSAS-SR\; @Fresco2001], which contains 24 items, including “Calling someone you don’t know very well” (fear or anxiety, 0 = none to 3 = severe; avoidance, 0 = never to 3 = usually). General well-being was measured using the Questionnaire on well-being [@Braconier2015], which contains 18 items, such as "To what extent during the past week have you felt calm and relaxed?" (0 = never to 5 = very often). These self-report measures have reported either good or excellent internal consistency (`r xresult(0.89,2)`, `r xresult(0.92,2)`, `r xresult(0.96,2)`, and `r xresult(0.926,2)`, respectively).
+Depression was measured using the Patient Health Questionnaire 9-Item Scale [PHQ-9\; @Kroenke2010], which contains nine items, including “Feeling down, depressed, or hopeless” (0 = not at all to 3 = nearly every day). Generalized anxiety was measured using the Generalized Anxiety Disorder 7-item Scale [GAD-7\; @Kroenke2006], which contains seven items, including “Feeling nervous, anxious, or on edge” (0 = not at all to 3 = nearly every day). Social anxiety was measured using the Liebowitz Social Anxiety Scale [LSAS-SR\; @Fresco2001], which contains 24 items, including “Calling someone you don’t know very well” (fear or anxiety, 0 = none to 3 = severe; avoidance, 0 = never to 3 = usually). General well-being was measured using the Questionnaire on well-being [@Braconier2015], which contains 18 items, such as "To what extent during the past week have you felt calm and relaxed?" (0 = never to 5 = very often). These self-report measures have reported either good or excellent internal consistency (`r xresult(0.89,2,f="a")`, `r xresult(0.92,2,f="a")`, `r xresult(0.96,2,f="a")`, and `r xresult(0.926,2,f="a")`, respectively).
 
 ## Intervention
 
