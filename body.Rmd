@@ -1686,7 +1686,7 @@ clinsig <- function(measure, direction, first, last, group, kwobj) {
   output <- as.matrix(clinsig$summary[c(2:3)])
     output <-
     paste0(
-      "\\parbox[b]{3.12em}{\\flushright$",
+      "\\hskip -.5em\\parbox[b]{3.12em}{\\flushright$",
       output[, 1],
       "$} ($",
       round(output[, 2] * 100),
@@ -1904,7 +1904,7 @@ In the post-hoc testing, no effect on depressive symptoms, measured with the PHQ
 
 No between-group effects were found for the GAD-7 when comparing the treatment and the wait-list groups. In addition, there was no significant effect of the unguided self-help condition on social anxiety symptoms measured with the LSAS-SR at the post time point. However, a large effect was found at the follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1, display)` for the unguided self-help group, compared with the lowest value collected at the during time point. For the guided self-help group, a moderate effect was found at the post time point, `r report.text2(lsas_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1, display)`, with a large effect at the follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1, display)`, this time compared with the most conservative value, from the during time point, for the wait-list group.
 
-For general well-being, moderate effects were found at post in both the unguided and the guided groups, 
+For the Well-being Questionnaire, moderate effects were found at post in both the unguided and the guided groups, 
 `r report.text2(well.out, paste(xT3,xG3,"-",xT3,xG1), -1, display)`, and
 `r report.text2(well.out, paste(xT3,xG3,"-",xT3,xG2), -1, display)`, respectively, increasing to large effects at follow-up in both treatment groups,
 `r report.text2(well.out, paste(xT1,xG3,"-",xT4,xG1), -1, display)`, and
