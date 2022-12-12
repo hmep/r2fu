@@ -1225,7 +1225,7 @@ knitr::kable(
   format = "latex",
   table.envir = "sidewaystable"
 ) %>%
-  kable_styling(full_width = F, font_size = 6.75) %>%
+  kable_styling(full_width = F, font_size = 6.5) %>%
   pack_rows("Within-group effect sizes", 1, 7, bold = F) %>%
   pack_rows("Between-group effect sizes", 8, 15, bold = F) %>%
   row_spec(c(3, 6, 7, 10, 13, 16), extra_latex_after = "\\midrule") %>%

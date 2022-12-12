@@ -22,7 +22,7 @@ address:
   - code: KI
     address: Department of Clinical Neuroscience, Karolinska Institutet, SE-171 77 Stockholm, Sweden
   - code: LU
-    address: Dept. of Behavioural Sciences and Learning, Dept. of Biomedical and Clinical Sciences, Linköping University, SE-581 83 Linköping, Sweden
+    address: Department of Behavioural Sciences and Learning, Department of Biomedical and Clinical Sciences, Linköping University, SE-581 83 Linköping, Sweden
   - code: CCI
     address: Centre for Clinical Interventions, 223 James St, Northbridge WA 6003, Australia
 abstract: |
@@ -35,12 +35,12 @@ keywords:
   - "stress"
   - "avoidance"
 date: "`r Sys.Date()`"
-classoption: review, 3p
+classoption: preprint, 3p
 bibliography:
   - packages.bib
   - KSH.bib
   - DBT.bib
-linenumbers: true
+linenumbers: false
 numbersections: false
 #csl: .apa.csl
 csl: ./elsevier-harvard.csl
@@ -48,17 +48,18 @@ journal: Behaviour research and therapy
 output: 
   rticles::elsevier_article:
     keep_tex: true
-    latex_engine: xelatex
+    latex_engine: pdflatex
     citation_package: default
   word_document:
     default
     #reference_docx: "2110071135_ip_m-template-instructions.docx"
 knit: (function(inputFile, encoding){rmarkdown::render(inputFile, encoding = encoding, output_format = "all") })
 header-includes:
-  - \usepackage{fontspec}
-  - \setmainfont[Path=fonts/,BoldFont={texgyretermes-bold.otf},ItalicFont={texgyretermes-italic.otf},BoldItalicFont={texgyretermes-bolditalic.otf}]{texgyretermes-regular.otf}
-  - \usepackage{unicode-math}
-  - \setmathfont[Path=fonts/]{texgyretermes-math.otf}
+  # - \usepackage{fontspec}
+  # - \setmainfont[Path=fonts/,BoldFont={texgyretermes-bold.otf},ItalicFont={texgyretermes-italic.otf},BoldItalicFont={texgyretermes-bolditalic.otf}]{texgyretermes-regular.otf}
+  # - \usepackage{unicode-math}
+  # - \setmathfont[Path=fonts/]{texgyretermes-math.otf}
+  - \usepackage{mathptmx}
   - \usepackage[format=plain,labelsep=period,labelfont=bf,textfont=it]{caption}
   - \usepackage[nomarkers,nolists]{endfloat}
   - \usepackage[figuresright]{rotating}
