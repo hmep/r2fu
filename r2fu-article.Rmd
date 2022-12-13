@@ -61,9 +61,9 @@ header-includes:
   # - \setmathfont[Path=fonts/]{texgyretermes-math.otf}
   - \usepackage{mathptmx}
   - \usepackage[format=plain,labelsep=period,labelfont=bf,textfont=it]{caption}
-  - \usepackage[nomarkers,nolists]{endfloat}
-  - \usepackage[figuresright]{rotating}
-  - \DeclareDelayedFloatFlavor{sidewaystable}{table}
+  # - \usepackage[nomarkers,nolists]{endfloat}
+  # - \usepackage[figuresright]{rotating}
+  # - \DeclareDelayedFloatFlavor{sidewaystable}{table}
 ---
 
 <!-- highlights: -->
