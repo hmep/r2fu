@@ -16,15 +16,15 @@ author:
     email: per.carlbring@psychology.su.se
     correspondingauthor: true
     affiliation: SU
-address:
+address:  
   - code: SU
-    address: Department of Psychology, Stockholm University, SE-106 91 Stockholm, Sweden
+    address: "Department of Psychology, Stockholm University, SE-106 91 Stockholm, Sweden"
   - code: KI
-    address: Department of Clinical Neuroscience, Karolinska Institutet, SE-171 77 Stockholm, Sweden
+    address: "Department of Clinical Neuroscience, Karolinska Institutet, SE-171 77 Stockholm, Sweden"
   - code: LU
-    address: Department of Behavioural Sciences and Learning, Department of Biomedical and Clinical Sciences, Linköping University, SE-581 83 Linköping, Sweden
+    address: "Department of Behavioural Sciences and Learning, Department of Biomedical and Clinical Sciences, Linkoping University, SE-581 83 Linkoping, Sweden"
   - code: CCI
-    address: Centre for Clinical Interventions, 223 James St, Northbridge WA 6003, Australia
+    address: "Centre for Clinical Interventions, 223 James St, Northbridge WA 6003, Australia"
 abstract: |
   `r readLines('abstract.Rmd', encoding = 'UTF-8')`
 keywords: 
@@ -35,16 +35,16 @@ keywords:
   - "stress"
   - "avoidance"
 date: "`r Sys.Date()`"
-classoption: preprint, 3p
+classoption: preprint, 3p, times, endfloat, longtitle
 bibliography:
   - packages.bib
   - KSH.bib
   - DBT.bib
 linenumbers: false
 numbersections: false
-#csl: .apa.csl
+#csl: ./apa.csl
 csl: ./elsevier-harvard.csl
-journal: Behaviour research and therapy
+journal: Internet Interventions
 output: 
   rticles::elsevier_article:
     keep_tex: true
@@ -60,7 +60,7 @@ header-includes:
   # - \usepackage{unicode-math}
   # - \setmathfont[Path=fonts/]{texgyretermes-math.otf}
   - \usepackage{mathptmx}
-  - \usepackage[format=plain,labelsep=period,labelfont=bf,textfont=it]{caption}
+  # - \usepackage[format=plain,labelsep=period,labelfont=bf,textfont=it]{caption}
   # - \usepackage[nomarkers,nolists]{endfloat}
   # - \usepackage[figuresright]{rotating}
   # - \DeclareDelayedFloatFlavor{sidewaystable}{table}
