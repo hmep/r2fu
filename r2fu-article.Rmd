@@ -35,7 +35,7 @@ keywords:
   - "stress"
   - "avoidance"
 date: "`r Sys.Date()`"
-classoption: preprint, 3p, times, endfloat, longtitle
+#https://www.elsevier.com/authors/policies-and-guidelines/documents/elsdoc-1.pdf
 bibliography:
   - packages.bib
   - KSH.bib
@@ -53,17 +53,19 @@ output:
   word_document:
     default
     #reference_docx: "2110071135_ip_m-template-instructions.docx"
-knit: (function(inputFile, encoding){rmarkdown::render(inputFile, encoding = encoding, output_format = "all") })
+#knit: (function(inputFile, encoding){rmarkdown::render(inputFile, encoding = encoding, output_format = "all") })
+classoption: 3p
 header-includes:
   # - \usepackage{fontspec}
   # - \setmainfont[Path=fonts/,BoldFont={texgyretermes-bold.otf},ItalicFont={texgyretermes-italic.otf},BoldItalicFont={texgyretermes-bolditalic.otf}]{texgyretermes-regular.otf}
   # - \usepackage{unicode-math}
   # - \setmathfont[Path=fonts/]{texgyretermes-math.otf}
   - \usepackage{mathptmx}
-  # - \usepackage[format=plain,labelsep=period,labelfont=bf,textfont=it]{caption}
-  # - \usepackage[nomarkers,nolists]{endfloat}
-  # - \usepackage[figuresright]{rotating}
-  # - \DeclareDelayedFloatFlavor{sidewaystable}{table}
+  - \usepackage[format=plain,labelsep=period,labelfont=bf,textfont=it]{caption}
+  - \usepackage[nomarkers,nolists]{endfloat}
+  - \usepackage[figuresright]{rotating}
+  - \DeclareDelayedFloatFlavor{sidewaystable}{table}
+  - \usepackage{xcolor}\definecolor{newtext}{rgb}{1,0,0}\definecolor{oldtext}{rgb}{0,0,0}
 ---
 
 <!-- highlights: -->
