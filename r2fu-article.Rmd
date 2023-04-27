@@ -40,7 +40,7 @@ bibliography:
   - packages.bib
   - KSH.bib
   - DBT.bib
-linenumbers: false
+linenumbers: true
 numbersections: false
 #csl: ./apa.csl
 csl: ./elsevier-harvard.csl
