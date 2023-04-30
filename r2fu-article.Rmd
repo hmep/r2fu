@@ -100,7 +100,8 @@ packages <-
     "here",
     "linebreak",
     "MOTE",
-    "rticles"
+    "rticles",
+    "devtools"
   )
 if (!require("install.load")) install.packages("install.load")
 library(install.load)
