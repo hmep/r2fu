@@ -96,7 +96,6 @@ packages <-
     "patchwork",
     "performance",
     "sjPlot",
-    "kableExtra",
     "clinicalsignificance",
     "here",
     "linebreak",
@@ -106,6 +105,10 @@ packages <-
 if (!require("install.load")) install.packages("install.load")
 library(install.load)
 install_load(packages)
+
+# https://github.com/haozhu233/kableExtra/issues/750
+devtools::install_github("kupietz/kableExtra")
+library(kableExtra)
 
 knitr::opts_chunk$set(
   warning = F,
