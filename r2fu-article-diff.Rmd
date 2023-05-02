@@ -40,7 +40,7 @@ bibliography:
   - packages.bib
   - KSH.bib
   - DBT.bib
-linenumbers: false
+linenumbers: true
 numbersections: false
 #csl: ./apa.csl
 csl: ./elsevier-harvard.csl
@@ -65,7 +65,7 @@ header-includes:
   - \usepackage[nomarkers,nolists]{endfloat}
   - \usepackage[figuresright]{rotating}
   - \DeclareDelayedFloatFlavor{sidewaystable}{table}
-  - \usepackage{xcolor}\definecolor{newtext}{cmyk}{0,0,0,1}\definecolor{oldtext}{cmyk}{0,0,0,1}
+  - \usepackage{xcolor}\definecolor{newtext}{cmyk}{0,1,1,0}\definecolor{oldtext}{cmyk}{0,0,0,1}
   - \color{oldtext}
 ---
 
