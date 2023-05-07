@@ -1,0 +1,135 @@
+---
+title             : "Efficacy of Transdiagnostic Cognitive-Behavioral Therapy for Assertiveness: A Randomized Controlled Trial"
+shorttitle        : "Efficacy of CBT for Assertiveness"
+
+author: 
+  - name          : "Tobias Hagberg"
+    affiliation   : "1"
+    address       : "Department of Psychology, Stockholm University, SE-106 91 Stockholm, Sweden"
+    role:
+      - Conceptualization
+      - Methodology
+      - Investigation
+      - Data curation
+      - Writing - Original Draft
+      - Software
+      - Formal Analysis
+  - name          : "Patrik Manhem"
+    affiliation   : "1"
+    address       : "Department of Psychology, Stockholm University, SE-106 91 Stockholm, Sweden"
+    role:
+      - Conceptualization
+      - Methodology
+      - Investigation
+      - Data curation
+      - Writing - Original Draft
+  - name          : "Martin Oscarsson"
+    role:
+      - Writing - Original Draft
+    affiliation   : "1"
+    address       : "Department of Psychology, Stockholm University, SE-106 91 Stockholm, Sweden"
+  - name          : "Fiona Michel"
+    affiliation   : "4"
+    address       : "Centre for Clinical Interventions, 223 James St, Northbridge WA 6003, Australia"
+    role:
+      - Resources
+      - Writing - Review & Editing  
+  - name          : "Gerhard Andersson"
+    affiliation   : "2,3"
+    address       :  "Department of Behavioural Sciences and Learning, Department of Biomedical and Clinical Sciences, Linköping University, SE-581 83 Linköping, Sweden"
+    role:
+      - Resources
+      - Writing - Review & Editing  
+  - name          : "Per Carlbring"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Department of Psychology, Stockholm University, SE-106 91 Stockholm, Sweden"
+    email         : "per.carlbring@psychology.su.se"
+    role:
+      - Supervision
+      - Writing - Review & Editing
+affiliation:
+  - id            : "1"
+    institution   : "Stockholm University"
+  - id            : "2"
+    institution   : "Karolinska Institutet"
+  - id            : "3"
+    institution   : "Linköping University"
+  - id            : "3"
+    institution   : "Centre for Clinical Interventions"
+abstract: "`r readLines('abstract.Rmd', encoding = 'UTF-8')`\n"
+keywords          : "assertiveness, assertive behavior, anxiety, depression, stress, avoidance"
+wordcount         : ""
+
+bibliography:
+  - packages.bib
+  - KSH.bib
+  - DBT.bib
+csl               : "./elsevier-harvard.csl"
+
+floatsintext      : no
+linenumbers       : no
+draft             : no
+mask              : no
+
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+
+classoption       : "man"
+output            : papaja::apa6_word
+---
+
+```{r setup, include=F}
+
+# https://hughjonesd.github.io/huxtable/reference/label.html
+# https://ardata-fr.github.io/officeverse/index.html
+# https://gt.rstudio.com/
+
+packages <-
+  c(
+    "pwr",
+    "readxl",
+    "writexl",
+    "lmerTest",
+    "dunn.test",
+    "ggplot2",
+    "tidyr",
+    "jtools",
+    "modelr",
+    "ggeffects",
+    "emmeans",
+    "patchwork",
+    "performance",
+    "sjPlot",
+    "clinicalsignificance",
+    "here",
+    "linebreak",
+    "MOTE",
+    "rticles",
+    "devtools"
+  )
+if (!require("install.load")) install.packages("install.load")
+library(install.load)
+install_load(packages)
+
+# https://github.com/haozhu233/kableExtra/issues/750
+devtools::install_github("kupietz/kableExtra")
+library(kableExtra)
+
+knitr::opts_chunk$set(
+  warning = F,
+  message = F,
+  echo = F,
+  collapse = T,
+  fig.retina = 4,
+  dpi = 196,
+  out.width = "100%",
+  fig.width = 7.5,
+  fig.asp = 0.618
+)
+
+```
+
+```{r body, child="body-w.Rmd", eval=TRUE}
+```

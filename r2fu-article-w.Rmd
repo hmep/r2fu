@@ -1,0 +1,126 @@
+---
+title: "Efficacy of Transdiagnostic Cognitive-Behavioral Therapy for Assertiveness: A Randomized Controlled Trial"
+shorttitle: "Efficacy of CBT for Assertiveness"
+author:
+- name: Tobias Hagberg
+  affiliation: SU
+- name: Patrik Manhem
+  affiliation: SU
+- name: Martin Oscarsson
+  affiliation: SU
+- name: Fiona Michel
+  affiliation: CCI
+- name: Gerhard Andersson
+  affiliation: LU,KI
+- name: Per Carlbring
+  email: per.carlbring@psychology.su.se
+  correspondingauthor: yes
+  affiliation: SU
+date: ''
+output:
+  #bookdown::word_document2:
+  papaja::apa6_docx:
+    number_sections: false
+    tables:
+      style: Table
+      layout: autofit
+      width: 1.0
+      caption:
+       style: Table Caption
+       pre: "Table "
+       sep: ". "
+    plots:
+      style: Normal
+      layout: autofit
+      caption:
+       style: Image Caption
+       pre: "Figure "
+       sep: ". "
+abstract: "`r readLines('abstract.Rmd', encoding = 'UTF-8')`\n"
+keywords:
+- assertiveness
+- assertive behavior
+- anxiety
+- depression
+- stress
+- avoidance
+runtitle: Transdiagnostic CBT for Assertiveness
+bibliography:
+- packages.bib
+- KSH.bib
+- DBT.bib
+csl: "./elsevier-harvard.csl"
+address:
+- code: SU
+  address: "Department of Psychology, Stockholm University, SE-106 91 Stockholm, Sweden"
+- code: KI
+  address: "Department of Clinical Neuroscience, Karolinska Institutet, SE-171 77
+    Stockholm, Sweden"
+- code: LU
+  address: "Department of Behavioural Sciences and Learning, Department of Biomedical
+    and Clinical Sciences, Linköping University, SE-581 83 Linköping, Sweden"
+- code: CCI
+  address: Centre for Clinical Interventions, 223 James St, Northbridge WA 6003, Australia
+---
+
+## Highlights
+
+  - Stand-alone iCBT assertiveness training is effective at increasing levels of adaptive assertiveness.
+  - Stand-alone iCBT assertiveness training is effective at alleviating symptoms of social anxiety to the point of clinical recovery for a significant number of participants.
+  - The effects were maintained at the one year follow-up.
+  - The assertiveness construct can also be useful as a target in a self-help guide, without therapist support.
+  - The assertiveness construct is worthy of revived clinical research interest.
+
+```{r setup, include=F}
+
+# https://hughjonesd.github.io/huxtable/reference/label.html
+# https://ardata-fr.github.io/officeverse/index.html
+# https://gt.rstudio.com/
+
+packages <-
+  c(
+    "pwr",
+    "readxl",
+    "writexl",
+    "lmerTest",
+    "dunn.test",
+    "ggplot2",
+    "tidyr",
+    "jtools",
+    "modelr",
+    "ggeffects",
+    "emmeans",
+    "patchwork",
+    "performance",
+    "sjPlot",
+    "clinicalsignificance",
+    "here",
+    "linebreak",
+    "MOTE",
+    "rticles",
+    "devtools"
+  )
+if (!require("install.load")) install.packages("install.load")
+library(install.load)
+install_load(packages)
+
+# https://github.com/haozhu233/kableExtra/issues/750
+devtools::install_github("kupietz/kableExtra")
+library(kableExtra)
+
+knitr::opts_chunk$set(
+  warning = F,
+  message = F,
+  echo = F,
+  collapse = T,
+  fig.retina = 4,
+  dpi = 196,
+  out.width = "100%",
+  fig.width = 7.5,
+  fig.asp = 0.618
+)
+
+```
+
+```{r body, child="body-w.Rmd", eval=TRUE}
+```

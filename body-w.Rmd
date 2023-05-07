@@ -49,6 +49,22 @@ xresult <-
            "$")
   }
 
+xresultwtab <-
+  function(x, d = 2, f = "c") {
+    paste0("",
+           if (f == "a") {
+             apa(value = x,
+                 decimals = d,
+                 leading = F)
+           } else {
+             formatC(x,
+                     digits = d,
+                     drop0trailing = F,
+                     format = "f")
+           },
+           "")
+  }
+
 xresulttext <-
   function(x, d = 2, f = "c") {
     if (f == "a") {
@@ -129,11 +145,14 @@ xps <- function(x) {
 xpss <- function(x) {
   paste(ifelse(
     x < 0.001,
-    "\\hbox to 0bp{\\textsuperscript{***}}",
+    #"\\hbox to 0bp{\\textsuperscript{***}}",
+    "***",
     ifelse(
       x < 0.01,
-      "\\hbox to 0bp{\\textsuperscript{**}}",
-      ifelse(x > 0.05, "", "\\hbox to 0bp{\\textsuperscript{*}}")
+      #"\\hbox to 0bp{\\textsuperscript{**}}",
+      "**",
+      #ifelse(x > 0.05, "", "\\hbox to 0bp{\\textsuperscript{*}}")
+      ifelse(x > 0.05, "", "*")
     )
   ))
 }
@@ -219,13 +238,14 @@ effsize.tabrow2 <- function(outobj, contrast, direction, stars = "stars") {
     upper = outobj$effectsizes$upper.CL[effrow] * direction
   }
   paste0(
-    "\\parbox[b]{4.25em}{\\flushright",
-    xresult(outobj$effectsizes$effect.size[effrow] * direction, 2),
-    "}",
-    "~[",
-    xresult(lower, 2),
+    #"\\parbox[b]{4.25em}{\\flushright",
+    xresultwtab(outobj$effectsizes$effect.size[effrow] * direction, 2),
+    #"}",
+    #"~[",
+    " [",
+    xresultwtab(lower, 2),
     ", ",
-    xresult(upper, 2),
+    xresultwtab(upper, 2),
     "]",
     stars
   )
@@ -506,70 +526,13 @@ The study was registered at ClinicalTrials.gov (NCT04240249). An error in the de
 
 ## Participants
 
-Participants were recruited from the public through advertisements on social media and other websites. Interested individuals were referred to a purpose-built secure website [@Vlaescu2016] with more information on the study, including the participation criteria. The participants were required to be Swedish citizens, at least 18 years of age, have access to the internet, and be fluent in Swedish. Information on the website also included the risks associated with participation, as well as the terms and conditions for participation. Volunteers were invited to submit their email addresses, and those who did were sent a link to complete an online screening questionnaire. The questionnaire included self-report measures of anxiety, depression, general well-being, and assertiveness, as well as questions regarding socio-demographics, experiences of psychological treatment, any current medication, and motivation for participation. \color{newtext}Participants were not submitted to a clinical interview as part of the screening process.\color{oldtext}\ See Table 1 for a summary of the socio-demographic baseline characteristics.
-
-\begin{table}
-
-\caption{\label{tab:demdata}Socio-demographic baseline characteristics of participants.}
-\centering
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{10em}>{\centering\arraybackslash}p{4em}>{\centering\arraybackslash}p{4em}>{\centering\arraybackslash}p{4em}>{\centering\arraybackslash}p{4em}}
-\toprule
-  & Wait-list & Unguided & Guided & Total\\
-  & $n$ = 68 & $n$ = 67 & $n$ = 70 & $n$ = 205\\
-\midrule
-\addlinespace[0.3em]
-\multicolumn{5}{l}{Age (years)}\\
-\hspace{1em}$M$ ($SD$) & 41 (8) & 41 (9) & 44 (10) & 42 (9)\\
-\midrule
-\addlinespace[0.3em]
-\multicolumn{5}{l}{Sex (\%)}\\
-\hspace{1em}Female & 91 & 79 & 93 & 88\\
-\midrule
-\addlinespace[0.3em]
-\multicolumn{5}{l}{Civil status (\%)}\\
-\hspace{1em}Single & 37 & 36 & 29 & 34\\
-\hspace{1em}Partner & 19 & 25 & 17 & 20\\
-\hspace{1em}Married & 37 & 28 & 49 & 38\\
-\hspace{1em}Other & 7 & 10 & 6 & 8\\
-\midrule
-\addlinespace[0.3em]
-\multicolumn{5}{l}{Highest educational level (\%)}\\
-\hspace{1em}Other & 3 & 1 & 1 & 2\\
-\hspace{1em}Middle school & 1 & 0 & 0 & 0\\
-\hspace{1em}High school/college & 10 & 9 & 7 & 9\\
-\hspace{1em}Vocational training & 7 & 4 & 7 & 6\\
-\hspace{1em}Currently at university & 7 & 15 & 10 & 11\\
-\hspace{1em}University degree & 71 & 70 & 74 & 72\\
-\midrule
-\addlinespace[0.3em]
-\multicolumn{5}{l}{Occupation (\%)}\\
-\hspace{1em}Other & 9 & 6 & 7 & 7\\
-\hspace{1em}Student & 7 & 12 & 6 & 8\\
-\hspace{1em}Employed & 74 & 76 & 76 & 75\\
-\hspace{1em}Unemployed & 4 & 4 & 0 & 3\\
-\hspace{1em}Retired & 0 & 0 & 4 & 1\\
-\hspace{1em}Parental leave & 0 & 0 & 4 & 1\\
-\hspace{1em}Sick leave & 6 & 1 & 3 & 3\\
-\midrule
-\addlinespace[0.3em]
-\multicolumn{5}{l}{Use of psychotropic medications (\%)}\\
-\hspace{1em}No & 76 & 70 & 67 & 71\\
-\hspace{1em}Yes, previously & 7 & 9 & 17 & 11\\
-\hspace{1em}Yes, currently & 16 & 21 & 16 & 18\\
-\midrule
-\addlinespace[0.3em]
-\multicolumn{5}{l}{Previous psychological treatment (\%)}\\
-\hspace{1em}No & 38 & 40 & 39 & 39\\
-\hspace{1em}Yes & 62 & 60 & 61 & 61\\
-\bottomrule
-\end{tabular}
-\end{table}
+Participants were recruited from the public through advertisements on social media and other websites. Interested individuals were referred to a purpose-built secure website [@Vlaescu2016] with more information on the study, including the participation criteria. The participants were required to be Swedish citizens, at least 18 years of age, have access to the internet, and be fluent in Swedish. Information on the website also included the risks associated with participation, as well as the terms and conditions for participation. Volunteers were invited to submit their email addresses, and those who did were sent a link to complete an online screening questionnaire. The questionnaire included self-report measures of anxiety, depression, general well-being, and assertiveness, as well as questions regarding socio-demographics, experiences of psychological treatment, any current medication, and motivation for participation. Participants were not submitted to a clinical interview as part of the screening process. See Table \@ref(tab:socdemtab) for a summary of the socio-demographic baseline characteristics.
 
 In total, 657 individuals submitted their email addresses, of whom 464 completed the screening questionnaire. Of these, 126 were excluded for meeting the exclusion criteria, which were concurrent psychological treatment, a recent change in psychotropic medication, lack of time and/or motivation for participation, and a rating of 15 or above on the Patient Health Questionnaire (PHQ-9) measure of depression. The remaining 338 individuals were invited to participate in the study. Of these, 253 accepted the invitation.
 
 ## Procedure
 
-Following the a priori power calculation, 210 participants were randomized to be included in the study. The remaining 43 individuals were offered access to the treatment materials but were excluded from all the analyses. The 210 participants were randomized to the three treatment conditions. The participants in the guided condition were randomized to one of two therapists. See Figure 1 for a flow-chart detailing the recruitment and randomization steps. All randomization was performed by an independent third party at Stockholm University using random.org [@RandomOrg] and sealedenvelope.com [@sealed].
+Following the a priori power calculation, 210 participants were randomized to be included in the study. The remaining 43 individuals were offered access to the treatment materials but were excluded from all the analyses. The 210 participants were randomized to the three treatment conditions. The participants in the guided condition were randomized to one of two therapists. See Figure \@ref(fig:flowchart-dot) for a flow-chart detailing the recruitment and randomization steps. All randomization was performed by an independent third party at Stockholm University using random.org [@RandomOrg] and sealedenvelope.com [@sealed].
 
 ## Measures
 
@@ -577,7 +540,7 @@ The data were collected using the measures described below at four time points: 
 
 ### Primary measures
 
-Assertiveness style was measured using a Swedish translation (contributed by TH) of the Adaptive and Aggressive Assertiveness Scales [AAA-S\; @Thompson2011], which contains 30 items, including “When someone I don’t know well borrows something from me and forgets to return it, I… a. Demand it back; b. Ask if she/he is done and ask for it back” (a. and b. both scored from 1 = never to 5 = always). \color{newtext}The English-language version of the AAA-S has good internal consistency for both aggressive assertiveness (`r xresult(0.88,2,f="a")`) and adaptive assertiveness  (`r xresult(0.82,2,f="a")`).\color{oldtext}\ A Swedish translation (contributed by TH) of the Rathus Assertiveness Schedule [RAS\; @Rathus1973] was used as an additional measure of assertiveness style with 30 items, including “I find it embarrassing to return merchandise” (+3 = very characteristic of me, extremely descriptive to --3 = very uncharacteristic of me, extremely nondescriptive). The RAS has good internal consistency (`r xresult(0.87,2,f="a")`) [@Thompson2011].
+Assertiveness style was measured using a Swedish translation (contributed by TH) of the Adaptive and Aggressive Assertiveness Scales [AAA-S\; @Thompson2011], which contains 30 items, including “When someone I don’t know well borrows something from me and forgets to return it, I… a. Demand it back; b. Ask if she/he is done and ask for it back” (a. and b. both scored from 1 = never to 5 = always). The English-language version of the AAA-S has good internal consistency for both aggressive assertiveness (`r xresult(0.88,2,f="a")`) and adaptive assertiveness  (`r xresult(0.82,2,f="a")`). A Swedish translation (contributed by TH) of the Rathus Assertiveness Schedule [RAS\; @Rathus1973] was used as an additional measure of assertiveness style with 30 items, including “I find it embarrassing to return merchandise” (+3 = very characteristic of me, extremely descriptive to --3 = very uncharacteristic of me, extremely nondescriptive). The RAS has good internal consistency (`r xresult(0.87,2,f="a")`) [@Thompson2011].
 
 ### Secondary measures
 
@@ -591,7 +554,7 @@ The material also includes a rationale for cognitive restructuring with methods 
 
 The Swedish adaptation prompted additions to @michel2008, some of which are presented here. Based on recent research on exposure and inhibitory learning [e.g., @Craske2008], the participants were encouraged to actively vary learning situations and work on new skills in as many environments as possible. In another new passage, inspired by the works on acceptance by Hayes [e.g., -@Hayes2004a] and others, the participants were encouraged to actively search for and remain in the respondent discomfort they previously avoided. In line with Öst’s [-@ost2006tillampad] recommendations for applied tension, progressive muscle relaxation was introduced early in the intervention and expanded over several weeks. The written material was also complemented by downloadable audio relaxation exercises, videos of conversations and role-playing, and several new interactive exercises.
 
-\color{newtext}Everything else being equal, the guided condition included time-limited (on average approximately 15 minutes per participant and week) asynchronous communication support from therapists having completed basic CBT training.\color{oldtext}\ Additional support for participants in the guided self-help condition included weekly messages on the treatment platform, involving feedback on homework, encouragement, validation, psychoeducation, and answers to any questions. 
+Everything else being equal, the guided condition included time-limited (on average approximately 15 minutes per participant and week) asynchronous communication support from therapists having completed basic CBT training. Additional support for participants in the guided self-help condition included weekly messages on the treatment platform, involving feedback on homework, encouragement, validation, psychoeducation, and answers to any questions. 
 
 ### Therapists
 
@@ -601,59 +564,11 @@ Both therapists working with participants in the guided condition were final-yea
 
 Five participants were excluded from the analyses due to wrongful inclusion, as they were receiving concurrent psychological treatment.
 
-```{r flowchart-dot, engine = "dot", fig.cap = "A total of 210 participants were included in the study through randomization and further randomized into three groups: unguided self-help, guided self-help, and wait-list, with 70 participants each.",results = "as.is"}
-digraph G {
-
-  dpi=600
-  fontname=Helvetica
-  fontsize=10
-  node [ shape=box, fontname=Helvetica, fontsize=10, penwidth=0.5 ]
-  compound=true
-  #ranksep=.275
-  ranksep=.3
-  
-  leads -> { screening_non_completers screening_completers }
-  screening_completers -> { excluded invited }
-  invited  -> { invitation_non_responders invitation_responders }
-  invitation_responders -> { trimmed keepers }
-  keepers -> randomization
-  randomization -> selfhelp_dur [lhead=cluster_selfhelp]
-  randomization -> support_dur [lhead=cluster_support]
-  randomization -> waitlist_dur [lhead=cluster_waitlist]
-
-  leads[label=<Leads from social media<BR/><I>n</I> = 657>]
-  screening_completers[label=<Completed screening<BR/><I>n</I> = 464>]
-  excluded[label=<Excluded from study<BR/><I>n</I> = 126, for the following reasons:<BR/>PHQ-9 cutoff (≥ 15), <I>n</I> = 77<BR/>Concurrent therapy, <I>n</I> = 29<BR/>Recent change in psychotropic drugs, <I>n</I> = 7<BR/>Low motivation/lack of time, <I>n</I> = 13>]
-  screening_non_completers[label=<Did not complete screening<BR/><I>n</I> = 193>]
-  invited[label=<Invited to participate in study<BR/><I>n</I> = 338>]
-  invitation_non_responders[label=<Declined or did not respond<BR/><I>n</I> = 85>]
-  invitation_responders[label=<Accepted invitation<BR/><I>n</I> = 253>]
-  trimmed[label=<Excluded through randomization<BR/><I>n</I> = 43>]
-  keepers[label=<Included through randomization<BR/><I>n</I> = 210>]
-  randomization[label=<Randomization to condition<BR/><I>n</I> = 70 each>]
-  selfhelp_dur[label=<Completed During measurement<BR/>(week 4)<BR/><I>n</I> = 44>]
-  selfhelp_post[label=<Completed Post measurement<BR/>(week 8)<BR/><I>n</I> = 35>]
-  selfhelp_fu[label=<Completed Follow-up measurement<BR/>(1 year)<BR/><I>n</I> = 30>]
-  support_dur[label=<Completed During measurement<BR/>(week 4)<BR/><I>n</I> = 48>]
-  support_post[label=<Completed Post measurement<BR/>(week 8)<BR/><I>n</I> = 50>]
-  support_fu[label=<Completed Follow-up measurement<BR/>(1 year)<BR/><I>n</I> = 38>]
-  waitlist_dur[label=<Completed During measurement<BR/>(week 4)<BR/><I>n</I> = 58>]
-  waitlist_post[label=<Completed Post measurement<BR/>(week 8)<BR/><I>n</I> = 61>]
-  itt[label=<Intention to treat<BR/><I>n</I> = 205>]
-
-  subgraph cluster_selfhelp { margin=8; penwidth=0.5; labelloc="t"; color=black; bgcolor=white; label=<Unguided self-help<BR/><I>n</I> = 70 – 3 (excluded) = 67> ; selfhelp_dur -> selfhelp_post -> selfhelp_fu; } 
-  subgraph cluster_support { margin=8; penwidth=0.5; labelloc="t"; color=black; bgcolor=white; label=<Guided self-help<BR/><I>n</I> = 70> ; support_dur -> support_post -> support_fu; } 
-  subgraph cluster_waitlist { margin=8; penwidth=0.5; labelloc="t"; color=black; bgcolor=white; label=<Wait-list<BR/><I>n</I> = 70 – 2 (excluded) = 68> ; waitlist_dur -> waitlist_post; } 
-  { selfhelp_fu support_fu waitlist_post } -> itt
-
-}
-```
-
 ## Analysis
 
 All the data were analyzed using `r R.Version()$language` `r paste(R.Version()[c("major", "minor")], collapse = ".")`, with the packages lmerTest [@R-lmerTest], emmeans [@R-emmeans], ggeffects [@R-ggeffects], performance [@R-performance], and clinicalsignificance [@R-clinicalsignificance]. All the syntax is available at https://github.com/hmep/r2fu/, together with the anonymized data. 
 
-A linear mixed-effects model was fitted to estimate the fixed effects of group, time, and group-time interaction, and the random effects of participant (specifying a random intercept to control for individual differences), using an unstructured covariance pattern and the Restricted maximum likelihood (REML) estimation method. The Kenward-Roger approximations were used to estimate denominator degrees of freedom. Post-hoc pairwise comparisons of estimated marginal means were performed using T-tests. The significance of all the post-hoc tests was decided with Bonferroni-corrected p-values. The proportions of participants showing reliable change and reaching clinical significance were determined following @Jacobson1991, using the “c” definition to select the cutoff value. To honor the intention-to-treat principle in the analysis of clinical significance, the last observation was carried forward for any missing values. \color{newtext}In a subsequent step, rank-sum tests of these proportions of clinically changed participants were performed to establish significance of differences between the waitlist and the treatment conditions.\color{oldtext}
+A linear mixed-effects model was fitted to estimate the fixed effects of group, time, and group-time interaction, and the random effects of participant (specifying a random intercept to control for individual differences), using an unstructured covariance pattern and the Restricted maximum likelihood (REML) estimation method. The Kenward-Roger approximations were used to estimate denominator degrees of freedom. Post-hoc pairwise comparisons of estimated marginal means were performed using T-tests. The significance of all the post-hoc tests was decided with Bonferroni-corrected p-values. The proportions of participants showing reliable change and reaching clinical significance were determined following @Jacobson1991, using the “c” definition to select the cutoff value. To honor the intention-to-treat principle in the analysis of clinical significance, the last observation was carried forward for any missing values. In a subsequent step, rank-sum tests of these proportions of clinically changed participants were performed to establish significance of differences between the waitlist and the treatment conditions.
 
 ```{r mixedmodels, fig.width = 13, fig.asp = 0.75, echo = F, eval = T, results='hide'}
 
@@ -890,30 +805,6 @@ effsel.time <- -10
 
 ```
 
-```{r emm.primary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of the estimated fixed effects for the primary transdiagnostic scales used to measure skillful, assertive behavior, and aggressive assertive behavior. The participants’ estimated means for all three measures exhibited increasing levels of assertiveness during treatment in the unguided self-help and guided self-help groups, with negligible differences between the two treatment conditions.'}
-
-(aaas_ad.emm.plot + theme(plot.margin = unit(c(0,8,8,0), "pt"))) +
-  (aaas_ag.emm.plot + theme(plot.margin = unit(c(0,0,8,8), "pt"))) +
-  (rathus.emm.plot + theme(plot.margin = unit(c(8,8,0,0), "pt"))) +
-  guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2)
-
-```
-
-```{r emm.secondary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of the estimated fixed effects for the secondary syndromal outcome measures, as well as for the general well-being measure. Participation in the unguided self-help and guided self-help conditions led to significant symptom alleviation between the pre and post time points as well as between the pre and one-year follow-up time points for depression and social anxiety. Participation in both treatment groups also led to significant increases in well-being. As with the transdiagnostic measures of assertive behavior, the differences between the post and follow-up time points were statistically inappreciable for all measures, in both treatment groups. The wait-list control group did not significantly change between any time points for either measure. However, to stay on the conservative side and counteract even the slightest nocebo effect of the wait-list condition, the most conservative estimate for the wait-list control condition was used in each follow-up between-group comparison; see the dotted line for a visual representation of the selected time point.'}
-
-# (phq_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
-#   (gad_sum.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
-#   (lsas_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) + 
-#   guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2) 
-
-(phq_sum.emm.plot + theme(plot.margin = unit(c(0,8,8,0), "pt"))) +
-  (gad_sum.emm.plot + theme(plot.margin = unit(c(0,0,8,8), "pt"))) +
-  (lsas_sum.emm.plot + theme(plot.margin = unit(c(8,8,0,0), "pt"))) + 
-  (well.emm.plot + theme(plot.margin = unit(c(8,0,0,8), "pt"))) +
-  plot_layout(ncol = 2) 
-
-```
-
 ```{r measures, echo = F, eval = T}
 
 ### AAA-S Adaptive assertiveness
@@ -1034,10 +925,12 @@ comparison.long <- c(
   "Wait-list, Pre vs. Post",
   "Unguided self-help at Post vs. Wait-list at Post",
   "Unguided self-help at Follow-up vs. Wait-list at Post",
-  "Unguided self-help at Follow-up vs. Wait-list at \\dag",
+  #"Unguided self-help at Follow-up vs. Wait-list at \\dag",
+  "Unguided self-help at Follow-up vs. Wait-list at †",
   "Guided self-help at Post vs. Wait-list at Post",
   "Guided self-help at Follow-up vs. Wait-list at Post",
-  "Guided self-help at Follow-up vs. Wait-list at \\dag",
+  #"Guided self-help at Follow-up vs. Wait-list at \\dag",
+  "Guided self-help at Follow-up vs. Wait-list at †",
   "Guided self-help at Post vs. Unguided at Post",
   "Guided self-help at Follow-up vs. Unguided at Follow-up"
   )
@@ -1052,10 +945,12 @@ comparison <- c(
   "Wait-list, Pre vs. Post",
   "Unguided at Post vs. Wait-list at Post",
   "Unguided at Follow-up vs. Wait-list at Post",
-  "Unguided at Follow-up vs. Wait-list at \\dag",
+  #"Unguided at Follow-up vs. Wait-list at \\dag",
+  "Unguided at Follow-up vs. Wait-list at †",
   "Guided at Post vs. Wait-list at Post",
   "Guided at Follow-up vs. Wait-list at Post",
-  "Guided at Follow-up vs. Wait-list at \\dag",
+  #"Guided at Follow-up vs. Wait-list at \\dag",
+  "Guided at Follow-up vs. Wait-list at †",
   "Guided vs. Unguided at Post",
   "Guided vs. Unguided at Follow-up"
   )
@@ -1071,10 +966,12 @@ aaas_ad.effsizes <-
     effsize.tabrow2(aaas_ad.out,paste(xT1,xG3,"-",xT3,xG3),-1),
     effsize.tabrow2(aaas_ad.out,paste(xT3,xG3,"-",xT3,xG1),-1),
     effsize.tabrow2(aaas_ad.out,paste(xT3,xG3,"-",xT4,xG1),-1),
-    "\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
+    #"\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
+    "(idem)",
     effsize.tabrow2(aaas_ad.out,paste(xT3,xG3,"-",xT3,xG2),-1),
     effsize.tabrow2(aaas_ad.out,paste(xT3,xG3,"-",xT4,xG2),-1),
-    "\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
+    #"\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
+    "(idem)",
     effsize.tabrow2(aaas_ad.out,paste(xT3,xG1,"-",xT3,xG2),-1),
     effsize.tabrow2(aaas_ad.out,paste(xT4,xG1,"-",xT4,xG2),-1)
   )
@@ -1090,10 +987,12 @@ aaas_ag.effsizes <-
     effsize.tabrow2(aaas_ag.out,paste(xT1,xG3,"-",xT3,xG3),1),
     effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT3,xG1),1),
     effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT4,xG1),1),
-    "\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
+    #"\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
+    "(idem)",
     effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT3,xG2),1),
     effsize.tabrow2(aaas_ag.out,paste(xT3,xG3,"-",xT4,xG2),1),
-    "\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
+    #"\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
+    "(idem)",
     effsize.tabrow2(aaas_ag.out,paste(xT3,xG1,"-",xT3,xG2),1),
     effsize.tabrow2(aaas_ag.out,paste(xT4,xG1,"-",xT4,xG2),1)
   )
@@ -1109,10 +1008,12 @@ rathus.effsizes <-
     effsize.tabrow2(rathus.out,paste(xT1,xG3,"-",xT3,xG3),-1),
     effsize.tabrow2(rathus.out,paste(xT3,xG3,"-",xT3,xG1),-1),
     effsize.tabrow2(rathus.out,paste(xT3,xG3,"-",xT4,xG1),-1),
-    "\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
+    #"\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
+    "(idem)",
     effsize.tabrow2(rathus.out,paste(xT3,xG3,"-",xT3,xG2),-1),
     effsize.tabrow2(rathus.out,paste(xT3,xG3,"-",xT4,xG2),-1),
-    "\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
+    #"\\parbox{10.5em}{\\hfil{}(idem)\\hfil{}}",
+    "(idem)",
     effsize.tabrow2(rathus.out,paste(xT3,xG1,"-",xT3,xG2),-1),
     effsize.tabrow2(rathus.out,paste(xT4,xG1,"-",xT4,xG2),-1)
   )
@@ -1203,56 +1104,11 @@ effectsize.table <- cbind.data.frame(
   well.effsizes
   )
 
-measurementnamesspecial <- paste0("\\parbox{10.5em}{\\hfil{}\\hspace{2em}",measurementnames,"\\hfil{}}")
+#measurementnamesspecial <- paste0("\\parbox{10.5em}{\\hfil{}\\hspace{2em}",measurementnames,"\\hfil{}}")
 # paste0("\\parbox{10em}{\\hfil{}\\hspace{2em}",measurementnames,"\\hfil{}}")
 
-colnames(effectsize.table) <- c(" ",measurementnamesspecial)
-
-```
-
-```{r effsizetab, echo = F, eval = T}
-
-# https://ftp.acc.umu.se/mirror/CTAN/macros/latex/contrib/endfloat/endfloat.pdf p 10
-# https://bookdown.org/yihui/rmarkdown-cookbook/kable.html#customize-latex-tables search for "table.envir"
-# table.envir = "sidewaystable" # See URLs above
-# %>%
-#   kableExtra::landscape()
-
-knitr::kable(
-  effectsize.table,
-  caption = "Within-group effect sizes [95\\% CI] comparing estimated marginal means between Pre- and Post-treatment, as well as between Pre-treatment and 1-year Follow-up, and between group effect sizes [95\\% CI] at Post-treatment and 1-year Follow-up.",
-  align = "rlllllll",
-  escape = F,
-  booktabs = T,
-  format = "latex",
-  table.envir = "table"
-) %>%
-  kable_styling(full_width = F, font_size = 4) %>%
-  pack_rows("Within-group effect sizes", 1, 7, bold = F) %>%
-  pack_rows("Between-group effect sizes", 8, 15, bold = F) %>%
-  row_spec(c(3, 6, 7, 10, 13, 16), extra_latex_after = "\\midrule") %>%
-  column_spec(c(1), width = "19em") %>%
-  column_spec(c(2:7), width = c("10.5em","11em","10.5em","10.5em","10.5em","10.5em")) %>% # 11.5em
-  add_header_above(
-    c(
-      " ",
-      "Primary transdiagnostic measures of skillful behavior" = 3,
-      "Secondary measures of syndromal symptoms and well-being" = 4
-    )
-  ) %>%
-  footnote(
-    general = c(
-      "CI = confidence interval",
-      "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalized Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale; Well-being = Questionnaire on Well-being.",
-      "Pre = pre-treatment measurement at 0 weeks; During = measurement during week 4; Post = measurement after completion of treatment at week 8; Follow-up = measurement at 1 year after completion.",
-      "\\\\textsuperscript{\\\\dag} = the most conservative measurement for the Wait-list control condition, in order to suppress any nocebo effects; see dotted lines in graphs in Figure 3 for identification of time point.",
-      "\\\\textsuperscript{*} = \\\\textit{p} < .05, \\\\textsuperscript{**} = \\\\textit{p} < .01, \\\\textsuperscript{***} = \\\\textit{p} < .00; \\\\textit{p}-values are Bonferroni adjusted, based on pairwise comparisons of all sampled time points and conditions."
-    ),
-    escape = F,
-    general_title = "Notes.",
-    footnote_as_chunk = F,
-    threeparttable = T
-  ) 
+#colnames(effectsize.table) <- c(" ",measurementnamesspecial)
+colnames(effectsize.table) <- c(" ",measurementnames)
 
 ```
 
@@ -1688,11 +1544,13 @@ clinsig <- function(measure, direction, first, last, group, kwobj) {
   output <- as.matrix(clinsig$summary[c(2:3)])
     output <-
     paste0(
-      "\\hskip -.5em\\parbox[b]{3.12em}{\\flushright$",
+      #"\\hskip -.5em\\parbox[b]{3.12em}{\\flushright$",
       output[, 1],
-      "$} ($",
+      #"$} ($",
+      " (",
       round(output[, 2] * 100),
-      "$\\%)"
+      #"$\\%)"
+      "%)"
     )
   output <- c(paste0(output[1],kwstars), output[c(2:5)])
   return(output)
@@ -1743,15 +1601,6 @@ clinsigtext <- function(measure, direction, first, last, group, kwobj, stats = "
 }
   
 xclinsigcategories <- c("Recovered", "Improved", "Unchanged", "Deteriorated", "Harmed")
-
-  # cbind(
-  #   xclinsigcategories,
-  #   clinsig("aaas_ag", "higher", xT1, xT3, xG3, aaas_ag.pre.post.kw),
-  #   clinsig("aaas_ag", "higher", xT1, xT3, xG1, aaas_ag.pre.post.kw),
-  #   clinsig("aaas_ag", "higher", xT1, xT4, xG1, aaas_ag.pre.fu.kw),
-  #   clinsig("aaas_ag", "higher", xT1, xT3, xG2, aaas_ag.pre.post.kw),
-  #   clinsig("aaas_ag", "higher", xT1, xT4, xG2, aaas_ag.pre.fu.kw)
-  # ),
 
 clinsig.table <- rbind(
   cbind(
@@ -1811,66 +1660,17 @@ clinsig.table <- rbind(
     clinsig("well", "higher", xT1, xT4, xG2, well.pre.fu.kw)
   )
 )
-
-# xcolnames <-
-#   c(
-#     " ",
-#     paste(xG3, xT3),
-#     paste(xG1, xT3),
-#     paste(xG1, xT4),
-#     paste(xG2, xT3),
-#     paste(xG2, xT4)
-#   )
-
-# xcolnames <-
-#   c(
-#     " ",
-#     paste0(xT1,"--",xT3),
-#     paste0(xT1,"--",xT3),
-#     paste0(xT1,"--",xT4),
-#     paste0(xT1,"--",xT3),
-#     paste0(xT1,"--",xT4)
-#   )
-
 xcolnames <-
   c(
     " ",
-    paste0("\\parbox{7em}{\\hfil{}",xT1,"--",xT3,"\\hfil{}}"),
-    paste0("\\parbox{7em}{\\hfil{}",xT1,"--",xT3,"\\hfil{}}"),
-    paste0("\\parbox{7em}{\\hfil{}",xT1,"--",xT4text,"\\hfil{}}"),
-    paste0("\\parbox{7em}{\\hfil{}",xT1,"--",xT3,"\\hfil{}}"),
-    paste0("\\parbox{7em}{\\hfil{}",xT1,"--",xT4text,"\\hfil{}}")
+    paste0(xT1,"a--",xT3),
+    paste0(xT1,"b--",xT3),
+    paste0(xT1,"c--",xT4),
+    paste0(xT1,"d--",xT3),
+    paste0(xT1,"e--",xT4)
   )
 
 colnames(clinsig.table) <- xcolnames
-
-```
-
-```{r clinsigtab, echo = F, eval = T, results = 'asis'}
-
-knitr::kable(clinsig.table, caption="Clinical significance summary of the number (and proportion in \\%) of participants that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Follow-up-time points respectively (rows named 'Recovered'). For missing values (i.e., caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle.", booktabs = T, format = "latex", align="rlllll", escape = F) %>%
-  kable_styling(full_width = F, font_size = 8) %>%
-  pack_rows(paste0(measurementnames[1]), 1, 5, bold = F, escape = F) %>%
-  pack_rows(paste0(measurementnames[2]), 6, 10, bold = F, escape = F) %>%
-  pack_rows(paste0(measurementnames[3]), 11, 15, bold = F, escape = F) %>%
-  pack_rows(paste0(measurementnames[4]), 16, 20, bold = F, escape = F) %>%
-  pack_rows(paste0(measurementnames[5]), 21, 25, bold = F, escape = F) %>%
-  pack_rows(paste0(measurementnames[6]), 26, 30, bold = F, escape = F) %>%
-  pack_rows(paste0(measurementnames[7]), 31, 35, bold = F, escape = F) %>%
-  row_spec(c(5,10,15,20,25,30), extra_latex_after = "\\midrule") %>%
-  column_spec(c(1), width = "7em") %>%
-  column_spec(c(2:6), width = "7em") %>%
-  add_header_above(c(" ", "Wait-list" = 1, "Unguided self-help" = 2, "Guided self-help" = 2)) %>%
-  footnote(
-    general = c(
-      "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalized Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale; Well-being = Questionnaire on Well-being.",
-      "\\\\textsuperscript{*} = \\\\textit{p} < .05, \\\\textsuperscript{**} = \\\\textit{p} < .01, \\\\textsuperscript{***} = \\\\textit{p} < .00; \\\\textit{p}-values are Bonferroni adjusted\\\\color{newtext}, based on rank-sum tests of the proportions of clinically improved participants between the three conditions at the post and follow-up time points, respectively\\\\color{oldtext}."
-      ),
-    escape = F,
-    general_title = "Notes.",
-    footnote_as_chunk = F,
-    threeparttable = T
-  )
 
 ```
 
@@ -1878,13 +1678,13 @@ knitr::kable(clinsig.table, caption="Clinical significance summary of the number
 
 ## Treatment efficacy, primary, and secondary measures
 
-Mixed models that included the unguided self-help, guided self-help, and wait-list groups at the pre, during, and post time points revealed time–group interaction effects for all three measures of assertiveness: the AAA-S Adaptive subscale, `r report.anova(aaas_ad.post.anova)[3]`, the AAA-S Aggressive subscale, `r report.anova(aaas_ag.post.anova)[3]`, and the RAS, `r report.anova(rathus.post.anova)[3]`; see Figure 2. These interactions showed that the random assignment to group conditions had an effect over time on assertive behavior. Similarly, mixed models for the syndromal symptoms revealed time–group interaction effects for all four measures of anxiety, depression, and well-being: the PHQ-9, `r report.anova(phq_sum.post.anova)[3]`, the GAD-7, `r report.anova(gad_sum.post.anova)[3]`, the LSAS-SR, `r report.anova(lsas_sum.post.anova)[3]`, and the Well-being questionnaire, `r report.anova(well.post.anova)[3]`; see Figure 3. The estimated mean levels of depressive mood, generalized and social anxiety, and general well-being were significantly affected by participation in the intervention.
+Mixed models that included the unguided self-help, guided self-help, and wait-list groups at the pre, during, and post time points revealed time–group interaction effects for all three measures of assertiveness: the AAA-S Adaptive subscale, `r report.anova(aaas_ad.post.anova)[3]`, the AAA-S Aggressive subscale, `r report.anova(aaas_ag.post.anova)[3]`, and the RAS, `r report.anova(rathus.post.anova)[3]`; see Figure \@ref(fig:emm-primary-plots). These interactions showed that the random assignment to group conditions had an effect over time on assertive behavior. Similarly, mixed models for the syndromal symptoms revealed time–group interaction effects for all four measures of anxiety, depression, and well-being: the PHQ-9, `r report.anova(phq_sum.post.anova)[3]`, the GAD-7, `r report.anova(gad_sum.post.anova)[3]`, the LSAS-SR, `r report.anova(lsas_sum.post.anova)[3]`, and the Well-being questionnaire, `r report.anova(well.post.anova)[3]`; see Figure \@ref(fig:emm-secondary-plots). The estimated mean levels of depressive mood, generalized and social anxiety, and general well-being were significantly affected by participation in the intervention.
 
 All subsequent post-hoc testing of marginal mean differences in pairwise comparisons included all groups and time points.
 
 ### Between-group effects on assertive behavior
 
-Post-hoc testing revealed significant effects between both treatment groups and the wait-list group for all three primary measures of assertiveness at the post time point, that is, at the end of the eight-week Respekt^2^ treatment program. It also revealed significant effects at the follow-up one year after the end of treatment compared to the wait-list condition at the post time point. Table 2 summarizes the significance tests of the estimated marginal mean differences and effect sizes, with 95\% confidence intervals (CI).
+Post-hoc testing revealed significant effects between both treatment groups and the wait-list group for all three primary measures of assertiveness at the post time point, that is, at the end of the eight-week Respekt^2^ treatment program. It also revealed significant effects at the follow-up one year after the end of treatment compared to the wait-list condition at the post time point. Table \@ref(tab:effsizetab) summarizes the significance tests of the estimated marginal mean differences and effect sizes, with 95\% confidence intervals (CI).
 
 ```{r displaytoggle}
 
@@ -1902,7 +1702,7 @@ Comparing the unguided self-help and guided self-help conditions, no significant
 
 ### Between-group effects on syndromal symptoms of anxiety, depression, and well-being
 
-In the post-hoc testing, no effect on depressive symptoms, measured with the PHQ-9, was found at the post time point comparing the wait-list and the unguided self-help groups. Tentative evidence was found for therapist support benefiting depressed participants: The wait-list versus the guided self-help comparison revealed a moderate to large effect on PHQ-9 at the post time point, `r report.text2(phq_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1, display)`. However, this effect dissipated when the follow-up comparison was instead made against the most conservative value collected in the wait-list group, in this case from the pre time point; see Figure 3 for a visual exploration of a possible nocebo effect.
+In the post-hoc testing, no effect on depressive symptoms, measured with the PHQ-9, was found at the post time point comparing the wait-list and the unguided self-help groups. Tentative evidence was found for therapist support benefiting depressed participants: The wait-list versus the guided self-help comparison revealed a moderate to large effect on PHQ-9 at the post time point, `r report.text2(phq_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1, display)`. However, this effect dissipated when the follow-up comparison was instead made against the most conservative value collected in the wait-list group, in this case from the pre time point; see Figure  for a visual exploration of a possible nocebo effect.
 
 No between-group effects were found for the GAD-7 when comparing the treatment and the wait-list groups. In addition, there was no significant effect of the unguided self-help condition on social anxiety symptoms measured with the LSAS-SR at the post time point. However, a large effect was found at the follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1, display)` for the unguided self-help group, compared with the lowest value collected at the during time point. For the guided self-help group, a moderate effect was found at the post time point, `r report.text2(lsas_sum.out, paste(xT3,xG3,"-",xT3,xG2), 1, display)`, with a large effect at the follow-up, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1, display)`, this time compared with the most conservative value, from the during time point, for the wait-list group.
 
@@ -1912,11 +1712,11 @@ For the Well-being Questionnaire, moderate effects were found at post in both th
 `r report.text2(well.out, paste(xT1,xG3,"-",xT4,xG1), -1, display)`, and
 `r report.text2(well.out, paste(xT1,xG3,"-",xT4,xG2), -1, display)`, respectively.
 
-Thus, the eight-week Respekt^2^ intervention did not affect either depression or generalized anxiety. However, it did have a pronounced effect on social anxiety, and on general well-being. See Table 2 for a summary of the significant effects, including 95\% CIs.
+Thus, the eight-week Respekt^2^ intervention did not affect either depression or generalized anxiety. However, it did have a pronounced effect on social anxiety, and on general well-being. See Table \@ref(tab:effsizetab) for a summary of the significant effects, including 95\% CIs.
 
 ### Within-group effects
 
-As shown in Table 2, the participants in both treatment groups enjoyed sustained within-group effects on assertiveness at the follow-up compared to the pre-treatment time point, measured with the AAA-S Adaptive and Aggressive subscales and the RAS. Thus, assertive behavior was still manifested well beyond the end of participation in the intervention. However, significant effects between the post and the follow-up time points were found only for two measures in the guided self-help group, where the AAA-S Adaptive subscale and the RAS exhibited small to moderate effects, `r report.text2(aaas_ad.out, paste(xT3,xG2,"-",xT4,xG2), -1)` and `r report.text2(rathus.out, paste(xT3,xG2,"-",xT4,xG2), -1)`, respectively. In the unguided self-help group, no difference between the post and the follow-up time points was found for either measure, `r xprnot(aaas_ad.out$emmpairs$p.value[41],0,a="Bonf")` and `r xprnot(rathus.out$emmpairs$p.value[41],a="Bonf")`, indicating that the therapist support provided some benefit to the participants’ ability to generalize adaptive assertive behaviors beyond the duration of the intervention.
+As shown in Table \@ref(tab:effsizetab), the participants in both treatment groups enjoyed sustained within-group effects on assertiveness at the follow-up compared to the pre-treatment time point, measured with the AAA-S Adaptive and Aggressive subscales and the RAS. Thus, assertive behavior was still manifested well beyond the end of participation in the intervention. However, significant effects between the post and the follow-up time points were found only for two measures in the guided self-help group, where the AAA-S Adaptive subscale and the RAS exhibited small to moderate effects, `r report.text2(aaas_ad.out, paste(xT3,xG2,"-",xT4,xG2), -1)` and `r report.text2(rathus.out, paste(xT3,xG2,"-",xT4,xG2), -1)`, respectively. In the unguided self-help group, no difference between the post and the follow-up time points was found for either measure, `r xprnot(aaas_ad.out$emmpairs$p.value[41],0,a="Bonf")` and `r xprnot(rathus.out$emmpairs$p.value[41],a="Bonf")`, indicating that the therapist support provided some benefit to the participants’ ability to generalize adaptive assertive behaviors beyond the duration of the intervention.
 
 Among the secondary measures of syndromal symptoms, depression, as captured with the PHQ-9, decreased significantly from the pre time point only in the guided self-help group and only at the follow-up, showing a medium effect, `r report.text2(phq_sum.out, paste(xT1,xG2,"-",xT4,xG2), 1)`, implying that therapist support benefited depressed participants on a longer rather than a shorter time scale.
 
@@ -1938,7 +1738,7 @@ Clinical recovery measured with the PHQ-9 between the pre and post time points i
 
 As for general well-being, `r clinsigtext("well", "higher", xT1, xT4, xG2, well.pre.fu.kw)[1]` moved into the recovered category in the guided self-help group, but none in the unguided group, again indicating a possible benefit from therapist support.
 
-Table 3 provides a summary of the numbers and proportions of clinical recovery in the different groups and the significance, if any, of the pairwise tests of proportions against those of the wait-list group.
+Table \@ref(tab:clinsigtab) provides a summary of the numbers and proportions of clinical recovery in the different groups and the significance, if any, of the pairwise tests of proportions against those of the wait-list group.
 
 #### Reliable deterioration and harm
 
@@ -1960,57 +1760,403 @@ our study provides new data on assertiveness as a viable transdiagnostic stand-a
 
 The large effects on assertiveness measured with the AAA-S Adaptive subscale are comparable to those found in clinical trials of iCBT interventions for other transdiagnostic behavioral problems. Measurement with the RAS at the follow-up confirms these effects, as does the insignificantly larger effects found for assertiveness measured with the AAA-S Adaptive subscale and the RAS in the guided self-help group. Benchmarking against procrastination [@Rozental2015] and perfectionism [@Rozental2017], these results indicate that the assertiveness construct can be used successfully as a behavior therapy target with various clinical presentations, helping participants to appreciate and report changes in healthy assertion levels in their daily lives.
 
-<!-- Don't repeat results in Discussion section -->
-<!-- The large effects on assertiveness measured with the AAA-S Adaptive subscale, comparing the wait-list and the unguided self-help conditions at the follow-up, `r report.text2(aaas_ad.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")`, with $22$\% clinically improved, are comparable to those found in clinical trials of iCBT interventions for other transdiagnostic behavioral problems. Measurement with the RAS at the follow-up -->
-<!-- , `r report.text2(rathus.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")`, with $31$\% clinically improved, -->
-<!-- confirms these effects, as does the insignificantly larger effects found for assertiveness measured with the AAA-S Adaptive subscale and the RAS in the guided self-help group, with clinical improvement proportions of $26$\% and $36$\%, respectively. Benchmarking against procrastination [$d$ = `r xresult(0.5,2)`--`r xresult(0.69,2)` and $24$--$36$\% clinically improved in an unguided group, and $d$ = `r xresult(0.70,2)`--`r xresult(0.81,2)` and $31$--$40$\% clinically improved in a guided group\; @Rozental2015] and perfectionism [$d$ = `r xresult(0.68,2)`--`r xresult(1.00,2)`, with $45$\% of participants clinically improved in a guided group\; @Rozental2017], these results indicate that the assertiveness construct can be used successfully as a behavior therapy target with various clinical presentations, helping participants to appreciate and report changes in healthy assertion levels in their daily lives. -->
-
 It should be noted that while there were significant negative effects on aggressive assertiveness in both treatment groups, no statistically significant number of clinically worsened participants was found at either the post or the follow-up time points for the AAA-S Aggressive subscale in either group, compared to the wait-list. This should not be surprising, however, since for this particular sample the baseline levels of aggressive assertiveness were very low. Also, the operationalization of aggressive assertiveness is fuzzy and prone to individual differences in interpretation; behavior that one person deems aggressive assertion might be healthy assertion to another. Likewise, what counts as healthy assertion in one specific societal/cultural context might be perceived as normatively aggressive in another [@Mitamura2018]. Therefore, for a particular individual in a particular context, it is probably warranted to track only how the relationship between levels of adaptive and aggressive assertiveness changes over time, taking into account that individual’s idiographic goals in therapy. This topic may well be further explored in future studies. For the purposes of this study, however, the lack of clinical levels of aggressive assertiveness indicates that participation did not lead to possibly adverse effects in relationships.
-
-<!-- 2do: Introduce and also discuss inverse link anxiety/assertiveness, cite Borkovec1994; Craske and Barlow1988;O’Donnell et al.2007? -->
-
-<!-- 2do: Discuss gender diffs in aggressive assertiveness? @Thompson2011 p 10. -->
 
 The effects at the follow-up on social anxiety and depression are in agreement with those for iCBT in general [@Andrews2018], which in turn is about the same as for face-to-face treatment [@Carlbring2018], with the effects on general well-being of rounding out the picture of benefits from participation. However, the current intervention was insufficient for ameliorating generalized anxiety. Possibly, the overall structure of the Respekt^2^ intervention, with its emphasis on cheerleading participants in designing and performing in vivo behavioral experiments early on in treatment and for a limited time, was not adequate for addressing generalized anxiety symptoms where non-commitment to exposure and behavioral rigidity are often important first hurdles to overcome.
 
-<!-- Don't repeat results in Discussion section -->
-<!-- The effects at the follow-up on social anxiety symptoms, `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1,"effshort")` and `r report.text2(lsas_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1,"effshort")`, and depression, `r report.text2(phq_sum.out, paste(xT2,xG3,"-",xT4,xG1), 1,"effshort")` and `r report.text2(phq_sum.out, paste(xT2,xG3,"-",xT4,xG2), 1,"effshort")`, are in agreement with those for iCBT in general, where the average between-group effect size is $g$ = `r xresult(0.8,2)` compared to controls [@Andrews2018], which in turn is about the same as for face-to-face treatment [@Carlbring2018], with the effects on general well-being of `r report.text2(well.out, paste(xT3,xG3,"-",xT4,xG1), -1,"effshort")` and `r report.text2(well.out, paste(xT3,xG3,"-",xT4,xG2), -1,"effshort")` rounding out the picture of benefits from participation. However, the current intervention was insufficient for ameliorating generalized anxiety symptoms. Possibly, the overall structure of the Respekt^2^ intervention, with its emphasis on cheerleading participants in designing and performing in vivo behavioral experiments early on in treatment and for a limited time, was not adequate for addressing generalized anxiety symptoms where non-commitment to exposure and behavioral rigidity are often important first hurdles to overcome. -->
-
-\color{newtext}The analysis of clinical change revealed that large majorities in all groups at both the post and follow-up time points remained unchanged. This is expected for a non-clinical sample, for which baseline measurement scores were already mostly well on the functional side of cutoff values.\color{oldtext}
+The analysis of clinical change revealed that large majorities in all groups at both the post and follow-up time points remained unchanged. This is expected for a non-clinical sample, for which baseline measurement scores were already mostly well on the functional side of cutoff values.
 
 ## Limitations and future directions
 
-\color{newtext}The guided and unguided conditions yielded similar average levels across assertiveness measures as well as indicators of psychological problem symptoms, potentially indicating a ceiling effect of the self-help material when applied to a non-clinical population. Future studies should explore the impact of therapist involvement [possibly AI-enhanced, @carlbring2023new] and its interplay with participant factors in greater detail for diverse diagnostic populations. Ideally, these studies would involve a larger number of therapists and incorporate therapist factors into the analysis [@magnusson2018consequences]. This approach could reveal how varying levels of therapist support [ranging from positive reinforcement to troubleshooting, @berg2022good] influence retention rates, engagement, and ultimately, the outcomes and cost-benefit ratios for different diagnostic subgroups.\color{oldtext}
+The guided and unguided conditions yielded similar average levels across assertiveness measures as well as indicators of psychological problem symptoms, potentially indicating a ceiling effect of the self-help material when applied to a non-clinical population. Future studies should explore the impact of therapist involvement [possibly AI-enhanced, @carlbring2023new] and its interplay with participant factors in greater detail for diverse diagnostic populations. Ideally, these studies would involve a larger number of therapists and incorporate therapist factors into the analysis [@magnusson2018consequences]. This approach could reveal how varying levels of therapist support [ranging from positive reinforcement to troubleshooting, @berg2022good] influence retention rates, engagement, and ultimately, the outcomes and cost-benefit ratios for different diagnostic subgroups.
 
-The study has a number of \color{newtext}additional\color{oldtext}\ limitations that impair the generalizability of the findings. In studies of iCBT, the recruitment method is one of the most important factors influencing the symptom burden of the sample under investigation [@Lindner2015]. Recruitment for this study was performed via advertising on social media, where the presentation of the ads by revenue-maximizing design was skewed to boost click-throughs by the algorithms employed by the respective ad networks. We achieved distributions with regard to sex ($79$--$91$% female participants), higher education level ($70$--$74$%) and previous participation in therapy ($60$--$62$%) that are higher than expected had the sampling been purely random. Generalization of the findings needs to be made with caution before being confirmed with other samples in future studies.
+The study has a number of additional limitations that impair the generalizability of the findings. In studies of iCBT, the recruitment method is one of the most important factors influencing the symptom burden of the sample under investigation [@Lindner2015]. Recruitment for this study was performed via advertising on social media, where the presentation of the ads by revenue-maximizing design was skewed to boost click-throughs by the algorithms employed by the respective ad networks. We achieved distributions with regard to sex ($79$--$91$% female participants), higher education level ($70$--$74$%) and previous participation in therapy ($60$--$62$%) that are higher than expected had the sampling been purely random. Generalization of the findings needs to be made with caution before being confirmed with other samples in future studies.
 
 Another methodological drawback of the current study is that some of the measurement scales were recently translated into Swedish without back translation, somewhat impairing the ability to compare findings with the data for the English-speaking populations where the scales were originally validated. The Swedish adaptations of the RAS and AAA-S scales should be quality controlled with back translation prior to future usage and, if possible, also validated for Swedish clinical and non-clinical populations. For the assessment of general well-being, a more established measure than the Well-being Questionnaire should preferably be used. 
 
 It is also noteworthy that the mean levels of depression in the wait-list control group increased as the participants waited in line to begin treatment; this might be due to a nocebo or reverse placebo effect, where participants’ expectations contribute to their mood worsening [@Furukawa2014], which in turn risks inflating between-group effect sizes. Analysis of reliable change confirmed this hypothesis, revealing that 12 individuals ($18$%) in the wait-list group worsened while waiting for treatment. To cancel out this nocebo effect in the analysis, the most conservative estimated marginal mean from either of the pre, during, or post time points was used for the follow-up comparison (in effect, underestimating rather than overestimating the difference). In any future studies, researchers would be wise to employ an active wait-list condition, such as participation in a discussion forum, to avoid running the risk of artificially inflated effect sizes [@Cuijpers2016].
 
-<!-- https://yury-zablotski.netlify.app/post/mixed-models/#why-do-we-need-it-what-are-the-benefits -->
-<!-- https://ourcodingclub.github.io/tutorials/mixed-models/#extra -->
-Preferably, any future replication or extended version of the current study should also collect data at no less than four time points, allowing data to be fitted not only using random intercepts (controlling for/capturing initial differences between subjects) but also with random slopes (controlling for/capturing individual trajectories). \color{newtext}As noted above,\color{oldtext}\ it might also be necessary to add a third level to the model to control for therapist factors.
+Preferably, any future replication or extended version of the current study should also collect data at no less than four time points, allowing data to be fitted not only using random intercepts (controlling for/capturing initial differences between subjects) but also with random slopes (controlling for/capturing individual trajectories). As noted above, it might also be necessary to add a third level to the model to control for therapist factors.
 
 Along with the third wave of CBT, transdiagnostic behavioral approach goals have gained ground; that is, those captured with the Valued Living Questionnaire [VLQ\; @Wilson2010], the Acceptance and Action Questionnaire [AAQ-II\; @Fledderus2012;@Lundgren2016], or, more generally, the Process-Based Assessment Tool [PBAT\; @Ciarrochi2022]. Further exploration of how the pursuit of healthy assertion goals might influence these and other similar constructs could illuminate what goals are best suited for different patients (or populations) to find acceptable targets that can help short-circuit verbally expressed defenses head-on and thus increase the likelihood of engagement in new learning in CBT. Rhetorically, who does not want to be better still at respectfully asserting their feelings, wishes, and needs?
 
-In the current study, we found that participation in Respekt^2^ increased assertive expressions, \color{newtext}and at the same time reduced\color{oldtext}\ self-assessed social anxiety in a non-clinical sample. The intervention did not have an immediate effect on generalized anxiety, although there was some within-group evidence of beneficial longer-term effects on depression. \color{newtext}With only a few exceptions, the guided condition did not yield better outcomes than the unguided condition, lending support for Respekt^2^ as a stand-alone, self-help intervention.\color{oldtext}\ Overall, the findings demonstrate that assertiveness is a potentially useful target in CBT and iCBT in the treatment of both psychiatric syndromes and non-syndromal problems in daily life, calling for more research on the construct in various applications.
-
-# Author contributions
-
-<!-- https://www.elsevier.com/authors/policies-and-guidelines/credit-author-statement -->
-
-Tobias Hagberg and Patrik Manhem performed Conceptualization, Methodology, Investigation, Data curation and Writing - Original Draft; TH also Software and Formal Analysis; Martin Oscarsson performed Writing - Original Draft; Per Carlbring performed Supervision, Writing - Review & Editing; Fiona Michel and Gerhard Andersson both provided Resources and performed Writing - Review & Editing.
+In the current study, we found that participation in Respekt^2^ increased assertive expressions, and at the same time reduced self-assessed social anxiety in a non-clinical sample. The intervention did not have an immediate effect on generalized anxiety, although there was some within-group evidence of beneficial longer-term effects on depression. With only a few exceptions, the guided condition did not yield better outcomes than the unguided condition, lending support for Respekt^2^ as a stand-alone, self-help intervention. Overall, the findings demonstrate that assertiveness is a potentially useful target in CBT and iCBT in the treatment of both psychiatric syndromes and non-syndromal problems in daily life, calling for more research on the construct in various applications.
 
 # ORCID
 
-- Tobias Hagberg, \url{https://orcid.org/0000-0001-6059-6668}
-- Patrik Manhem, \url{https://orcid.org/0000-0002-2883-9751}
-- Martin Oscarsson, \url{https://orcid.org/0000-0002-8209-5351}
-- Gerhard Andersson, \url{https://orcid.org/0000-0003-4753-6745}
-- Per Carlbring, \url{https://orcid.org/0000-0002-2172-8813}
+- Tobias Hagberg, https://orcid.org/0000-0001-6059-6668
+- Patrik Manhem, https://orcid.org/0000-0002-2883-9751
+- Martin Oscarsson, https://orcid.org/0000-0002-8209-5351
+- Gerhard Andersson, https://orcid.org/0000-0003-4753-6745
+- Per Carlbring, https://orcid.org/0000-0002-2172-8813
 
-<!-- \pagebreak -->
+\pagebreak
+
+# Figures
+
+```{r flowchart-dot, eval = T, engine = "dot", fig.cap = "A total of 210 participants were included in the study through randomization and further randomized into three groups: unguided self-help, guided self-help, and wait-list, with 70 participants each.", fig.id = "flowchart-dot", fig.cap.style = "Image Caption"}
+
+digraph G {
+
+  dpi=600
+  fontname=Helvetica
+  fontsize=10
+  node [ shape=box, fontname=Helvetica, fontsize=10, penwidth=0.5 ]
+  compound=true
+  #ranksep=.275
+  ranksep=.3
+  
+  leads -> { screening_non_completers screening_completers }
+  screening_completers -> { excluded invited }
+  invited  -> { invitation_non_responders invitation_responders }
+  invitation_responders -> { trimmed keepers }
+  keepers -> randomization
+  randomization -> selfhelp_dur [lhead=cluster_selfhelp]
+  randomization -> support_dur [lhead=cluster_support]
+  randomization -> waitlist_dur [lhead=cluster_waitlist]
+
+  leads[label=<Leads from social media<BR/><I>n</I> = 657>]
+  screening_completers[label=<Completed screening<BR/><I>n</I> = 464>]
+  excluded[label=<Excluded from study<BR/><I>n</I> = 126, for the following reasons:<BR/>PHQ-9 cutoff (≥ 15), <I>n</I> = 77<BR/>Concurrent therapy, <I>n</I> = 29<BR/>Recent change in psychotropic drugs, <I>n</I> = 7<BR/>Low motivation/lack of time, <I>n</I> = 13>]
+  screening_non_completers[label=<Did not complete screening<BR/><I>n</I> = 193>]
+  invited[label=<Invited to participate in study<BR/><I>n</I> = 338>]
+  invitation_non_responders[label=<Declined or did not respond<BR/><I>n</I> = 85>]
+  invitation_responders[label=<Accepted invitation<BR/><I>n</I> = 253>]
+  trimmed[label=<Excluded through randomization<BR/><I>n</I> = 43>]
+  keepers[label=<Included through randomization<BR/><I>n</I> = 210>]
+  randomization[label=<Randomization to condition<BR/><I>n</I> = 70 each>]
+  selfhelp_dur[label=<Completed During measurement<BR/>(week 4)<BR/><I>n</I> = 44>]
+  selfhelp_post[label=<Completed Post measurement<BR/>(week 8)<BR/><I>n</I> = 35>]
+  selfhelp_fu[label=<Completed Follow-up measurement<BR/>(1 year)<BR/><I>n</I> = 30>]
+  support_dur[label=<Completed During measurement<BR/>(week 4)<BR/><I>n</I> = 48>]
+  support_post[label=<Completed Post measurement<BR/>(week 8)<BR/><I>n</I> = 50>]
+  support_fu[label=<Completed Follow-up measurement<BR/>(1 year)<BR/><I>n</I> = 38>]
+  waitlist_dur[label=<Completed During measurement<BR/>(week 4)<BR/><I>n</I> = 58>]
+  waitlist_post[label=<Completed Post measurement<BR/>(week 8)<BR/><I>n</I> = 61>]
+  itt[label=<Intention to treat<BR/><I>n</I> = 205>]
+
+  subgraph cluster_selfhelp { margin=8; penwidth=0.5; labelloc="t"; color=black; bgcolor=white; label=<Unguided self-help<BR/><I>n</I> = 70 – 3 (excluded) = 67> ; selfhelp_dur -> selfhelp_post -> selfhelp_fu; } 
+  subgraph cluster_support { margin=8; penwidth=0.5; labelloc="t"; color=black; bgcolor=white; label=<Guided self-help<BR/><I>n</I> = 70> ; support_dur -> support_post -> support_fu; } 
+  subgraph cluster_waitlist { margin=8; penwidth=0.5; labelloc="t"; color=black; bgcolor=white; label=<Wait-list<BR/><I>n</I> = 70 – 2 (excluded) = 68> ; waitlist_dur -> waitlist_post; } 
+  { selfhelp_fu support_fu waitlist_post } -> itt
+
+}
+
+```
+
+\pagebreak
+
+```{r emm-primary-plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = "Plots of the estimated fixed effects for the primary transdiagnostic scales used to measure skillful, assertive behavior, and aggressive assertive behavior. The participants’ estimated means for all three measures exhibited increasing levels of assertiveness during treatment in the unguided self-help and guided self-help groups, with negligible differences between the two treatment conditions.", fig.id = "emm-primary-plots", fig.cap.style = "Image Caption"}
+
+#{r emm.primary.plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of the estimated fixed effects for the primary transdiagnostic scales used to measure skillful, assertive behavior, and aggressive assertive behavior. The participants’ estimated means for all three measures exhibited increasing levels of assertiveness during treatment in the unguided self-help and guided self-help groups, with negligible differences between the two treatment conditions.'}
+
+(aaas_ad.emm.plot + theme(plot.margin = unit(c(0,8,8,0), "pt"))) +
+  (aaas_ag.emm.plot + theme(plot.margin = unit(c(0,0,8,8), "pt"))) +
+  (rathus.emm.plot + theme(plot.margin = unit(c(8,8,0,0), "pt"))) +
+  guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2)
+
+```
+
+\pagebreak
+
+```{r emm-secondary-plots, fig.width = 10, fig.asp = 0.8, echo = F, fig.cap = 'Plots of the estimated fixed effects for the secondary syndromal outcome measures, as well as for the general well-being measure. Participation in the unguided self-help and guided self-help conditions led to significant symptom alleviation between the pre and post time points as well as between the pre and one-year follow-up time points for depression and social anxiety. Participation in both treatment groups also led to significant increases in well-being. As with the transdiagnostic measures of assertive behavior, the differences between the post and follow-up time points were statistically inappreciable for all measures, in both treatment groups. The wait-list control group did not significantly change between any time points for either measure. However, to stay on the conservative side and counteract even the slightest nocebo effect of the wait-list condition, the most conservative estimate for the wait-list control condition was used in each follow-up between-group comparison; see the dotted line for a visual representation of the selected time point.', fig.id = "emm-secondary-plots", fig.cap.style = "Image Caption"}
+
+# (phq_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) +
+#   (gad_sum.emm.plot + theme(plot.margin = unit(c(0,0,0,8), "pt"))) +
+#   (lsas_sum.emm.plot + theme(plot.margin = unit(c(0,8,0,0), "pt"))) + 
+#   guide_area() + plot_layout(guides = 'collect') + plot_layout(ncol = 2) 
+
+(phq_sum.emm.plot + theme(plot.margin = unit(c(0,8,8,0), "pt"))) +
+  (gad_sum.emm.plot + theme(plot.margin = unit(c(0,0,8,8), "pt"))) +
+  (lsas_sum.emm.plot + theme(plot.margin = unit(c(8,8,0,0), "pt"))) + 
+  (well.emm.plot + theme(plot.margin = unit(c(8,0,0,8), "pt"))) +
+  plot_layout(ncol = 2) 
+
+```
+
+\pagebreak
+
+# Tables
+
+```{r socdemtab, echo = F, eval = T, tab.cap="Socio-demographic baseline characteristics of participants.", tab.id = "socdemtab", tab.cap.style = "Image Caption"}
+
+socdemcat <- c(
+  "",
+  "Age (years)",
+  "Age (years)",
+  "Sex (%)",
+  "Civil status (%)",
+  "Civil status (%)",
+  "Civil status (%)",
+  "Civil status (%)",
+  "Highest education level (%)",
+  "Highest education level (%)",
+  "Highest education level (%)",
+  "Highest education level (%)",
+  "Highest education level (%)",
+  "Highest education level (%)",
+  "Occupation (%)",
+  "Occupation (%)",
+  "Occupation (%)",
+  "Occupation (%)",
+  "Occupation (%)",
+  "Occupation (%)",
+  "Occupation (%)",
+  "Use of psychotropic medications (%)",
+  "Use of psychotropic medications (%)",
+  "Use of psychotropic medications (%)",
+  "Previous psychological treatment (%)",
+  "Previous psychological treatment (%)"
+)
+
+socdemstat <- c(
+  "n",
+  "M",
+  "SD",
+  "Female",
+  "Single",
+  "Partner",
+  "Married",
+  "Other",
+  "Other",
+  "Middle school",
+  "High school/college",
+  "Vocational training",
+  "Currently at university",
+  "University degree",
+  "Other",
+  "Student",
+  "Employed",
+  "Unemployed",
+  "Retired",
+  "Parental leave",
+  "Sick leave",
+  "No",
+  "Yes,  previously",
+  "Yes,  currently",
+  "No",
+  "Yes"
+)
+
+socdemwaitlist <-
+  c(68,
+    41,
+    8,
+    91,
+    37,
+    19,
+    37,
+    7,
+    3,
+    1,
+    10,
+    7,
+    7,
+    71,
+    9,
+    7,
+    74,
+    4,
+    0,
+    0,
+    6,
+    76,
+    7,
+    16,
+    38,
+    62)
+
+socdemunguided <-
+  c(67,
+    41,
+    9,
+    79,
+    36,
+    25,
+    28,
+    10,
+    1,
+    0,
+    9,
+    4,
+    15,
+    70,
+    6,
+    12,
+    76,
+    4,
+    0,
+    0,
+    1,
+    70,
+    9,
+    21,
+    40,
+    60)
+
+socdemguided <-
+  c(70,
+    44,
+    10,
+    93,
+    29,
+    17,
+    49,
+    6,
+    1,
+    0,
+    7,
+    7,
+    10,
+    74,
+    7,
+    6,
+    76,
+    0,
+    4,
+    4,
+    3,
+    67,
+    17,
+    16,
+    39,
+    61)
+
+socdem.table <- cbind.data.frame(
+  "Category" = socdemcat,
+  "Statistic" = socdemstat,
+  "Waitlist" = socdemwaitlist,
+  "Unguided" = socdemunguided,
+  "Guided" = socdemguided
+  )
+
+# https://hughjonesd.github.io/huxtable/huxtable.html
+library("flextable")
+library("huxtable")
+
+ht <- huxtable(socdem.table) %>%
+  set_header_rows(1, TRUE) %>%
+  set_header_cols(1:2, TRUE) %>%
+  style_headers(bold = TRUE) %>%
+  merge_cells(1, 1:2) %>%
+  merge_cells(3:4, 1) %>%
+  merge_cells(6:9, 1) %>%
+  merge_cells(10:15, 1) %>%
+  merge_cells(16:22, 1) %>%
+  merge_cells(23:25, 1) %>%
+  merge_cells(26:27, 1) %>%
+  add_footnote(
+    ""
+  ) %>%
+  set_width(1) %>%
+  set_font_size(8) %>%
+  theme_basic()
+as_flextable(ht)
+
+```
+
+\pagebreak
+
+```{r effsizetab, echo = F, eval = T, tab.cap="Within-group effect sizes [95% CI] comparing estimated marginal means between Pre- and Post-treatment, as well as between Pre-treatment and 1-year Follow-up, and between group effect sizes [95% CI] at Post-treatment and 1-year Follow-up.", tab.id = "effsizetab", tab.cap.style = "Image Caption"}
+
+ht <- huxtable(effectsize.table) %>%
+  insert_row(
+    "",
+    "Primary transdiagnostic measures of skillful behavior",
+    "",
+    "",
+    "Secondary measures of syndromal symptoms and well-being",
+    "",
+    "",
+    "",
+    after = 0
+  ) %>%
+  insert_column(
+    "",
+    "",
+    "Within-group effect sizes",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "Between-group effect sizes",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    after = 0
+  ) %>%
+  set_header_rows(1:2, TRUE) %>%
+  set_header_cols(1:2, TRUE) %>%
+  style_headers(bold = TRUE) %>%
+  merge_cells(1, 3:5) %>%
+  merge_cells(1, 6:9) %>%
+  merge_cells(3:9, 1) %>%
+  merge_cells(10:17, 1) %>%
+  add_footnote(
+    "CI = confidence interval\nPre = pre-treatment measurement at 0 weeks; During = measurement during week 4; Post = measurement after completion of treatment at week 8; Follow-up = measurement at 1 year after completion.\n† = the most conservative measurement for the Wait-list control condition, in order to suppress any nocebo effects; see dotted lines in graphs in Figure 3 for identification of time point.\n* = p < .05, ** = p < .01, *** = p < .00; p-values are Bonferroni adjusted, based on pairwise comparisons of all sampled time points and conditions."
+  ) %>%
+  set_width(1) %>%
+  set_font_size(8) %>%
+  theme_basic()
+as_flextable(ht)
+
+```
+
+\pagebreak
+
+```{r clinsigtab, echo = F, eval = T, tab.id = "clinsigtab", tab.cap.style = "Table Caption", tab.cap="Clinical significance summary of the number (and proportion in %) of participants that changed reliably and moved from the clinical to the functional population from Pre-treatment to Post- and 1-year Follow-up-time points respectively (rows named 'Recovered'). For missing values (i.e., caused by drop-outs), the last collected value was moved forward to the next measurement time point, in order to respect the intention to treat principle."}
+
+ht <- huxtable(clinsig.table) %>%
+  insert_column(rep(measurementnames, each = 5), after = 0) %>% 
+  insert_row(
+    "",
+    "",
+    "Pre–Post",
+    "Pre–Post",
+    "Pre–Follow-up",
+    "Pre–Post",
+    "Pre–Follow-up",
+    after = 0
+  ) %>%
+  insert_row(
+    "",
+    "",
+    "Wait-list",
+    "Unguided self-help",
+    "",
+    "Guided self-help",
+    "",
+    after = 0
+  ) %>%
+  set_header_rows(1:2, TRUE) %>%
+  set_header_cols(1, TRUE) %>%
+  style_headers(bold = TRUE) %>%
+  merge_cells(3:7, 1) %>%
+  merge_cells(8:12, 1) %>%
+  merge_cells(13:17, 1) %>%
+  merge_cells(18:22, 1) %>%
+  merge_cells(23:27, 1) %>%
+  merge_cells(28:32, 1) %>%
+  merge_cells(33:37, 1) %>%
+  merge_cells(1, 4:5) %>%
+  merge_cells(1, 6:7) %>%
+  add_footnote(
+    "AAA-S Adaptive = Adaptive and Aggressive Assertiveness Scales, Adaptive subscale; AAA-S Aggressive = Adaptive and Aggressive Assertiveness Scales, Aggressive Subscale, RAS = Rathus Assertiveness Schedule; PHQ-9 = Patient Health Questionnaire, 9 items; GAD-7 = Generalized Anxiety Disorder 7-item Scale; LSAS-SR = Liebowitz Social Anxiety Scale; Well-being = Questionnaire on Well-being.\n* = p < .05, ** = p < .01, *** = p < .00; p-values are Bonferroni adjusted, based on rank-sum tests of the proportions of clinically improved participants between the three conditions at the post and follow-up time points, respectively."
+  ) %>%
+  set_width(1) %>%
+  set_font_size(8) %>%
+  theme_basic()
+as_flextable(ht)
+
+```
+
+\pagebreak
 
 # References {.allowframebreaks}
 
@@ -2020,4 +2166,3 @@ knitr::write_bib(packages, "packages.bib")
 
 ```
 
-\small
