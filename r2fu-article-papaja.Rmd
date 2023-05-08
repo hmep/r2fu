@@ -59,7 +59,7 @@ affiliation:
     institution   : "Centre for Clinical Interventions"
 abstract: "`r readLines('abstract.Rmd', encoding = 'UTF-8')`\n"
 keywords          : "assertiveness, assertive behavior, anxiety, depression, stress, avoidance"
-wordcount         : ""
+wordcount         : "6360"
 
 bibliography:
   - packages.bib

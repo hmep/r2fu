@@ -1794,7 +1794,7 @@ In the current study, we found that participation in Respekt^2^ increased assert
 
 # Figures
 
-```{r flowchart-dot, eval = T, engine = "dot", fig.cap = "A total of 210 participants were included in the study through randomization and further randomized into three groups: unguided self-help, guided self-help, and wait-list, with 70 participants each.", fig.id = "flowchart-dot", fig.cap.style = "Image Caption"}
+```{r flowchart-dot, eval = F, engine = "dot", fig.cap = "A total of 210 participants were included in the study through randomization and further randomized into three groups: unguided self-help, guided self-help, and wait-list, with 70 participants each.", fig.id = "flowchart-dot", fig.cap.style = "Image Caption"}
 
 digraph G {
 
@@ -2135,7 +2135,7 @@ ht <- huxtable(clinsig.table) %>%
     after = 0
   ) %>%
   set_header_rows(1:2, TRUE) %>%
-  set_header_cols(1, TRUE) %>%
+  set_header_cols(1:2, TRUE) %>%
   style_headers(bold = TRUE) %>%
   merge_cells(3:7, 1) %>%
   merge_cells(8:12, 1) %>%
