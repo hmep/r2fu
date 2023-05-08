@@ -1794,7 +1794,7 @@ In the current study, we found that participation in Respekt^2^ increased assert
 
 # Figures
 
-```{r flowchart-dot, eval = F, engine = "dot", fig.cap = "A total of 210 participants were included in the study through randomization and further randomized into three groups: unguided self-help, guided self-help, and wait-list, with 70 participants each.", fig.id = "flowchart-dot", fig.cap.style = "Image Caption"}
+```{r flowchart-dot-OFF, eval = F, engine = "dot", fig.cap = "A total of 210 participants were included in the study through randomization and further randomized into three groups: unguided self-help, guided self-help, and wait-list, with 70 participants each.", fig.id = "flowchart-dot-OFF", fig.cap.style = "Image Caption"}
 
 digraph G {
 
@@ -1841,6 +1841,12 @@ digraph G {
   { selfhelp_fu support_fu waitlist_post } -> itt
 
 }
+
+```
+
+```{r flowchart-dot, eval = T, fig.cap = "A total of 210 participants were included in the study through randomization and further randomized into three groups: unguided self-help, guided self-help, and wait-list, with 70 participants each.", fig.id = "flowchart-dot", fig.cap.style = "Image Caption"}
+
+knitr::include_graphics('r2fu-article_files/figure-docx/flowchart-dot-1.png')
 
 ```
 
